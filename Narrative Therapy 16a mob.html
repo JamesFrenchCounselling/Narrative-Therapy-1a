@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Section 16: Challenges and Adversity</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    /* prevent iOS from randomly resizing some text blocks */
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #1e3a8a 0, #4f46e5 25%, #ec4899 60%, #f97316 100%);
+      color: #111827;
+    }
+
+    .layout {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px 56px;
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 260px;
+      flex: 0 0 260px;
+      position: sticky;
+      top: 16px;
+      align-self: flex-start;
+    }
+
+    .page {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 18px; /* helps on mobile so content doesn’t feel “top-half” */
+    }
+
+    h1 {
+      font-size: 1.9rem;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #f9fafb;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.45);
+    }
+
+    p.intro {
+      margin-top: 0;
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+      color: #e5e7eb;
+      max-width: 760px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    }
+
+    /* Timer only in sidebar */
+    .timer {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 3px;
+      padding: 8px 11px;
+      border-radius: 16px;
+      background: rgba(15,23,42,0.95);
+      border: 1px solid rgba(248,250,252,0.2);
+      box-shadow: 0 6px 18px rgba(15,23,42,0.7);
+      font-size: 0.88rem;
+      color: #e5e7eb;
+      width: 100%;
+    }
+    .timer span.label { opacity: 0.8; font-size: 0.78rem; }
+    .timer span.time { font-weight: 800; font-size: 1.2rem; letter-spacing: 0.08em; }
+    .timer.ending {
+      border-color: #f97373;
+      color: #fecaca;
+      box-shadow: 0 0 14px rgba(248,113,113,0.7);
+    }
+    .timer.up { opacity: 0.7; }
+
+    .time-up-banner {
+      display: none;
+      margin-bottom: 10px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(254,242,242,0.96);
+      color: #991b1b;
+      border: 1px solid #fecaca;
+      font-size: 0.84rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .time-up .time-up-banner { display: block; }
+    .time-up #reflectionForm input,
+    .time-up #reflectionForm textarea { pointer-events: none; opacity: 0.9; }
+
+    .card {
+      background: #f9fafb;
+      border-radius: 18px;
+      padding: 18px 16px;
+      box-shadow: 0 10px 22px rgba(15,23,42,0.25);
+      border: 1px solid #e5e7eb;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-title {
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #111827;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 4px;
+      color: #111827;
+    }
+
+    .question-text {
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+    }
+
+    textarea,
+    input[type="text"] {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      font: inherit;
+      background: #ffffff;
+      min-height: 90px;
+      resize: vertical;
+      transition: border-color 0.15s ease-out, box-shadow 0.15s ease-out, transform 0.05s ease-out;
+    }
+    textarea:focus,
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 2px rgba(129,140,248,0.4);
+      transform: translateY(-1px);
+    }
+
+    .options-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 10px 0 12px;
+    }
+
+    /* Consistent option font size */
+    .option-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(129,140,248,0.7);
+      font-size: 0.95rem;       /* consistent size */
+      line-height: 1.25;        /* consistent line height */
+      background: rgba(239,246,255,0.95);
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.05s ease-out, box-shadow 0.05s ease-out, background 0.1s ease-out, border-color 0.1s ease-out, color 0.1s ease-out;
+      width: 100%;
+    }
+    .option-pill input { accent-color: #4b6bfb; flex: 0 0 auto; }
+    .option-pill:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 5px rgba(148,163,184,0.8);
+    }
+    .option-pill.selected {
+      background: linear-gradient(135deg, #22c55e, #a855f7);
+      color: #f9fafb;
+      border-color: transparent;
+      box-shadow: 0 4px 12px rgba(55,65,81,0.7);
+    }
+    .option-pill.selected input { accent-color: #fef9c3; }
+
+    .step { display: none; }
+    .step.active { display: block; }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 14px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      cursor: pointer;
+      border-radius: 999px;
+      border: none;
+      padding: 10px 18px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      background: radial-gradient(circle at 0% 0%, #f97316, #ec4899, #6366f1);
+      color: #f9fafb;
+      box-shadow: 0 8px 18px rgba(15,23,42,0.7);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: transform 0.07s ease, box-shadow 0.07s ease, opacity 0.1s ease;
+      white-space: nowrap;
+    }
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 11px 22px rgba(15,23,42,0.8);
+    }
+    button:active:not(:disabled) {
+      transform: translateY(1px);
+      box-shadow: 0 5px 11px rgba(15,23,42,0.75);
+    }
+    button:disabled { opacity: 0.45; cursor: default; box-shadow: none; }
+
+    .secondary {
+      background: #e5e7eb;
+      color: #111827;
+      box-shadow: 0 4px 10px rgba(55,65,81,0.5);
+      text-transform: none;
+      letter-spacing: 0.01em;
+    }
+
+    .status {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: #16a34a;
+      min-height: 1.2em;
+    }
+
+    /* Hidden export textarea (kept for reliable copy fallback, not shown to user) */
+    #resultsBox {
+      position: absolute;
+      left: -9999px;
+      top: -9999px;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    @media (max-width: 900px) {
+      .layout { flex-direction: column; }
+      .sidebar {
+        width: 100%;
+        flex: none;
+        position: static;
+        order: -1;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .nav-buttons button { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="timer" id="timer">
+        <span class="label">⏱️ Time left (Section 16)</span>
+        <span class="time" id="timeRemaining">30:00</span>
+        <span style="font-size:0.75rem; opacity:0.75;">Up to 30 minutes to complete this week's narrative.</span>
+      </div>
+    </aside>
+
+    <main class="page">
+      <h1>Section 16: Challenges and Adversity</h1>
+      <p class="intro">
+        Move through each step one at a time. At the end you’ll be able to copy a formatted reflection to send on.
+      </p>
+
+      <div class="time-up-banner" id="timeUpBanner">
+        The 30 minutes for this reflection have finished. Your answers are still here – you can review them and copy them at the end.
+      </div>
+
+      <form id="reflectionForm">
+        <!-- STEP 1 = Question 1 -->
+        <div class="step active" data-step="1">
+          <div class="card question" data-question="Question 1 – Sense of self right now">
+            <div class="card-title">Step 1 – Question 1</div>
+            <div class="question-text">
+              How would you describe your sense of self right now? What words come to mind?
+            </div>
+
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q1" value="Grounded - I generally feel like I know who I am">
+                A. Grounded - I generally feel like I know who I am
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q1" value="Conflicted - I often feel pulled between different versions of myself">
+                B. Conflicted - I often feel pulled between different versions of myself
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q1" value="Uncertain - I’m not really sure how to describe myself at the moment">
+                C. Uncertain - I’m not really sure how to describe myself at the moment
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q1" value="Evolving - I feel like I’m in the process of becoming someone new">
+                D. Evolving - I feel like I’m in the process of becoming someone new
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q1" value="Disconnected - I feel distant from who I really am">
+                E. Disconnected - I feel distant from who I really am
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q1" value="Content - I’m comfortable with who I am, even if it’s not perfect">
+                F. Content - I’m comfortable with who I am, even if it’s not perfect
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q1" value="Other / Please specify">
+                G. Other / Please specify:
+              </label>
+            </div>
+
+            <textarea id="q1_other" placeholder="If you chose ‘Other’, or you’d like to specify the words that come to mind, write here."></textarea>
+          </div>
+
+          <div class="nav-buttons">
+            <span></span>
+            <button type="button" id="next1" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 2 = Question 1a -->
+        <div class="step" data-step="2">
+          <div class="card question" data-question="Question 1a – Reflective follow-up">
+            <div class="card-title">Step 2 – Question 1a</div>
+            <div class="question-text">
+              What do you think contributes most to your current sense of self – or lack thereof?
+            </div>
+            <textarea id="q1a" placeholder="Write your reflection here..."></textarea>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back2">⮜ Back</button>
+            <button type="button" id="next2" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 3 = Optional Follow-Up (for Question 1) -->
+        <div class="step" data-step="3">
+          <div class="card question" data-question="Question 1 – Optional follow-up">
+            <div class="card-title">Step 3 – Optional Follow-Up</div>
+            <div class="question-text">
+              Optional: Is there anything else you want to add about your sense of self right now?
+            </div>
+            <textarea id="q1_follow" placeholder="Optional notes..."></textarea>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back3">⮜ Back</button>
+            <button type="button" id="next3" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 4 = Question 2 -->
+        <div class="step" data-step="4">
+          <div class="card question" data-question="Question 2 – Childhood messages">
+            <div class="card-title">Step 4 – Question 2</div>
+            <div class="question-text">
+              When you think about your childhood, what messages did you receive about who you were supposed to be?
+            </div>
+
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q2" value="Be strong and independent">
+                A. Be strong and independent
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q2" value="Keep the peace and avoid conflict">
+                B. Keep the peace and avoid conflict
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q2" value="Work hard and succeed">
+                C. Work hard and succeed
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q2" value="Be helpful and self-sacrificing">
+                D. Be helpful and self-sacrificing
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q2" value="Fit in and avoid standing out">
+                E. Fit in and avoid standing out
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q2" value="Be different and stand apart">
+                F. Be different and stand apart
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q2" value="Other / Please specify">
+                G. Other / Please specify:
+              </label>
+            </div>
+
+            <textarea id="q2_other" placeholder="If you chose ‘Other’, or you’d like to specify the messages you received, write here."></textarea>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back4">⮜ Back</button>
+            <button type="button" id="next4" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 5 = Question 2a -->
+        <div class="step" data-step="5">
+          <div class="card question" data-question="Question 2a – Reflective follow-up">
+            <div class="card-title">Step 5 – Question 2a</div>
+            <div class="question-text">
+              How have these early messages influenced the way you see yourself today?
+            </div>
+            <textarea id="q2a" placeholder="Write your reflection here..."></textarea>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back5">⮜ Back</button>
+            <button type="button" id="next5" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 6 = Optional Follow-Up (for Question 2) + FINISH -->
+        <div class="step" data-step="6">
+          <div class="card question" data-question="Question 2 – Optional follow-up">
+            <div class="card-title">Step 6 – Optional Follow-Up</div>
+            <div class="question-text">
+              Optional: Is there anything else you want to add about the messages you received in childhood?
+            </div>
+            <textarea id="q2_follow" placeholder="Optional notes..."></textarea>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back6">⮜ Back</button>
+            <button type="button" id="finishBtn" disabled>Finish</button>
+          </div>
+        </div>
+      </form>
+
+      <div id="resultsSection" style="display:none; margin-top:20px;">
+        <h2 style="color:#f9fafb; text-shadow:0 2px 6px rgba(0,0,0,0.45);">Your Reflection Export</h2>
+        <p class="intro">
+          Click the button below to copy your formatted reflection.
+        </p>
+        <button type="button" id="copyButton">📋 Copy this reflection</button>
+        <div class="status" id="statusMessage"></div>
+
+        <!-- hidden box (no visible reflection text area) -->
+        <textarea id="resultsBox" readonly></textarea>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // ES5-friendly script with no arrow functions / let / const
+
+    // ---------- TIMER (30 MINUTES) ----------
+    var totalSeconds = 30 * 60;
+    var timerInterval = null;
+    var timeUp = false;
+    var timerEl = document.getElementById('timer');
+    var timeRemainingEl = document.getElementById('timeRemaining');
+    var timeUpBanner = document.getElementById('timeUpBanner');
+
+    function formatTime(seconds) {
+      var m = Math.floor(seconds / 60);
+      var s = seconds % 60;
+      var mm = m < 10 ? '0' + m : '' + m;
+      var ss = s < 10 ? '0' + s : '' + s;
+      return mm + ':' + ss;
+    }
+
+    function startTimer() {
+      timeRemainingEl.textContent = formatTime(totalSeconds);
+      timerInterval = setInterval(function() {
+        totalSeconds--;
+        if (totalSeconds <= 0) {
+          totalSeconds = 0;
+          clearInterval(timerInterval);
+          handleTimeUp();
+        }
+        timeRemainingEl.textContent = formatTime(totalSeconds);
+        if (totalSeconds <= 60 && !timeUp) {
+          if (timerEl.className.indexOf('ending') === -1) {
+            timerEl.className += ' ending';
+          }
+        }
+      }, 1000);
+    }
+
+    function handleTimeUp() {
+      timeUp = true;
+      timerEl.className = timerEl.className.replace(' ending', '');
+      if (timerEl.className.indexOf(' up') === -1) {
+        timerEl.className += ' up';
+      }
+      if (document.body.className.indexOf('time-up') === -1) {
+        document.body.className += ' time-up';
+      }
+      timeUpBanner.style.display = 'block';
+      var allInputs = document.querySelectorAll('#reflectionForm input, #reflectionForm textarea');
+      for (var i = 0; i < allInputs.length; i++) {
+        allInputs[i].disabled = true;
+      }
+    }
+
+    // ---------- STEPS ----------
+    var steps = document.querySelectorAll('.step');
+    var currentStep = 1;
+
+    function showStep(stepNumber) {
+      for (var i = 0; i < steps.length; i++) {
+        var step = steps[i];
+        var target = Number(step.getAttribute('data-step')) === stepNumber;
+        if (target) {
+          if (step.className.indexOf('active') === -1) step.className += ' active';
+        } else {
+          step.className = step.className.replace(' active', '');
+        }
+      }
+      currentStep = stepNumber;
+
+      // mobile-friendly: bring the new step into view
+      try {
+        var active = document.querySelector('.step.active');
+        if (active && active.scrollIntoView) {
+          active.scrollIntoView({ block: 'start' });
+        }
+      } catch (e) {}
+    }
+
+    // ---------- ANSWER CHECKING (for enabling Next/Finish) ----------
+    function isStepAnswered(stepNumber) {
+      var step = document.querySelector('.step[data-step="' + stepNumber + '"]');
+      if (!step) return false;
+
+      var checked = step.querySelector('input[type="radio"]:checked, input[type="checkbox"]:checked');
+      if (checked) return true;
+
+      var fields = step.querySelectorAll('textarea, input[type="text"]');
+      for (var i = 0; i < fields.length; i++) {
+        if (fields[i].value && fields[i].value.trim() !== '') return true;
+      }
+      return false;
+    }
+
+    function enableOrDisableButtonsForStep(stepNumber) {
+      var answered = isStepAnswered(stepNumber);
+
+      function setBtn(id, enabled) {
+        var b = document.getElementById(id);
+        if (b) b.disabled = !enabled;
+      }
+
+      if (stepNumber === 1) setBtn('next1', answered);
+      if (stepNumber === 2) setBtn('next2', answered);
+      if (stepNumber === 3) setBtn('next3', answered);
+      if (stepNumber === 4) setBtn('next4', answered);
+      if (stepNumber === 5) setBtn('next5', answered);
+      if (stepNumber === 6) setBtn('finishBtn', answered);
+    }
+
+    // helper: closest parent with a class (older Safari-friendly)
+    function closestWithClass(element, className, stopAt) {
+      while (element && element !== stopAt && element.nodeType === 1) {
+        if ((' ' + element.className + ' ').indexOf(' ' + className + ' ') > -1) return element;
+        element = element.parentNode;
+      }
+      return null;
+    }
+
+    // ---------- OPTION PILL SELECTION ----------
+    var optionGroups = document.querySelectorAll('.options-group');
+    for (var og = 0; og < optionGroups.length; og++) {
+      optionGroups[og].addEventListener('change', function(e) {
+        var target = e.target || e.srcElement;
+        if (!target || target.tagName !== 'INPUT') return;
+
+        var pill = closestWithClass(target, 'option-pill', this);
+        if (!pill) return;
+
+        if (target.type === 'radio') {
+          var allPills = this.querySelectorAll('.option-pill');
+          for (var i = 0; i < allPills.length; i++) {
+            allPills[i].className = allPills[i].className.replace(' selected', '');
+          }
+          if (pill.className.indexOf('selected') === -1) pill.className += ' selected';
+        } else if (target.type === 'checkbox') {
+          if (target.checked) {
+            if (pill.className.indexOf('selected') === -1) pill.className += ' selected';
+          } else {
+            pill.className = pill.className.replace(' selected', '');
+          }
+        }
+
+        var stepEl = closestWithClass(target, 'step', document.body);
+        if (stepEl) {
+          var stepNumber = Number(stepEl.getAttribute('data-step'));
+          enableOrDisableButtonsForStep(stepNumber);
+        }
+      });
+    }
+
+    // Also update when typing
+    var reflectionForm = document.getElementById('reflectionForm');
+    reflectionForm.addEventListener('input', function(e) {
+      var target = e.target || e.srcElement;
+      var stepEl = closestWithClass(target, 'step', document.body);
+      if (stepEl) {
+        var stepNumber = Number(stepEl.getAttribute('data-step'));
+        enableOrDisableButtonsForStep(stepNumber);
+      }
+    });
+
+    // ---------- STEP NAV BUTTONS ----------
+    document.getElementById('next1').addEventListener('click', function() { showStep(2); });
+    document.getElementById('back2').addEventListener('click', function() { showStep(1); });
+    document.getElementById('next2').addEventListener('click', function() { showStep(3); });
+    document.getElementById('back3').addEventListener('click', function() { showStep(2); });
+    document.getElementById('next3').addEventListener('click', function() { showStep(4); });
+    document.getElementById('back4').addEventListener('click', function() { showStep(3); });
+    document.getElementById('next4').addEventListener('click', function() { showStep(5); });
+    document.getElementById('back5').addEventListener('click', function() { showStep(4); });
+    document.getElementById('next5').addEventListener('click', function() { showStep(6); });
+    document.getElementById('back6').addEventListener('click', function() { showStep(5); });
+
+    // Dash line used after each option ONLY (kept the same style as your base)
+    var dashLine = '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ';
+
+    // ---------- EXPORT TEXT ----------
+    function generateExportText() {
+      var allQuestions = document.querySelectorAll('.question');
+      var output = '';
+
+      output += '──────────────────────────────────────────────────────────────\n';
+      output += 'Section 16: Challenges and Adversity: Reflection Summary\n';
+      output += '──────────────────────────────────────────────────────────────\n\n';
+      output += 'For each step below, all possible options are listed (where applicable).\n';
+      output += 'Your own written notes follow where you added them.\n\n';
+
+      for (var qIndex = 0; qIndex < allQuestions.length; qIndex++) {
+        var q = allQuestions[qIndex];
+        var mainPrompt = q.getAttribute('data-question') || ('Step ' + (qIndex + 1));
+
+        output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+        output += mainPrompt + '\n\n';
+
+        var groups = q.querySelectorAll('.options-group');
+        for (var gIndex = 0; gIndex < groups.length; gIndex++) {
+          var group = groups[gIndex];
+          var labels = group.querySelectorAll('label.option-pill');
+          if (labels.length > 0) {
+            output += 'Options:\n';
+            for (var lIndex = 0; lIndex < labels.length; lIndex++) {
+              var label = labels[lIndex];
+              var labelText = label.textContent.replace(/\s+/g, ' ').trim();
+              output += ' ' + labelText + '\n';
+              output += dashLine + '\n';
+            }
+            output += '\n';
+          }
+        }
+
+        var notes = [];
+        var fields = q.querySelectorAll('textarea, input[type="text"]');
+        for (var fIndex = 0; fIndex < fields.length; fIndex++) {
+          var field = fields[fIndex];
+          if (field.value && field.value.trim() !== '') notes.push(field.value.trim());
+        }
+
+        output += 'Notes and narrative reflections:\n';
+        if (notes.length > 0) {
+          for (var nIndex = 0; nIndex < notes.length; nIndex++) {
+            output += ' • ' + notes[nIndex] + '\n';
+          }
+        } else {
+          output += ' • (no additional written notes provided for this step)\n';
+        }
+
+        output += '\n';
+      }
+
+      output += '──────────────────────────────────────────────────────────────\n';
+      output += 'End of Section 16\n';
+      output += '──────────────────────────────────────────────────────────────\n';
+
+      document.getElementById('resultsBox').value = output;
+    }
+
+    // ---------- FINISH ----------
+    document.getElementById('finishBtn').addEventListener('click', function() {
+      generateExportText();
+      document.getElementById('resultsSection').style.display = 'block';
+      document.getElementById('finishBtn').style.display = 'none';
+      document.getElementById('resultsSection').scrollIntoView({ block: 'start' });
+    });
+
+    // ---------- COPY BUTTON ----------
+    var copyButton = document.getElementById('copyButton');
+    copyButton.addEventListener('click', function() {
+      var statusMessage = document.getElementById('statusMessage');
+      var text = document.getElementById('resultsBox').value;
+
+      if (!text || text.trim() === '') {
+        statusMessage.textContent = 'Nothing to copy yet — press Finish first.';
+        return;
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text)
+          .then(function() {
+            statusMessage.textContent = '✨ Reflection copied! You can now paste it into an email or document.';
+          })
+          .catch(function() {
+            // fallback
+            var box = document.getElementById('resultsBox');
+            box.focus();
+            box.select();
+            try {
+              var successful = document.execCommand('copy');
+              statusMessage.textContent = successful
+                ? '✨ Reflection copied! You can now paste it into an email or document.'
+                : 'Copy failed. Please try again.';
+            } catch (e) {
+              statusMessage.textContent = 'Copy failed. Please try again.';
+            }
+          });
+      } else {
+        var box2 = document.getElementById('resultsBox');
+        box2.focus();
+        box2.select();
+        try {
+          var successful2 = document.execCommand('copy');
+          statusMessage.textContent = successful2
+            ? '✨ Reflection copied! You can now paste it into an email or document.'
+            : 'Copy failed. Please try again.';
+        } catch (e2) {
+          statusMessage.textContent = 'Copy failed. Please try again.';
+        }
+      }
+    });
+
+    // ---------- INIT ----------
+    startTimer();
+    showStep(1);
+    enableOrDisableButtonsForStep(1);
+  </script>
+</body>
+</html>
