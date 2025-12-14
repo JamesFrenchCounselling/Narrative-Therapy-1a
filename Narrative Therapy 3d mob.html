@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Section 3d: Influential Relationships</title>
+  <!-- Mobile-friendly viewport -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Prevent iOS from randomly resizing some text blocks */
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      height: 100%;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at top, #1e3a8a 0, #4f46e5 25%, #ec4899 60%, #f97316 100%);
+      color: #111827;
+      min-height: 100vh; /* ensure full screen usage on mobile */
+    }
+
+    .layout {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      min-height: 100vh; /* so content can occupy full height */
+    }
+
+    .sidebar {
+      width: 260px;
+      flex: 0 0 260px;
+      position: sticky;
+      top: 16px;
+      align-self: flex-start;
+    }
+
+    .page {
+      flex: 1;
+      min-width: 0;
+    }
+
+    h1 {
+      font-size: 1.9rem;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #f9fafb;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.45);
+    }
+
+    h1 span.badge {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(251,191,36,0.95);
+      color: #78350f;
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+    }
+
+    p.intro {
+      margin-top: 0;
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+      color: #e5e7eb;
+      max-width: 760px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    }
+
+    /* Timer only in sidebar now */
+    .timer {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 3px;
+      padding: 8px 11px;
+      border-radius: 16px;
+      background: rgba(15,23,42,0.95);
+      border: 1px solid rgba(248,250,252,0.2);
+      box-shadow: 0 6px 18px rgba(15,23,42,0.7);
+      font-size: 0.88rem;
+      color: #e5e7eb;
+    }
+    .timer span.label {
+      opacity: 0.8;
+      font-size: 0.78rem;
+    }
+    .timer span.time {
+      font-weight: 800;
+      font-size: 1.2rem;
+      letter-spacing: 0.08em;
+    }
+    .timer.ending {
+      border-color: #f97373;
+      color: #fecaca;
+      box-shadow: 0 0 14px rgba(248,113,113,0.7);
+    }
+    .timer.up {
+      opacity: 0.7;
+    }
+    .time-up-banner {
+      display: none;
+      margin-bottom: 10px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(254,242,242,0.96);
+      color: #991b1b;
+      border: 1px solid #fecaca;
+      font-size: 0.84rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .time-up .time-up-banner {
+      display: block;
+    }
+    .time-up #reflectionForm input,
+    .time-up #reflectionForm textarea {
+      pointer-events: none;
+      opacity: 0.9;
+    }
+
+    .card {
+      background: #f9fafb;
+      border-radius: 18px;
+      padding: 18px 16px;
+      box-shadow: 0 10px 22px rgba(15,23,42,0.25);
+      border: 1px solid #e5e7eb;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-title {
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #111827;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 4px;
+      color: #111827;
+    }
+
+    .question-text {
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+    }
+
+    textarea,
+    input[type="text"] {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      font: inherit;
+      background: #ffffff;
+      min-height: 70px;
+      resize: vertical;
+      transition: border-color 0.15s ease-out, box-shadow 0.15s ease-out, transform 0.05s ease-out;
+    }
+
+    textarea:focus,
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 2px rgba(129,140,248,0.4);
+      transform: translateY(-1px);
+    }
+
+    .options-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin: 8px 0 10px;
+      font-size: 0.95rem; /* ensure consistent option text size */
+    }
+
+    .option-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(129,140,248,0.7);
+      font-size: 0.95rem; /* consistent size for all options */
+      background: rgba(239,246,255,0.95);
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.05s ease-out, box-shadow 0.05s ease-out, background 0.1s ease-out, border-color 0.1s ease-out, color 0.1s ease-out;
+    }
+
+    .option-pill input {
+      accent-color: #4b6bfb;
+      flex-shrink: 0;
+    }
+
+    .option-pill:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 5px rgba(148,163,184,0.8);
+    }
+
+    .option-pill.selected {
+      background: linear-gradient(135deg, #22c55e, #a855f7);
+      color: #f9fafb;
+      border-color: transparent;
+      box-shadow: 0 4px 12px rgba(55,65,81,0.7);
+    }
+
+    .option-pill.selected input {
+      accent-color: #fef9c3;
+    }
+
+    .sub-question {
+      margin-top: 12px;
+      display: none; /* show only active one per question "page" */
+    }
+
+    .sub-question.active {
+      display: block;
+    }
+
+    .sub-question-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #111827;
+    }
+
+    .step {
+      display: none;
+    }
+
+    .step.active {
+      display: block;
+    }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 14px;
+      gap: 10px;
+    }
+
+    button {
+      cursor: pointer;
+      border-radius: 999px;
+      border: none;
+      padding: 10px 18px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      background: radial-gradient(circle at 0% 0%, #f97316, #ec4899, #6366f1);
+      color: #f9fafb;
+      box-shadow: 0 8px 18px rgba(15,23,42,0.7);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: transform 0.07s ease, box-shadow 0.07s ease, opacity 0.1s ease;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 11px 22px rgba(15,23,42,0.8);
+    }
+
+    button:active:not(:disabled) {
+      transform: translateY(1px);
+      box-shadow: 0 5px 11px rgba(15,23,42,0.75);
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .secondary {
+      background: #e5e7eb;
+      color: #111827;
+      box-shadow: 0 4px 10px rgba(55,65,81,0.5);
+      text-transform: none;
+      letter-spacing: 0.01em;
+    }
+
+    /* Sub-question navigation (per main question) */
+    .sub-nav {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .sub-nav .sub-status {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .sub-nav .sub-prev,
+    .sub-nav .sub-next {
+      font-size: 0.8rem;
+      padding: 8px 14px;
+    }
+
+    #resultsBox {
+      width: 100%;
+      min-height: 200px;
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px dashed #e5e7eb;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 0.9rem;
+      background: #f9fafb;
+      box-shadow: inset 0 0 8px rgba(148,163,184,0.5);
+      white-space: pre-wrap;
+    }
+
+    .status {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: #16a34a;
+      min-height: 1.2em;
+    }
+
+    .footer-note {
+      margin-top: 12px;
+      font-size: 0.8rem;
+      color: #e5e7eb;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        flex-direction: column;
+        padding-bottom: 32px;
+      }
+      .sidebar {
+        width: 100%;
+        flex: none;
+        position: static;
+        order: -1;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+  <!-- Sidebar with timer only -->
+  <aside class="sidebar">
+    <div class="timer" id="timer">
+      <span class="label">⏱️ Time left (Section 3d)</span>
+      <span class="time" id="timeRemaining">30:00</span>
+      <span style="font-size:0.75rem; opacity:0.75;">Up to 30 minutes to complete this week's narrative.</span>
+    </div>
+  </aside>
+
+  <!-- Main question page -->
+  <main class="page">
+    <h1>Section 3d: Influential Relationships</h1>
+    <p class="intro">
+      This sequence explores romantic, friendship, family, and professional relationships that have shaped you.
+      Move through Questions 10, 11, 12, 13, and 14 one at a time. At the end you’ll be able to copy a formatted
+      reflection to send on.
+    </p>
+
+    <div class="time-up-banner" id="timeUpBanner">
+      The 30 minutes for this reflection have finished. Your answers are still here – you can review them and copy them at the end.
+    </div>
+
+    <form id="reflectionForm">
+      <!-- STEP 1 – QUESTION 10 -->
+      <div class="step active" data-step="1">
+        <div class="card question" data-question="10. Navigating the aftermath of a difficult breakup">
+          <div class="card-title">Question 10 – Navigating the aftermath of a difficult breakup</div>
+
+          <div class="sub-question" data-subquestion="10a. How you navigated the aftermath of the breakup">
+            <div class="sub-question-title">
+              Think about a romantic relationship that ended on difficult terms.
+            </div>
+            <div class="question-text">
+              How did you navigate the aftermath of the breakup?
+            </div>
+
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q10a" value="Seeking support from friends, family, or a therapist.">
+                A. Seeking support from friends, family, or a therapist.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q10a" value="Focusing on personal growth or self-care.">
+                B. Focusing on personal growth or self-care.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q10a" value="Avoiding or distracting yourself from the situation.">
+                C. Avoiding or distracting yourself from the situation.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q10a" value="Reflecting deeply on the relationship and your role in it.">
+                D. Reflecting deeply on the relationship and your role in it.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q10a" value="Rebuilding your life by setting new goals or pursuing new interests.">
+                E. Rebuilding your life by setting new goals or pursuing new interests.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q10a" value="Maintaining a friendship or cordial relationship with your ex-partner.">
+                F. Maintaining a friendship or cordial relationship with your ex-partner.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q10a" value="Other / Not Listed (please specify).">
+                G. Other / Not Listed (please specify):
+              </label>
+            </div>
+
+            <textarea id="q10a_other"
+              placeholder="If ‘Other’ or if you’d like to describe how you navigated this period in more detail, you can write about it here."></textarea>
+          </div>
+
+          <div class="sub-question" data-subquestion="10b. What you learned about yourself or relationships from this experience">
+            <div class="sub-question-title">Optional follow-up:</div>
+            <div class="question-text">
+              What did you learn about yourself or relationships from this experience?
+            </div>
+            <textarea id="q10_follow"
+              placeholder="You might write about patterns you noticed, boundaries you discovered, or strengths that emerged."></textarea>
+          </div>
+        </div>
+
+        <!-- sub-question navigation for Question 10 will be injected here by JS -->
+
+        <div class="nav-buttons">
+          <span></span>
+          <button type="button" id="next1" disabled>Next Question ⮕</button>
+        </div>
+      </div>
+
+      <!-- STEP 2 – QUESTION 11 -->
+      <div class="step" data-step="2">
+        <div class="card question" data-question="11. An unexpected or unconventional friendship">
+          <div class="card-title">Question 11 – An unexpected or unconventional friendship</div>
+
+          <div class="sub-question" data-subquestion="11a. What made this friendship unexpected or unconventional">
+            <div class="sub-question-title">
+              Reflect on a friendship that began unexpectedly or in an unconventional way.
+            </div>
+            <div class="question-text">
+              What made this friendship unexpected or unconventional?
+            </div>
+
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q11a" value="You met under unusual or surprising circumstances.">
+                A. You met under unusual or surprising circumstances.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q11a" value="You initially had little in common but grew closer over time.">
+                B. You initially had little in common but grew closer over time.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q11a" value="You overcame initial challenges or conflicts to build the friendship.">
+                C. You overcame initial challenges or conflicts to build the friendship.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q11a" value="The friendship was formed in a professional or formal setting.">
+                D. The friendship was formed in a professional or formal setting.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q11a" value="The friendship developed from a chance encounter or brief interaction that grew over time.">
+                E. The friendship developed from a chance encounter or brief interaction that grew over time.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q11a" value="The friendship started online or through a non-traditional medium (e.g., social media, gaming).">
+                F. The friendship started online or through a non-traditional medium (e.g., social media, gaming).
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q11a" value="Other / Not Listed (please specify).">
+                G. Other / Not Listed (please specify):
+              </label>
+            </div>
+
+            <textarea id="q11a_other"
+              placeholder="If ‘Other’ or if you’d like to describe what made this friendship unique in more detail, you can write about it here."></textarea>
+          </div>
+
+          <div class="sub-question" data-subquestion="11b. How this friendship has evolved and its role in your life now">
+            <div class="sub-question-title">Optional follow-up:</div>
+            <div class="question-text">
+              How has this friendship evolved, and what role does it play in your life now?
+            </div>
+            <textarea id="q11_follow"
+              placeholder="You might write about how often you connect now, how the dynamic has changed, and what this friendship gives you."></textarea>
+          </div>
+        </div>
+
+        <!-- sub-question navigation for Question 11 will be injected here by JS -->
+
+        <div class="nav-buttons">
+          <button type="button" class="secondary" id="back2">⮜ Back</button>
+          <button type="button" id="next2" disabled>Next Question ⮕</button>
+        </div>
+      </div>
+
+      <!-- STEP 3 – QUESTION 12 -->
+      <div class="step" data-step="3">
+        <div class="card question" data-question="12. A challenging or strained familial relationship">
+          <div class="card-title">Question 12 – A challenging or strained familial relationship</div>
+
+          <div class="sub-question" data-subquestion="12a. The main challenge in this familial relationship">
+            <div class="sub-question-title">
+              Think about a familial relationship that has been challenging or strained.
+            </div>
+            <div class="question-text">
+              What has been the main challenge in this familial relationship?
+            </div>
+
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q12a" value="Differences in values, beliefs, or priorities.">
+                A. Differences in values, beliefs, or priorities.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q12a" value="Misunderstandings or conflicts that have gone unresolved.">
+                B. Misunderstandings or conflicts that have gone unresolved.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q12a" value="A lack of communication or emotional closeness.">
+                C. A lack of communication or emotional closeness.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q12a" value="Situational factors (e.g., distance, life events).">
+                D. Situational factors (e.g., distance, life events).
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q12a" value="Long-standing patterns of behaviour or dynamics that create tension.">
+                E. Long-standing patterns of behaviour or dynamics that create tension.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q12a" value="A significant event or trauma that impacted the relationship.">
+                F. A significant event or trauma that impacted the relationship.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q12a" value="Other / Not Listed (please specify).">
+                G. Other / Not Listed (please specify):
+              </label>
+            </div>
+
+            <textarea id="q12a_other"
+              placeholder="If ‘Other’ or if you’d like to describe this relationship in more detail, you can write about it here."></textarea>
+          </div>
+
+          <div class="sub-question" data-subquestion="12b. Strategies that helped you manage this relationship and what you learned">
+            <div class="sub-question-title">Optional follow-up:</div>
+            <div class="question-text">
+              What strategies have helped you manage this relationship, and what have you learned?
+            </div>
+            <textarea id="q12_follow"
+              placeholder="You might write about boundaries you’ve set, conversations you’ve had, or insights you’ve gained."></textarea>
+          </div>
+        </div>
+
+        <!-- sub-question navigation for Question 12 will be injected here by JS -->
+
+        <div class="nav-buttons">
+          <button type="button" class="secondary" id="back3">⮜ Back</button>
+          <button type="button" id="next3" disabled>Next Question ⮕</button>
+        </div>
+      </div>
+
+      <!-- STEP 4 – QUESTION 13 -->
+      <div class="step" data-step="4">
+        <div class="card question" data-question="13. A rewarding professional collaboration or partnership">
+          <div class="card-title">Question 13 – A rewarding professional collaboration</div>
+
+          <div class="sub-question" data-subquestion="13a. What made this professional collaboration rewarding">
+            <div class="sub-question-title">
+              Reflect on a professional collaboration or partnership that was particularly rewarding.
+            </div>
+            <div class="question-text">
+              What made this professional collaboration rewarding?
+            </div>
+
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q13a" value="A shared vision or strong teamwork.">
+                A. A shared vision or strong teamwork.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q13a" value="Learning new skills or perspectives from your collaborators.">
+                B. Learning new skills or perspectives from your collaborators.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q13a" value="Achieving a significant goal or outcome together.">
+                C. Achieving a significant goal or outcome together.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q13a" value="Building trust and mutual respect.">
+                D. Building trust and mutual respect.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q13a" value="Overcoming significant challenges together to achieve success.">
+                E. Overcoming significant challenges together to achieve success.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q13a" value="Developing lasting personal or professional relationships as a result.">
+                F. Developing lasting personal or professional relationships as a result.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q13a" value="Other / Not Listed (please specify).">
+                G. Other / Not Listed (please specify):
+              </label>
+            </div>
+
+            <textarea id="q13a_other"
+              placeholder="If ‘Other’ or if you’d like to describe what made this collaboration meaningful in more depth, you can write about it here."></textarea>
+          </div>
+
+          <div class="sub-question" data-subquestion="13b. Strengths you brought and how you grew professionally">
+            <div class="sub-question-title">Optional follow-up:</div>
+            <div class="question-text">
+              What strengths did you bring to the partnership, and how did it help you grow professionally?
+            </div>
+            <textarea id="q13_follow"
+              placeholder="You might write about skills you used, feedback you received, or shifts in your professional identity."></textarea>
+          </div>
+        </div>
+
+        <!-- sub-question navigation for Question 13 will be injected here by JS -->
+
+        <div class="nav-buttons">
+          <button type="button" class="secondary" id="back4">⮜ Back</button>
+          <button type="button" id="next4" disabled>Next Question ⮕</button>
+        </div>
+      </div>
+
+      <!-- STEP 5 – QUESTION 14 -->
+      <div class="step" data-step="5">
+        <div class="card question" data-question="14. A friendship that supported you through a difficult time">
+          <div class="card-title">Question 14 – A friendship during a difficult time</div>
+
+          <div class="sub-question" data-subquestion="14a. What kind of support this friend provided during a difficult time">
+            <div class="sub-question-title">
+              Can you recall a friendship that helped you through a difficult time in your life?
+            </div>
+            <div class="question-text">
+              What kind of support did this friend provide during a difficult time?
+            </div>
+
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q14a" value="Emotional support and understanding.">
+                A. Emotional support and understanding.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q14a" value="Practical help or problem-solving.">
+                B. Practical help or problem-solving.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q14a" value="Encouragement or motivation to keep going.">
+                C. Encouragement or motivation to keep going.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q14a" value="A sense of normalcy or humour that lightened the situation.">
+                D. A sense of normalcy or humour that lightened the situation.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q14a" value="Offering a safe space to express your feelings without judgment.">
+                E. Offering a safe space to express your feelings without judgment.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q14a" value="Helping you gain perspective or reframe the situation in a positive way.">
+                F. Helping you gain perspective or reframe the situation in a positive way.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q14a" value="Other / Not Listed (please specify).">
+                G. Other / Not Listed (please specify):
+              </label>
+            </div>
+
+            <textarea id="q14a_other"
+              placeholder="If ‘Other’ or if you’d like to describe the kind of support you received in more detail, you can write about it here."></textarea>
+          </div>
+
+          <div class="sub-question" data-subquestion="14b. How this friendship shaped your resilience or perspective on adversity">
+            <div class="sub-question-title">Optional follow-up:</div>
+            <div class="question-text">
+              How did this friendship shape your resilience or perspective on adversity?
+            </div>
+            <textarea id="q14_follow"
+              placeholder="You might write about how you see difficult times now, or how you show up for others because of this experience."></textarea>
+          </div>
+        </div>
+
+        <!-- sub-question navigation for Question 14 will be injected here by JS -->
+
+        <div class="nav-buttons">
+          <button type="button" class="secondary" id="back5">⮜ Back</button>
+          <button type="button" id="finishBtn" disabled>Finish</button>
+        </div>
+      </div>
+    </form>
+
+    <div id="resultsSection" style="display:none; margin-top:20px;">
+      <h2 style="color:#f9fafb; text-shadow:0 2px 6px rgba(0,0,0,0.45);">Your Reflection Export</h2>
+      <p class="intro">
+        Below is your formatted reflection. It includes every option for each question, plus your written notes.
+      </p>
+      <button type="button" id="copyButton">📋 Copy this reflection</button>
+      <div class="status" id="statusMessage"></div>
+      <textarea id="resultsBox" readonly></textarea>
+      <p class="footer-note">
+        After clicking “Copy this reflection”, go to your email or message app and use
+        <strong>Paste</strong> (Ctrl+V / Cmd+V).
+      </p>
+    </div>
+  </main>
+</div>
+
+<script>
+  // ES5-friendly script with no arrow functions / let / const
+  // and avoiding newer APIs where possible.
+
+  // ---------- TIMER (30 MINUTES) ----------
+  var totalSeconds = 30 * 60;
+  var timerInterval = null;
+  var timeUp = false;
+  var timerEl = document.getElementById('timer');
+  var timeRemainingEl = document.getElementById('timeRemaining');
+  var timeUpBanner = document.getElementById('timeUpBanner');
+
+  function formatTime(seconds) {
+    var m = Math.floor(seconds / 60);
+    var s = seconds % 60;
+    var mm = m < 10 ? '0' + m : '' + m;
+    var ss = s < 10 ? '0' + s : '' + s;
+    return mm + ':' + ss;
+  }
+
+  function startTimer() {
+    timeRemainingEl.textContent = formatTime(totalSeconds);
+    timerInterval = setInterval(function() {
+      totalSeconds--;
+      if (totalSeconds <= 0) {
+        totalSeconds = 0;
+        clearInterval(timerInterval);
+        handleTimeUp();
+      }
+      timeRemainingEl.textContent = formatTime(totalSeconds);
+      if (totalSeconds <= 60 && !timeUp) {
+        if (timerEl.className.indexOf('ending') === -1) {
+          timerEl.className += ' ending';
+        }
+      }
+    }, 1000);
+  }
+
+  function handleTimeUp() {
+    timeUp = true;
+    timerEl.className = timerEl.className.replace(' ending', '');
+    if (timerEl.className.indexOf(' up') === -1) {
+      timerEl.className += ' up';
+    }
+    if (document.body.className.indexOf('time-up') === -1) {
+      document.body.className += ' time-up';
+    }
+    timeUpBanner.style.display = 'block';
+    var allInputs = document.querySelectorAll('#reflectionForm input, #reflectionForm textarea');
+    for (var i = 0; i < allInputs.length; i++) {
+      allInputs[i].disabled = true;
+    }
+  }
+
+  // ---------- STEPS ----------
+  var steps = document.querySelectorAll('.step');
+  var currentStep = 1;
+  var totalSteps = steps.length; // 5
+
+  function showStep(stepNumber) {
+    for (var i = 0; i < steps.length; i++) {
+      var step = steps[i];
+      var target = Number(step.getAttribute('data-step')) === stepNumber;
+      if (target) {
+        if (step.className.indexOf('active') === -1) {
+          step.className += ' active';
+        }
+      } else {
+        step.className = step.className.replace(' active', '');
+      }
+    }
+    currentStep = stepNumber;
+    // ensure correct sub-question is shown for this step
+    if (subQuestionState[stepNumber]) {
+      updateSubNav(stepNumber);
+    }
+  }
+
+  // ---------- ANSWER CHECKING (for enabling Next/Finish) ----------
+  function isMainQuestionAnswered(stepNumber) {
+    var step = document.querySelector('.step[data-step="' + stepNumber + '"]');
+    if (!step) return false;
+
+    var checked = step.querySelector('input[type="radio"]:checked, input[type="checkbox"]:checked');
+    if (checked) return true;
+
+    var fields = step.querySelectorAll('textarea, input[type="text"]');
+    for (var i = 0; i < fields.length; i++) {
+      if (fields[i].value && fields[i].value.trim() !== '') {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function checkQuestionReward(stepNumber) {
+    // intentionally empty
+  }
+
+  // simple helper to find closest parent with a class (for older Safari)
+  function closestWithClass(element, className, stopAt) {
+    while (element && element !== stopAt && element.nodeType === 1) {
+      if ((' ' + element.className + ' ').indexOf(' ' + className + ' ') > -1) {
+        return element;
+      }
+      element = element.parentNode;
+    }
+    return null;
+  }
+
+  // ---------- SUB-QUESTION "PAGES" (ONE VISIBLE PER MAIN QUESTION) ----------
+  var subQuestionState = {}; // stepNumber -> { index, nodes, prevBtn, nextBtn, statusEl }
+
+  function initSubQuestions() {
+    for (var i = 0; i < steps.length; i++) {
+      var step = steps[i];
+      var stepNumber = Number(step.getAttribute('data-step'));
+      var subs = step.querySelectorAll('.sub-question');
+
+      if (!subQuestionState[stepNumber]) {
+        subQuestionState[stepNumber] = { index: 0, nodes: subs };
+      } else {
+        subQuestionState[stepNumber].nodes = subs;
+      }
+
+      // ensure only one active sub-question initially
+      for (var j = 0; j < subs.length; j++) {
+        subs[j].className = subs[j].className.replace(' active', '');
+      }
+      if (subs.length > 0) {
+        if (subs[0].className.indexOf('active') === -1) {
+          subs[0].className += ' active';
+        }
+      }
+
+      // create navigation controls if more than one sub-question
+      if (subs.length > 1) {
+        var nav = document.createElement('div');
+        nav.className = 'sub-nav';
+
+        var prevBtn = document.createElement('button');
+        prevBtn.type = 'button';
+        prevBtn.className = 'secondary sub-prev';
+        prevBtn.textContent = '⮜ Previous part';
+
+        var status = document.createElement('span');
+        status.className = 'sub-status';
+
+        var nextBtn = document.createElement('button');
+        nextBtn.type = 'button';
+        nextBtn.className = 'sub-next';
+        nextBtn.textContent = 'Next part ⮕';
+
+        nav.appendChild(prevBtn);
+        nav.appendChild(status);
+        nav.appendChild(nextBtn);
+
+        var card = step.querySelector('.card.question');
+        var navButtons = step.querySelector('.nav-buttons');
+        if (card && navButtons) {
+          step.insertBefore(nav, navButtons);
+        } else {
+          step.appendChild(nav);
+        }
+
+        subQuestionState[stepNumber].prevBtn = prevBtn;
+        subQuestionState[stepNumber].nextBtn = nextBtn;
+        subQuestionState[stepNumber].statusEl = status;
+
+        (function(stepNum) {
+          prevBtn.addEventListener('click', function() {
+            changeSubQuestion(stepNum, -1);
+          });
+          nextBtn.addEventListener('click', function() {
+            changeSubQuestion(stepNum, 1);
+          });
+        })(stepNumber);
+      }
+    }
+
+    // initial update for all steps
+    for (var s = 1; s <= steps.length; s++) {
+      if (subQuestionState[s]) {
+        updateSubNav(s);
+      }
+    }
+  }
+
+  function updateSubNav(stepNumber) {
+    var state = subQuestionState[stepNumber];
+    if (!state || !state.nodes || !state.nodes.length) return;
+
+    var total = state.nodes.length;
+    var idx = state.index;
+
+    // ensure index in range
+    if (idx < 0) idx = 0;
+    if (idx >= total) idx = total - 1;
+    state.index = idx;
+
+    // show only the active sub-question
+    for (var i = 0; i < total; i++) {
+      var sub = state.nodes[i];
+      sub.className = sub.className.replace(' active', '');
+      if (i === idx) {
+        if (sub.className.indexOf('active') === -1) {
+          sub.className += ' active';
+        }
+      }
+    }
+
+    // update sub-nav buttons & status
+    if (state.prevBtn) {
+      state.prevBtn.disabled = (idx === 0);
+    }
+    if (state.nextBtn) {
+      state.nextBtn.disabled = (idx === total - 1);
+    }
+    if (state.statusEl) {
+      state.statusEl.textContent = 'Part ' + (idx + 1) + ' of ' + total;
+    }
+
+    // show main "Next Question" / "Finish" buttons only on the last part for this step
+    var stepEl = document.querySelector('.step[data-step="' + stepNumber + '"]');
+    if (stepEl) {
+      var primaryButtons = stepEl.querySelectorAll('.nav-buttons button[type="button"]:not(.secondary)');
+      for (var b = 0; b < primaryButtons.length; b++) {
+        primaryButtons[b].style.display = (idx === total - 1) ? 'inline-flex' : 'none';
+      }
+    }
+  }
+
+  function changeSubQuestion(stepNumber, direction) {
+    var state = subQuestionState[stepNumber];
+    if (!state || !state.nodes || !state.nodes.length) return;
+
+    var newIndex = state.index + direction;
+    if (newIndex < 0) newIndex = 0;
+    if (newIndex >= state.nodes.length) newIndex = state.nodes.length - 1;
+    if (newIndex === state.index) return;
+
+    state.index = newIndex;
+    updateSubNav(stepNumber);
+
+    // keep button-enabled state in sync
+    enableOrDisableButtonsForStep(stepNumber);
+  }
+
+  // ---------- OPTION PILL SELECTION ----------
+  var optionGroups = document.querySelectorAll('.options-group');
+  for (var og = 0; og < optionGroups.length; og++) {
+    optionGroups[og].addEventListener('change', function(e) {
+      var target = e.target || e.srcElement;
+      if (!target || target.tagName !== 'INPUT') return;
+
+      var pill = closestWithClass(target, 'option-pill', this);
+      if (!pill) return;
+
+      if (target.type === 'radio') {
+        var allPills = this.querySelectorAll('.option-pill');
+        for (var i = 0; i < allPills.length; i++) {
+          allPills[i].className = allPills[i].className.replace(' selected', '');
+        }
+        if (pill.className.indexOf('selected') === -1) {
+          pill.className += ' selected';
+        }
+      } else if (target.type === 'checkbox') {
+        if (target.checked) {
+          if (pill.className.indexOf('selected') === -1) {
+            pill.className += ' selected';
+          }
+        } else {
+          pill.className = pill.className.replace(' selected', '');
+        }
+      }
+
+      var stepEl = closestWithClass(target, 'step', document.body);
+      if (stepEl) {
+        var stepNumber = Number(stepEl.getAttribute('data-step'));
+        enableOrDisableButtonsForStep(stepNumber);
+        checkQuestionReward(stepNumber);
+      }
+    });
+  }
+
+  // Also update when typing
+  var reflectionForm = document.getElementById('reflectionForm');
+  reflectionForm.addEventListener('input', function(e) {
+    var target = e.target || e.srcElement;
+    var stepEl = closestWithClass(target, 'step', document.body);
+    if (stepEl) {
+      var stepNumber = Number(stepEl.getAttribute('data-step'));
+      enableOrDisableButtonsForStep(stepNumber);
+      checkQuestionReward(stepNumber);
+    }
+  });
+
+  function enableOrDisableButtonsForStep(stepNumber) {
+    var stepEl = document.querySelector('.step[data-step="' + stepNumber + '"]');
+    if (!stepEl) return;
+
+    var answered = isMainQuestionAnswered(stepNumber);
+
+    // Find the main "Next" or "Finish" button for this step
+    var primaryButton = stepEl.querySelector('.nav-buttons button[type="button"]:not(.secondary)');
+    if (primaryButton) {
+      primaryButton.disabled = !answered;
+    }
+  }
+
+  // ---------- STEP NAV BUTTONS ----------
+  var next1 = document.getElementById('next1');
+  var back2 = document.getElementById('back2');
+  var next2 = document.getElementById('next2');
+  var back3 = document.getElementById('back3');
+  var next3 = document.getElementById('next3');
+  var back4 = document.getElementById('back4');
+  var next4 = document.getElementById('next4');
+  var back5 = document.getElementById('back5');
+  var finishBtn = document.getElementById('finishBtn');
+
+  next1.addEventListener('click', function() {
+    showStep(2);
+  });
+  back2.addEventListener('click', function() {
+    showStep(1);
+  });
+  next2.addEventListener('click', function() {
+    showStep(3);
+  });
+  back3.addEventListener('click', function() {
+    showStep(2);
+  });
+  next3.addEventListener('click', function() {
+    showStep(4);
+  });
+  back4.addEventListener('click', function() {
+    showStep(3);
+  });
+  next4.addEventListener('click', function() {
+    showStep(5);
+  });
+  back5.addEventListener('click', function() {
+    showStep(4);
+  });
+
+  // When finish clicked, show results section + generate export, then hide the Finish button
+  finishBtn.addEventListener('click', function() {
+    generateExportText();
+    document.getElementById('resultsSection').style.display = 'block';
+    finishBtn.style.display = 'none'; // hide Finish on the final page
+    document.getElementById('resultsSection').scrollIntoView();
+  });
+
+  // Dash line (40+ dashes) used after each option ONLY
+  var dashLine = '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -';
+
+  // ---------- EXPORT TEXT ----------
+  function generateExportText() {
+    var allQuestions = document.querySelectorAll('.question');
+    var output = '';
+
+    output += '──────────────────────────────────────────────────────────────\n';
+    output += 'Section 3d: Influential Relationships: Reflection Summary\n';
+    output += '──────────────────────────────────────────────────────────────\n\n';
+    output += 'For each question below, all possible options are listed.\n';
+    output += 'Your own written notes follow each group of options where you added them.\n\n';
+
+    for (var qIndex = 0; qIndex < allQuestions.length; qIndex++) {
+      var q = allQuestions[qIndex];
+      var mainPrompt = q.getAttribute('data-question') || ('Question ' + (qIndex + 10));
+
+      output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+      output += mainPrompt + '\n';
+
+      var subQuestions = q.querySelectorAll('.sub-question');
+      for (var sIndex = 0; sIndex < subQuestions.length; sIndex++) {
+        var sub = subQuestions[sIndex];
+        var subPrompt = sub.getAttribute('data-subquestion') || '';
+        output += '\n ▸ ' + subPrompt + '\n';
+
+        var groups = sub.querySelectorAll('.options-group');
+        for (var gIndex = 0; gIndex < groups.length; gIndex++) {
+          var group = groups[gIndex];
+          var labels = group.querySelectorAll('label.option-pill');
+          if (labels.length > 0) {
+            output += ' Options:\n';
+            for (var lIndex = 0; lIndex < labels.length; lIndex++) {
+              var label = labels[lIndex];
+              var labelText = label.textContent.replace(/\s+/g, ' ').trim();
+              output += ' ' + labelText + '\n';
+              output += dashLine + '\n';
+            }
+          }
+        }
+
+        var notes = [];
+        var fields = sub.querySelectorAll('textarea, input[type="text"]');
+        for (var fIndex = 0; fIndex < fields.length; fIndex++) {
+          var field = fields[fIndex];
+          if (field.value && field.value.trim() !== '') {
+            notes.push(field.value.trim());
+          }
+        }
+
+        if (notes.length > 0) {
+          output += ' Notes and narrative reflections:\n';
+          for (var nIndex = 0; nIndex < notes.length; nIndex++) {
+            output += ' • ' + notes[nIndex] + '\n';
+          }
+        } else {
+          output += ' Notes and narrative reflections:\n';
+          output += ' • (no additional written notes provided for this part)\n';
+        }
+      }
+
+      output += '\n';
+    }
+
+    output += '──────────────────────────────────────────────────────────────\n';
+    output += 'End of Section 3d\n';
+    output += '──────────────────────────────────────────────────────────────\n';
+
+    document.getElementById('resultsBox').value = output;
+  }
+
+  // ---------- COPY BUTTON ----------
+  var copyButton = document.getElementById('copyButton');
+  copyButton.addEventListener('click', function() {
+    var statusMessage = document.getElementById('statusMessage');
+    var text = document.getElementById('resultsBox').value;
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text)
+        .then(function() {
+          statusMessage.textContent = '✨ Reflection copied! You can now paste it into an email or document.';
+        })
+        .catch(function() {
+          statusMessage.textContent = 'Copy failed. Please select all the text in the box and copy it manually.';
+        });
+    } else {
+      var box = document.getElementById('resultsBox');
+      box.focus();
+      box.select();
+      try {
+        var successful = document.execCommand('copy');
+        if (successful) {
+          statusMessage.textContent = '✨ Reflection copied! You can now paste it into an email or document.';
+        } else {
+          statusMessage.textContent = 'Copy failed. Please select all the text in the box and copy it manually.';
+        }
+      } catch (e) {
+        statusMessage.textContent = 'Copy failed. Please select all the text in the box and copy it manually.';
+      }
+    }
+  });
+
+  // ---------- INIT ----------
+  initSubQuestions();
+  startTimer();
+  showStep(1);
+  enableOrDisableButtonsForStep(1);
+</script>
+</body>
+</html>
