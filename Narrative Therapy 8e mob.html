@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Section 8e: Self-Compassion and Self – Care’: Challenges and Adversity</title>
+  <!-- make mobile render at proper scale -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    /* prevent iOS from randomly resizing some text blocks */
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #1e3a8a 0, #4f46e5 25%, #ec4899 60%, #f97316 100%);
+      color: #111827;
+    }
+    @supports (min-height: 100dvh) {
+      body { min-height: 100dvh; }
+    }
+
+    .layout {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      min-height: 100vh;
+    }
+    @supports (min-height: 100dvh) {
+      .layout { min-height: 100dvh; }
+    }
+
+    .sidebar {
+      width: 260px;
+      flex: 0 0 260px;
+      position: sticky;
+      top: 16px;
+      align-self: flex-start;
+    }
+    .page {
+      flex: 1;
+      min-width: 0;
+      padding-bottom: 28px;
+    }
+
+    h1 {
+      font-size: 1.9rem;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #f9fafb;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.45);
+    }
+    p.intro {
+      margin-top: 0;
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+      color: #e5e7eb;
+      max-width: 760px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    }
+
+    /* Timer only in sidebar now */
+    .timer {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 3px;
+      padding: 8px 11px;
+      border-radius: 16px;
+      background: rgba(15,23,42,0.95);
+      border: 1px solid rgba(248,250,252,0.2);
+      box-shadow: 0 6px 18px rgba(15,23,42,0.7);
+      font-size: 0.88rem;
+      color: #e5e7eb;
+      width: 100%;
+    }
+    .timer span.label { opacity: 0.8; font-size: 0.78rem; }
+    .timer span.time { font-weight: 800; font-size: 1.2rem; letter-spacing: 0.08em; }
+    .timer.ending {
+      border-color: #f97373;
+      color: #fecaca;
+      box-shadow: 0 0 14px rgba(248,113,113,0.7);
+    }
+    .timer.up { opacity: 0.7; }
+
+    .time-up-banner {
+      display: none;
+      margin-bottom: 10px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(254,242,242,0.96);
+      color: #991b1b;
+      border: 1px solid #fecaca;
+      font-size: 0.84rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .time-up .time-up-banner { display: block; }
+    .time-up #reflectionForm input,
+    .time-up #reflectionForm textarea {
+      pointer-events: none;
+      opacity: 0.9;
+    }
+
+    .card {
+      background: #f9fafb;
+      border-radius: 18px;
+      padding: 18px 16px;
+      box-shadow: 0 10px 22px rgba(15,23,42,0.25);
+      border: 1px solid #e5e7eb;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-title {
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #111827;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 4px;
+      color: #111827;
+    }
+    .question-text {
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+    }
+    textarea,
+    input[type="text"] {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      font: inherit;
+      background: #ffffff;
+      min-height: 80px;
+      resize: vertical;
+      transition: border-color 0.15s ease-out, box-shadow 0.15s ease-out, transform 0.05s ease-out;
+    }
+    textarea:focus,
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 2px rgba(129,140,248,0.4);
+      transform: translateY(-1px);
+    }
+
+    .options-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 10px 0 10px;
+    }
+
+    /* consistent option font size across all devices */
+    .option-pill {
+      display: inline-flex;
+      align-items: flex-start;              /* better for multi-line labels */
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(129,140,248,0.7);
+      font-size: 0.95rem;                  /* consistent */
+      line-height: 1.25;                   /* consistent */
+      background: rgba(239,246,255,0.95);
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform 0.05s ease-out, box-shadow 0.05s ease-out, background 0.1s ease-out, border-color 0.1s ease-out, color 0.1s ease-out;
+      white-space: normal;                 /* allow wrapping */
+    }
+    .option-pill input {
+      margin-top: 2px;
+      accent-color: #4b6bfb;
+      flex: 0 0 auto;
+    }
+    .option-pill:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 5px rgba(148,163,184,0.8);
+    }
+    .option-pill.selected {
+      background: linear-gradient(135deg, #22c55e, #a855f7);
+      color: #f9fafb;
+      border-color: transparent;
+      box-shadow: 0 4px 12px rgba(55,65,81,0.7);
+    }
+    .option-pill.selected input { accent-color: #fef9c3; }
+
+    .sub-question-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #111827;
+    }
+
+    .step { display: none; }
+    .step.active { display: block; }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 14px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      cursor: pointer;
+      border-radius: 999px;
+      border: none;
+      padding: 10px 18px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      background: radial-gradient(circle at 0% 0%, #f97316, #ec4899, #6366f1);
+      color: #f9fafb;
+      box-shadow: 0 8px 18px rgba(15,23,42,0.7);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: transform 0.07s ease, box-shadow 0.07s ease, opacity 0.1s ease;
+      min-height: 44px; /* mobile tap target */
+    }
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 11px 22px rgba(15,23,42,0.8);
+    }
+    button:active:not(:disabled) {
+      transform: translateY(1px);
+      box-shadow: 0 5px 11px rgba(15,23,42,0.75);
+    }
+    button:disabled {
+      opacity: 0.45;
+      cursor: default;
+      box-shadow: none;
+    }
+    .secondary {
+      background: #e5e7eb;
+      color: #111827;
+      box-shadow: 0 4px 10px rgba(55,65,81,0.5);
+      text-transform: none;
+      letter-spacing: 0.01em;
+    }
+
+    .status {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: #16a34a;
+      min-height: 1.2em;
+    }
+
+    /* Hidden results storage (kept for copy + fallback; not shown) */
+    #resultsBox {
+      position: absolute;
+      left: -9999px;
+      top: -9999px;
+      opacity: 0;
+      width: 1px;
+      height: 1px;
+    }
+
+    @media (max-width: 900px) {
+      .layout { flex-direction: column; }
+      .sidebar {
+        width: 100%;
+        flex: none;
+        position: static;
+        order: -1;
+      }
+    }
+    @media (max-width: 520px) {
+      h1 { font-size: 1.55rem; }
+      .card { padding: 16px 14px; }
+      .nav-buttons { flex-direction: column; }
+      .nav-buttons button { width: 100%; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layout">
+    <!-- Sidebar with timer only -->
+    <aside class="sidebar">
+      <div class="timer" id="timer">
+        <span class="label">⏱️ Time left (Section 8e)</span>
+        <span class="time" id="timeRemaining">30:00</span>
+        <span style="font-size:0.75rem; opacity:0.75;">Up to 30 minutes to complete this week's narrative.</span>
+      </div>
+    </aside>
+
+    <main class="page">
+      <h1>Section 8e: Self-Compassion and Self – Care’: Challenges and Adversity</h1>
+      <p class="intro">
+        Move through Questions 14, 15, and 16 one part at a time. At the end you’ll be able to copy a formatted reflection to send on.
+      </p>
+
+      <div class="time-up-banner" id="timeUpBanner">
+        The 30 minutes for this reflection have finished. Your answers are still here – you can review them and copy them at the end.
+      </div>
+
+      <form id="reflectionForm">
+        <!-- STEP 1 = QUESTION 14 -->
+        <div class="step active" data-step="1">
+          <div class="card question" data-main="14" data-question="14. Reflect on a time when you compared yourself to others. How did this comparison affect your self-compassion, and what specific strategies helped you overcome it effectively?">
+            <div class="card-title">Question 14</div>
+            <div class="sub-question" data-subquestion="14. Reflection">
+              <div class="sub-question-title">
+                Reflect on a time when you compared yourself to others.
+              </div>
+              <div class="question-text">
+                How did this comparison affect your self-compassion, and what specific strategies helped you overcome it effectively?
+              </div>
+              <textarea id="q14_main" placeholder="Write your reflection here..."></textarea>
+            </div>
+          </div>
+
+          <div class="nav-buttons">
+            <span></span>
+            <button type="button" id="next1" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 2 = QUESTION 14a -->
+        <div class="step" data-step="2">
+          <div class="card question" data-main="14" data-question="14. Reflect on a time when you compared yourself to others. How did this comparison affect your self-compassion, and what specific strategies helped you overcome it effectively?">
+            <div class="card-title">Question 14a</div>
+
+            <div class="sub-question" data-subquestion="14a. What triggered the comparison? / What strategies helped you overcome it?">
+              <div class="sub-question-title">What triggered the comparison?</div>
+              <div class="options-group">
+                <label class="option-pill">
+                  <input type="radio" name="q14_trigger" value="Observing other’s success, milestones, or personal achievements over time.">
+                  A. Observing other’s success, milestones, or personal achievements over time.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q14_trigger" value="Social media content or highly visible public platforms frequently.">
+                  B. Social media content or highly visible public platforms frequently.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q14_trigger" value="Feeling deeply inadequate in personal or professional areas of life.">
+                  C. Feeling deeply inadequate in personal or professional areas of life.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q14_trigger" value="Struggling with ongoing self-doubt, insecurity, or consistently low confidence.">
+                  D. Struggling with ongoing self-doubt, insecurity, or consistently low confidence.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q14_trigger" value="Pressure to meet societal norms or familial expectations placed on you.">
+                  E. Pressure to meet societal norms or familial expectations placed on you.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q14_trigger" value="A strong sense of competition or the need to prove yourself constantly.">
+                  F. A strong sense of competition or the need to prove yourself constantly.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q14_trigger" value="Other / Not Listed (please specify).">
+                  G. Other / Not Listed (please specify):
+                </label>
+              </div>
+              <textarea id="q14_trigger_other" placeholder="If ‘Other’ or if you’d like to add detail, write it here..."></textarea>
+
+              <div style="height:10px;"></div>
+
+              <div class="sub-question-title">What strategies helped you overcome this comparison?</div>
+              <div class="options-group">
+                <label class="option-pill">
+                  <input type="radio" name="q14_strategy" value="Focused deeply on your own unique strengths, values, and personal qualities.">
+                  A. Focused deeply on your own unique strengths, values, and personal qualities.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q14_strategy" value="Limited exposure to comparison triggers, like using social media less often.">
+                  B. Limited exposure to comparison triggers, like using social media less often.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q14_strategy" value="Practiced consistent gratitude for your personal journey and meaningful accomplishments.">
+                  C. Practiced consistent gratitude for your personal journey and meaningful accomplishments.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q14_strategy" value="Reminded yourself gently that everyone’s life path is entirely different.">
+                  D. Reminded yourself gently that everyone’s life path is entirely different.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q14_strategy" value="Reframed the comparison into inspiration rather than harsh judgment or criticism.">
+                  E. Reframed the comparison into inspiration rather than harsh judgment or criticism.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q14_strategy" value="Engaged thoughtfully in self-compassionate practices, such as positive and encouraging self-talk.">
+                  F. Engaged thoughtfully in self-compassionate practices, such as positive and encouraging self-talk.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q14_strategy" value="Other / Not Listed (please specify).">
+                  G. Other / Not Listed (please specify):
+                </label>
+              </div>
+              <textarea id="q14_strategy_other" placeholder="If ‘Other’ or if you’d like to add detail, write it here..."></textarea>
+            </div>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back2">⮜ Back</button>
+            <button type="button" id="next2" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 3 = OPTIONAL FOLLOW-UP (Q14) -->
+        <div class="step" data-step="3">
+          <div class="card question" data-main="14" data-question="14. Reflect on a time when you compared yourself to others. How did this comparison affect your self-compassion, and what specific strategies helped you overcome it effectively?">
+            <div class="card-title">Question 14 – Optional Follow-Up</div>
+            <div class="sub-question" data-subquestion="Follow-up Question: How has reducing comparisons improved your ability to appreciate yourself and others?">
+              <div class="sub-question-title">Optional follow-up:</div>
+              <div class="question-text">
+                How has reducing comparisons improved your ability to appreciate yourself and others?
+              </div>
+              <textarea id="q14_follow" placeholder="Optional: write a short reflection here..."></textarea>
+            </div>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back3">⮜ Back</button>
+            <button type="button" id="next3">Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 4 = QUESTION 15 -->
+        <div class="step" data-step="4">
+          <div class="card question" data-main="15" data-question="15. Think about a moment when you felt proud of your self-care efforts. What actions contributed to your success, and how did it improve your overall happiness and well-being?">
+            <div class="card-title">Question 15</div>
+            <div class="sub-question" data-subquestion="15. Reflection">
+              <div class="sub-question-title">
+                Think about a moment when you felt proud of your self-care efforts.
+              </div>
+              <div class="question-text">
+                What actions contributed to your success, and how did it improve your overall happiness and well-being?
+              </div>
+              <textarea id="q15_main" placeholder="Write your reflection here..."></textarea>
+            </div>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back4">⮜ Back</button>
+            <button type="button" id="next4" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 5 = QUESTION 15a -->
+        <div class="step" data-step="5">
+          <div class="card question" data-main="15" data-question="15. Think about a moment when you felt proud of your self-care efforts. What actions contributed to your success, and how did it improve your overall happiness and well-being?">
+            <div class="card-title">Question 15a</div>
+
+            <div class="sub-question" data-subquestion="15a. What actions contributed to your success? / How did it contribute to your overall happiness?">
+              <div class="sub-question-title">What actions contributed to your success?</div>
+              <div class="options-group">
+                <label class="option-pill"><input type="radio" name="q15_actions" value="Sticking consistently to a long-term, effective self-care routine.">A. Sticking consistently to a long-term, effective self-care routine.</label>
+                <label class="option-pill"><input type="radio" name="q15_actions" value="Prioritising meaningful rest and relaxation despite a demanding or busy schedule.">B. Prioritising meaningful rest and relaxation despite a demanding or busy schedule.</label>
+                <label class="option-pill"><input type="radio" name="q15_actions" value="Engaging regularly in an activity that genuinely brought you personal joy.">C. Engaging regularly in an activity that genuinely brought you personal joy.</label>
+                <label class="option-pill"><input type="radio" name="q15_actions" value="Overcoming a deeply personal barrier to successfully establish a sustainable new habit.">D. Overcoming a deeply personal barrier to successfully establish a sustainable new habit.</label>
+                <label class="option-pill"><input type="radio" name="q15_actions" value="Practicing intentional self-compassion during a particularly challenging or stressful time.">E. Practicing intentional self-compassion during a particularly challenging or stressful time.</label>
+                <label class="option-pill"><input type="radio" name="q15_actions" value="Maintaining firm boundaries to protect your mental and emotional well-being consistently.">F. Maintaining firm boundaries to protect your mental and emotional well-being consistently.</label>
+                <label class="option-pill"><input type="radio" name="q15_actions" value="Other / Not Listed (please specify).">G. Other / Not Listed (please specify):</label>
+              </div>
+              <textarea id="q15_actions_other" placeholder="If ‘Other’ or if you’d like to add detail, write it here..."></textarea>
+
+              <div style="height:10px;"></div>
+
+              <div class="sub-question-title">How did it contribute to your overall happiness?</div>
+              <div class="options-group">
+                <label class="option-pill"><input type="radio" name="q15_happiness" value="It improved your emotional, mental, and physical well-being over time.">A. It improved your emotional, mental, and physical well-being over time.</label>
+                <label class="option-pill"><input type="radio" name="q15_happiness" value="It significantly strengthened your sense of personal confidence and self-worth.">B. It significantly strengthened your sense of personal confidence and self-worth.</label>
+                <label class="option-pill"><input type="radio" name="q15_happiness" value="It helped you feel much more balanced, centred, and in control.">C. It helped you feel much more balanced, centred, and in control.</label>
+                <label class="option-pill"><input type="radio" name="q15_happiness" value="It enhanced and deepened your meaningful relationships with others.">D. It enhanced and deepened your meaningful relationships with others.</label>
+                <label class="option-pill"><input type="radio" name="q15_happiness" value="It inspired you to consistently keep prioritising self-care for yourself.">E. It inspired you to consistently keep prioritising self-care for yourself.</label>
+                <label class="option-pill"><input type="radio" name="q15_happiness" value="It brought a profound sense of accomplishment, inner calm, and peace.">F. It brought a profound sense of accomplishment, inner calm, and peace.</label>
+                <label class="option-pill"><input type="radio" name="q15_happiness" value="Other / Not Listed (please specify).">G. Other / Not Listed (please specify):</label>
+              </div>
+              <textarea id="q15_happiness_other" placeholder="If ‘Other’ or if you’d like to add detail, write it here..."></textarea>
+            </div>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back5">⮜ Back</button>
+            <button type="button" id="next5" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 6 = OPTIONAL FOLLOW-UP (Q15) -->
+        <div class="step" data-step="6">
+          <div class="card question" data-main="15" data-question="15. Think about a moment when you felt proud of your self-care efforts. What actions contributed to your success, and how did it improve your overall happiness and well-being?">
+            <div class="card-title">Question 15 – Optional Follow-Up</div>
+            <div class="sub-question" data-subquestion="Follow-up Question: How can you celebrate and continue to build on these self-care successes?">
+              <div class="sub-question-title">Optional follow-up:</div>
+              <div class="question-text">
+                How can you celebrate and continue to build on these self-care successes?
+              </div>
+              <textarea id="q15_follow" placeholder="Optional: write a short reflection here..."></textarea>
+            </div>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back6">⮜ Back</button>
+            <button type="button" id="next6">Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 7 = QUESTION 16 -->
+        <div class="step" data-step="7">
+          <div class="card question" data-main="16" data-question="16. Describe a time when you helped someone else with their self-care. How did your actions impact their well-being and strengthen your relationship with them?">
+            <div class="card-title">Question 16</div>
+            <div class="sub-question" data-subquestion="16. Reflection">
+              <div class="sub-question-title">
+                Describe a time when you helped someone else with their self-care.
+              </div>
+              <div class="question-text">
+                How did your actions impact their well-being and strengthen your relationship with them?
+              </div>
+              <textarea id="q16_main" placeholder="Write your reflection here..."></textarea>
+            </div>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back7">⮜ Back</button>
+            <button type="button" id="next7" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 8 = QUESTION 16a -->
+        <div class="step" data-step="8">
+          <div class="card question" data-main="16" data-question="16. Describe a time when you helped someone else with their self-care. How did your actions impact their well-being and strengthen your relationship with them?">
+            <div class="card-title">Question 16a</div>
+
+            <div class="sub-question" data-subquestion="16a. How did you help someone else? / How did this impact your relationship?">
+              <div class="sub-question-title">How did you help someone else with their self-care?</div>
+              <div class="options-group">
+                <label class="option-pill"><input type="radio" name="q16_help" value="Encouraged them to prioritise their needs and focus on their overall well-being.">A. Encouraged them to prioritise their needs and focus on their overall well-being.</label>
+                <label class="option-pill"><input type="radio" name="q16_help" value="Supported them effectively in setting healthy boundaries or managing overwhelming stress levels.">B. Supported them effectively in setting healthy boundaries or managing overwhelming stress levels.</label>
+                <label class="option-pill"><input type="radio" name="q16_help" value="Participated actively in a meaningful self-care activity or routine together with them.">C. Participated actively in a meaningful self-care activity or routine together with them.</label>
+                <label class="option-pill"><input type="radio" name="q16_help" value="Listened carefully to their challenges and offered thoughtful, empathetic emotional support throughout.">D. Listened carefully to their challenges and offered thoughtful, empathetic emotional support throughout.</label>
+                <label class="option-pill"><input type="radio" name="q16_help" value="Helped them explore and find practical resources or tools to enhance their self-care.">E. Helped them explore and find practical resources or tools to enhance their self-care.</label>
+                <label class="option-pill"><input type="radio" name="q16_help" value="Modelled healthy and consistent self-care practices in your own daily life for inspiration.">F. Modelled healthy and consistent self-care practices in your own daily life for inspiration.</label>
+                <label class="option-pill"><input type="radio" name="q16_help" value="Other / Not Listed (please specify).">G. Other / Not Listed (please specify):</label>
+              </div>
+              <textarea id="q16_help_other" placeholder="If ‘Other’ or if you’d like to add detail, write it here..."></textarea>
+
+              <div style="height:10px;"></div>
+
+              <div class="sub-question-title">How did this impact your relationship?</div>
+              <div class="options-group">
+                <label class="option-pill"><input type="radio" name="q16_impact" value="It significantly deepened trust, mutual respect, and understanding between you.">A. It significantly deepened trust, mutual respect, and understanding between you.</label>
+                <label class="option-pill"><input type="radio" name="q16_impact" value="It strengthened your emotional bond and overall connection with each other.">B. It strengthened your emotional bond and overall connection with each other.</label>
+                <label class="option-pill"><input type="radio" name="q16_impact" value="It showed them that they are truly valued, supported, and cared for.">C. It showed them that they are truly valued, supported, and cared for.</label>
+                <label class="option-pill"><input type="radio" name="q16_impact" value="It inspired both of you to continuously prioritise self-care and mutual well-being.">D. It inspired both of you to continuously prioritise self-care and mutual well-being.</label>
+                <label class="option-pill"><input type="radio" name="q16_impact" value="It created more opportunities for meaningful shared growth and deeper reflection.">E. It created more opportunities for meaningful shared growth and deeper reflection.</label>
+                <label class="option-pill"><input type="radio" name="q16_impact" value="It reinforced the importance of mutual support and care within strong relationships.">F. It reinforced the importance of mutual support and care within strong relationships.</label>
+                <label class="option-pill"><input type="radio" name="q16_impact" value="Other / Not Listed (please specify).">G. Other / Not Listed (please specify):</label>
+              </div>
+              <textarea id="q16_impact_other" placeholder="If ‘Other’ or if you’d like to add detail, write it here..."></textarea>
+            </div>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back8">⮜ Back</button>
+            <button type="button" id="next8" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 9 = OPTIONAL FOLLOW-UP (Q16) -->
+        <div class="step" data-step="9">
+          <div class="card question" data-main="16" data-question="16. Describe a time when you helped someone else with their self-care. How did your actions impact their well-being and strengthen your relationship with them?">
+            <div class="card-title">Question 16 – Optional Follow-Up</div>
+            <div class="sub-question" data-subquestion="Follow-up Question: How can this experience guide your approach to supporting others while maintaining your own self-care?">
+              <div class="sub-question-title">Optional follow-up:</div>
+              <div class="question-text">
+                How can this experience guide your approach to supporting others while maintaining your own self-care?
+              </div>
+              <textarea id="q16_follow" placeholder="Optional: write a short reflection here..."></textarea>
+            </div>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back9">⮜ Back</button>
+            <button type="button" id="finishBtn">Finish</button>
+          </div>
+        </div>
+      </form>
+
+      <div id="resultsSection" style="display:none; margin-top:20px;">
+        <h2 style="color:#f9fafb; text-shadow:0 2px 6px rgba(0,0,0,0.45);">Your Reflection Export</h2>
+        <p class="intro">
+          When you’re ready, press copy. (The export includes every option for each part, plus any notes you wrote.)
+        </p>
+        <button type="button" id="copyButton">📋 Copy this reflection</button>
+        <div class="status" id="statusMessage"></div>
+
+        <!-- hidden (removed visible export textbox as requested) -->
+        <textarea id="resultsBox" readonly></textarea>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // ES5-friendly script with no arrow functions / let / const
+    // and avoiding newer APIs where possible.
+
+    // ---------- TIMER (30 MINUTES) ----------
+    var totalSeconds = 30 * 60;
+    var timerInterval = null;
+    var timeUp = false;
+    var timerEl = document.getElementById('timer');
+    var timeRemainingEl = document.getElementById('timeRemaining');
+    var timeUpBanner = document.getElementById('timeUpBanner');
+
+    function formatTime(seconds) {
+      var m = Math.floor(seconds / 60);
+      var s = seconds % 60;
+      var mm = m < 10 ? '0' + m : '' + m;
+      var ss = s < 10 ? '0' + s : '' + s;
+      return mm + ':' + ss;
+    }
+
+    function startTimer() {
+      timeRemainingEl.textContent = formatTime(totalSeconds);
+      timerInterval = setInterval(function() {
+        totalSeconds--;
+        if (totalSeconds <= 0) {
+          totalSeconds = 0;
+          clearInterval(timerInterval);
+          handleTimeUp();
+        }
+        timeRemainingEl.textContent = formatTime(totalSeconds);
+        if (totalSeconds <= 60 && !timeUp) {
+          if (timerEl.className.indexOf('ending') === -1) {
+            timerEl.className += ' ending';
+          }
+        }
+      }, 1000);
+    }
+
+    function handleTimeUp() {
+      timeUp = true;
+      timerEl.className = timerEl.className.replace(' ending', '');
+      if (timerEl.className.indexOf(' up') === -1) {
+        timerEl.className += ' up';
+      }
+      if (document.body.className.indexOf('time-up') === -1) {
+        document.body.className += ' time-up';
+      }
+      timeUpBanner.style.display = 'block';
+      var allInputs = document.querySelectorAll('#reflectionForm input, #reflectionForm textarea');
+      for (var i = 0; i < allInputs.length; i++) {
+        allInputs[i].disabled = true;
+      }
+    }
+
+    // ---------- STEPS ----------
+    var steps = document.querySelectorAll('.step');
+    var currentStep = 1;
+
+    function scrollToTopOfForm() {
+      // keeps steps from feeling like they only occupy the top portion on mobile
+      window.scrollTo(0, 0);
+    }
+
+    function showStep(stepNumber) {
+      for (var i = 0; i < steps.length; i++) {
+        var step = steps[i];
+        var target = Number(step.getAttribute('data-step')) === stepNumber;
+        if (target) {
+          if (step.className.indexOf('active') === -1) {
+            step.className += ' active';
+          }
+        } else {
+          step.className = step.className.replace(' active', '');
+        }
+      }
+      currentStep = stepNumber;
+      enableOrDisableButtonsForStep(stepNumber);
+      scrollToTopOfForm();
+    }
+
+    // ---------- OPTIONAL STEPS ----------
+    function isOptionalStep(stepNumber) {
+      return stepNumber === 3 || stepNumber === 6 || stepNumber === 9;
+    }
+
+    // ---------- ANSWER CHECKING ----------
+    function isStepAnswered(stepNumber) {
+      if (isOptionalStep(stepNumber)) return true;
+
+      var step = document.querySelector('.step[data-step="' + stepNumber + '"]');
+      if (!step) return false;
+
+      var checked = step.querySelector('input[type="radio"]:checked, input[type="checkbox"]:checked');
+      if (checked) return true;
+
+      var fields = step.querySelectorAll('textarea, input[type="text"]');
+      for (var i = 0; i < fields.length; i++) {
+        if (fields[i].value && fields[i].value.trim() !== '') {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    // simple helper to find closest parent with a class (for older Safari)
+    function closestWithClass(element, className, stopAt) {
+      while (element && element !== stopAt && element.nodeType === 1) {
+        if ((' ' + element.className + ' ').indexOf(' ' + className + ' ') > -1) {
+          return element;
+        }
+        element = element.parentNode;
+      }
+      return null;
+    }
+
+    // ---------- OPTION PILL SELECTION ----------
+    var optionGroups = document.querySelectorAll('.options-group');
+    for (var og = 0; og < optionGroups.length; og++) {
+      optionGroups[og].addEventListener('change', function(e) {
+        var target = e.target || e.srcElement;
+        if (!target || target.tagName !== 'INPUT') return;
+
+        var pill = closestWithClass(target, 'option-pill', this);
+        if (!pill) return;
+
+        if (target.type === 'radio') {
+          var allPills = this.querySelectorAll('.option-pill');
+          for (var i = 0; i < allPills.length; i++) {
+            allPills[i].className = allPills[i].className.replace(' selected', '');
+          }
+          if (pill.className.indexOf('selected') === -1) {
+            pill.className += ' selected';
+          }
+        } else if (target.type === 'checkbox') {
+          if (target.checked) {
+            if (pill.className.indexOf('selected') === -1) {
+              pill.className += ' selected';
+            }
+          } else {
+            pill.className = pill.className.replace(' selected', '');
+          }
+        }
+
+        var stepEl = closestWithClass(target, 'step', document.body);
+        if (stepEl) {
+          var stepNumber = Number(stepEl.getAttribute('data-step'));
+          enableOrDisableButtonsForStep(stepNumber);
+        }
+      });
+    }
+
+    // Also update when typing
+    var reflectionForm = document.getElementById('reflectionForm');
+    reflectionForm.addEventListener('input', function(e) {
+      var target = e.target || e.srcElement;
+      var stepEl = closestWithClass(target, 'step', document.body);
+      if (stepEl) {
+        var stepNumber = Number(stepEl.getAttribute('data-step'));
+        enableOrDisableButtonsForStep(stepNumber);
+      }
+    });
+
+    function enableOrDisableButtonsForStep(stepNumber) {
+      var answered = isStepAnswered(stepNumber);
+
+      // enable/disable the correct "Next" for this step
+      var nextBtn = document.getElementById('next' + stepNumber);
+      if (nextBtn) nextBtn.disabled = !answered;
+
+      // finish only on last step
+      if (stepNumber === 9) {
+        var finishBtn = document.getElementById('finishBtn');
+        if (finishBtn) finishBtn.disabled = !answered; // optional step => true
+      }
+    }
+
+    // ---------- STEP NAV BUTTONS ----------
+    function bindNav(btnId, toStep) {
+      var btn = document.getElementById(btnId);
+      if (!btn) return;
+      btn.addEventListener('click', function() { showStep(toStep); });
+    }
+
+    bindNav('next1', 2);
+
+    bindNav('back2', 1);
+    bindNav('next2', 3);
+
+    bindNav('back3', 2);
+    bindNav('next3', 4);
+
+    bindNav('back4', 3);
+    bindNav('next4', 5);
+
+    bindNav('back5', 4);
+    bindNav('next5', 6);
+
+    bindNav('back6', 5);
+    bindNav('next6', 7);
+
+    bindNav('back7', 6);
+    bindNav('next7', 8);
+
+    bindNav('back8', 7);
+    bindNav('next8', 9);
+
+    bindNav('back9', 8);
+
+    // Dash line used after each option ONLY
+    var dashLine = '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -';
+
+    // ---------- EXPORT TEXT (grouped by main question: 14, 15, 16) ----------
+    function generateExportText() {
+      var allParts = document.querySelectorAll('.question');
+      var order = [];
+      var groups = {};
+
+      for (var i = 0; i < allParts.length; i++) {
+        var part = allParts[i];
+        var key = part.getAttribute('data-main') || ('part' + i);
+        if (!groups[key]) {
+          groups[key] = [];
+          order.push(key);
+        }
+        groups[key].push(part);
+      }
+
+      var output = '';
+      output += '──────────────────────────────────────────────────────────────\n';
+      output += 'Section 8e: Self-Compassion and Self – Care’: Challenges and Adversity: Reflection Summary\n';
+      output += '──────────────────────────────────────────────────────────────\n\n';
+      output += 'For each question below, all possible options are listed.\n';
+      output += 'Your own written notes follow each group of options where you added them.\n\n';
+
+      for (var o = 0; o < order.length; o++) {
+        var mainKey = order[o];
+        var parts = groups[mainKey];
+        if (!parts || !parts.length) continue;
+
+        var mainPrompt = parts[0].getAttribute('data-question') || ('Question ' + mainKey);
+
+        output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+        output += mainPrompt + '\n';
+
+        for (var p = 0; p < parts.length; p++) {
+          var q = parts[p];
+          var subQuestions = q.querySelectorAll('.sub-question');
+
+          for (var sIndex = 0; sIndex < subQuestions.length; sIndex++) {
+            var sub = subQuestions[sIndex];
+            var subPrompt = sub.getAttribute('data-subquestion') || '';
+            output += '\n ▸ ' + subPrompt + '\n';
+
+            var groupsEls = sub.querySelectorAll('.options-group');
+            for (var gIndex = 0; gIndex < groupsEls.length; gIndex++) {
+              var group = groupsEls[gIndex];
+              var labels = group.querySelectorAll('label.option-pill');
+              if (labels.length > 0) {
+                output += ' Options:\n';
+                for (var lIndex = 0; lIndex < labels.length; lIndex++) {
+                  var label = labels[lIndex];
+                  var labelText = label.textContent.replace(/\s+/g, ' ').trim();
+                  output += ' ' + labelText + '\n';
+                  output += dashLine + '\n';
+                }
+              }
+            }
+
+            var notes = [];
+            var fields = sub.querySelectorAll('textarea, input[type="text"]');
+            for (var fIndex = 0; fIndex < fields.length; fIndex++) {
+              var field = fields[fIndex];
+              if (field.value && field.value.trim() !== '') {
+                notes.push(field.value.trim());
+              }
+            }
+
+            if (notes.length > 0) {
+              output += ' Notes and narrative reflections:\n';
+              for (var nIndex = 0; nIndex < notes.length; nIndex++) {
+                output += ' • ' + notes[nIndex] + '\n';
+              }
+            } else {
+              output += ' Notes and narrative reflections:\n';
+              output += ' • (no additional written notes provided for this part)\n';
+            }
+          }
+        }
+
+        output += '\n';
+      }
+
+      output += '──────────────────────────────────────────────────────────────\n';
+      output += 'End of Section 8e\n';
+      output += '──────────────────────────────────────────────────────────────\n';
+
+      document.getElementById('resultsBox').value = output;
+    }
+
+    // ---------- FINISH ----------
+    var finishBtn = document.getElementById('finishBtn');
+    finishBtn.addEventListener('click', function() {
+      generateExportText();
+      document.getElementById('resultsSection').style.display = 'block';
+      // keep finish only on last step (already), and hide it after completion
+      finishBtn.style.display = 'none';
+      scrollToTopOfForm();
+    });
+
+    // ---------- COPY BUTTON ----------
+    var copyButton = document.getElementById('copyButton');
+    copyButton.addEventListener('click', function() {
+      var statusMessage = document.getElementById('statusMessage');
+      var text = document.getElementById('resultsBox').value;
+
+      if (!text || text.trim() === '') {
+        statusMessage.textContent = 'Nothing to copy yet — press Finish first.';
+        return;
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text)
+          .then(function() {
+            statusMessage.textContent = '✨ Reflection copied! You can now paste it into an email or document.';
+          })
+          .catch(function() {
+            // fallback to execCommand
+            fallbackCopy(statusMessage);
+          });
+      } else {
+        fallbackCopy(statusMessage);
+      }
+    });
+
+    function fallbackCopy(statusMessage) {
+      var box = document.getElementById('resultsBox');
+      box.focus();
+      box.select();
+      try {
+        var successful = document.execCommand('copy');
+        if (successful) {
+          statusMessage.textContent = '✨ Reflection copied! You can now paste it into an email or document.';
+        } else {
+          statusMessage.textContent = 'Copy failed. Please try again.';
+        }
+      } catch (e) {
+        statusMessage.textContent = 'Copy failed. Please try again.';
+      }
+    }
+
+    // ---------- INIT ----------
+    startTimer();
+    showStep(1);
+  </script>
+</body>
+</html>

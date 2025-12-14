@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Section 4f: Challenges and Adversity</title>
+  <!-- NEW: make mobile render at proper scale -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Prevent iOS from randomly resizing some text blocks */
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at top, #1e3a8a 0, #4f46e5 25%, #ec4899 60%, #f97316 100%);
+      color: #111827;
+    }
+    .layout {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      min-height: 100vh; /* ensure full-height layout */
+    }
+    .sidebar {
+      width: 260px;
+      flex: 0 0 260px;
+      position: sticky;
+      top: 16px;
+      align-self: flex-start;
+    }
+    .page {
+      flex: 1;
+      min-width: 0;
+    }
+    h1 {
+      font-size: 1.9rem;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #f9fafb;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.45);
+    }
+    h1 span.badge {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(251,191,36,0.95);
+      color: #78350f;
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+    }
+    p.intro {
+      margin-top: 0;
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+      color: #e5e7eb;
+      max-width: 760px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    }
+
+    /* Timer only in sidebar now */
+    .timer {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 3px;
+      padding: 8px 11px;
+      border-radius: 16px;
+      background: rgba(15,23,42,0.95);
+      border: 1px solid rgba(248,250,252,0.2);
+      box-shadow: 0 6px 18px rgba(15,23,42,0.7);
+      font-size: 0.88rem;
+      color: #e5e7eb;
+    }
+    .timer span.label {
+      opacity: 0.8;
+      font-size: 0.78rem;
+    }
+    .timer span.time {
+      font-weight: 800;
+      font-size: 1.2rem;
+      letter-spacing: 0.08em;
+    }
+    .timer.ending {
+      border-color: #f97373;
+      color: #fecaca;
+      box-shadow: 0 0 14px rgba(248,113,113,0.7);
+    }
+    .timer.up {
+      opacity: 0.7;
+    }
+    .time-up-banner {
+      display: none;
+      margin-bottom: 10px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(254,242,242,0.96);
+      color: #991b1b;
+      border: 1px solid #fecaca;
+      font-size: 0.84rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .time-up .time-up-banner {
+      display: block;
+    }
+    .time-up #reflectionForm input,
+    .time-up #reflectionForm textarea {
+      pointer-events: none;
+      opacity: 0.9;
+    }
+
+    .card {
+      background: #f9fafb;
+      border-radius: 18px;
+      padding: 18px 16px;
+      box-shadow: 0 10px 22px rgba(15,23,42,0.25);
+      border: 1px solid #e5e7eb;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-title {
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #111827;
+    }
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 4px;
+      color: #111827;
+    }
+    .question-text {
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+    }
+    textarea,
+    input[type="text"] {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      font: inherit;
+      background: #ffffff;
+      min-height: 70px;
+      resize: vertical;
+      transition: border-color 0.15s ease-out, box-shadow 0.15s ease-out, transform 0.05s ease-out;
+    }
+    textarea:focus,
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 2px rgba(129,140,248,0.4);
+      transform: translateY(-1px);
+    }
+
+    .options-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin: 8px 0 10px;
+    }
+    .options-group label.option-pill {
+      font-weight: 500;
+      font-size: 0.95rem; /* consistent option font size */
+    }
+    .option-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(129,140,248,0.7);
+      background: rgba(239,246,255,0.95);
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.05s ease-out, box-shadow 0.05s ease-out, background 0.1s ease-out, border-color 0.1s ease-out, color 0.1s ease-out;
+    }
+    .option-pill input {
+      accent-color: #4b6bfb;
+    }
+    .option-pill:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 5px rgba(148,163,184,0.8);
+    }
+    .option-pill.selected {
+      background: linear-gradient(135deg, #22c55e, #a855f7);
+      color: #f9fafb;
+      border-color: transparent;
+      box-shadow: 0 4px 12px rgba(55,65,81,0.7);
+    }
+    .option-pill.selected input {
+      accent-color: #fef9c3;
+    }
+
+    .sub-question {
+      margin-top: 12px;
+      display: none; /* show only active one per question "page" */
+    }
+    .sub-question.active {
+      display: block;
+    }
+    .sub-question-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #111827;
+    }
+
+    .step {
+      display: none;
+    }
+    .step.active {
+      display: block;
+    }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 14px;
+      gap: 10px;
+    }
+    button {
+      cursor: pointer;
+      border-radius: 999px;
+      border: none;
+      padding: 10px 18px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      background: radial-gradient(circle at 0% 0%, #f97316, #ec4899, #6366f1);
+      color: #f9fafb;
+      box-shadow: 0 8px 18px rgba(15,23,42,0.7);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: transform 0.07s ease, box-shadow 0.07s ease, opacity 0.1s ease;
+    }
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 11px 22px rgba(15,23,42,0.8);
+    }
+    button:active:not(:disabled) {
+      transform: translateY(1px);
+      box-shadow: 0 5px 11px rgba(15,23,42,0.75);
+    }
+    button:disabled {
+      opacity: 0.45;
+      cursor: default;
+      box-shadow: none;
+    }
+    .secondary {
+      background: #e5e7eb;
+      color: #111827;
+      box-shadow: 0 4px 10px rgba(55,65,81,0.5);
+      text-transform: none;
+      letter-spacing: 0.01em;
+    }
+
+    /* Sub-question navigation (per main question) – unused here but kept for consistency */
+    .sub-nav {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .sub-nav .sub-status {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #374151;
+    }
+    .sub-nav .sub-prev,
+    .sub-nav .sub-next {
+      font-size: 0.8rem;
+      padding: 8px 14px;
+    }
+
+    #resultsBox {
+      width: 100%;
+      min-height: 200px;
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px dashed #e5e7eb;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 0.9rem;
+      background: #f9fafb;
+      box-shadow: inset 0 0 8px rgba(148,163,184,0.5);
+      white-space: pre-wrap;
+    }
+    .status {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: #16a34a;
+      min-height: 1.2em;
+    }
+    .footer-note {
+      margin-top: 12px;
+      font-size: 0.8rem;
+      color: #e5e7eb;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .sidebar {
+        width: 100%;
+        flex: none;
+        position: static;
+        order: -1;
+      }
+    }
+
+    /* Ensure cards fill more of the screen on mobile (not just top half) */
+    @media (max-width: 768px) {
+      .card.question {
+        min-height: 60vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+  <!-- Sidebar with timer only -->
+  <aside class="sidebar">
+    <div class="timer" id="timer">
+      <span class="label">⏱️ Time left (Section 4f)</span>
+      <span class="time" id="timeRemaining">30:00</span>
+      <span style="font-size:0.75rem; opacity:0.75;">Up to 30 minutes to complete this week's narrative.</span>
+    </div>
+  </aside>
+
+  <!-- Main question page -->
+  <main class="page">
+    <h1>Section 4f: Challenges and Adversity</h1>
+    <p class="intro">
+      This sequence explores moments when you felt tested, stretched, or pushed to your limits – and how you responded.
+      Move through Questions 18, 19, and 20 one step at a time. At the end, you’ll be able to copy a formatted reflection to send on.
+    </p>
+
+    <div class="time-up-banner" id="timeUpBanner">
+      The 30 minutes for this reflection have finished. Your answers are still here – you can review them and copy them at the end.
+    </div>
+
+    <form id="reflectionForm">
+      <!-- STEP 1 – QUESTION 18 -->
+      <div class="step active" data-step="1">
+        <div class="card question" data-question="18. A moment when the odds were stacked against you">
+          <div class="card-title">Question 18 – Defying expectations</div>
+
+          <div class="sub-question" data-subquestion="18. Think about a moment when you felt like the odds were stacked against you. How did you defy expectations?">
+            <div class="sub-question-title">
+              Think about a moment when you felt like the odds were stacked against you.
+            </div>
+            <div class="question-text">
+              How did you defy expectations?
+            </div>
+
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q18" value="Worked harder and smarter to achieve your goal.">
+                A. Worked harder and smarter to achieve your goal.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q18" value="Relied on creative or unconventional solutions.">
+                B. Relied on creative or unconventional solutions.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q18" value="Sought help or collaboration from others.">
+                C. Sought help or collaboration from others.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q18" value="Stayed determined and focused despite setbacks.">
+                D. Stayed determined and focused despite setbacks.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q18" value="Other / Not Listed (please specify).">
+                E. Other/Not Listed (please specify):
+              </label>
+            </div>
+
+            <textarea id="q18_other"
+              placeholder="If ‘Other’ or if you’d like to describe this moment in more detail, you can write about it here."></textarea>
+          </div>
+        </div>
+
+        <div class="nav-buttons">
+          <span></span>
+          <button type="button" id="next1" disabled>Next ⮕</button>
+        </div>
+      </div>
+
+      <!-- STEP 2 – QUESTION 18a -->
+      <div class="step" data-step="2">
+        <div class="card question" data-question="18a. What you proved to yourself in that moment">
+          <div class="card-title">Question 18a – What you proved to yourself</div>
+
+          <div class="sub-question" data-subquestion="18a. What did you prove to yourself?">
+            <div class="sub-question-title">
+              Looking back at that moment:
+            </div>
+            <div class="question-text">
+              What did you prove to yourself?
+            </div>
+
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q18a" value="That perseverance and effort pay off.">
+                A. That perseverance and effort pay off.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q18a" value="That you are more capable than others may assume.">
+                B. That you are more capable than others may assume.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q18a" value="The importance of believing in yourself even when others don’t.">
+                C. The importance of believing in yourself even when others don’t.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q18a" value="That setbacks are opportunities to grow and innovate.">
+                D. That setbacks are opportunities to grow and innovate.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q18a" value="Other / Not Listed (please specify).">
+                E. Other/Not Listed (please specify):
+              </label>
+            </div>
+
+            <textarea id="q18a_other"
+              placeholder="If ‘Other’ or if you’d like to add more detail about what you proved to yourself, you can write about it here."></textarea>
+          </div>
+        </div>
+
+        <div class="nav-buttons">
+          <button type="button" class="secondary" id="back2">⮜ Back</button>
+          <button type="button" id="next2" disabled>Next ⮕</button>
+        </div>
+      </div>
+
+      <!-- STEP 3 – OPTIONAL FOLLOW-UP (18) -->
+      <div class="step" data-step="3">
+        <div class="card question" data-question="18. Optional follow-up on how this shaped your approach to challenges">
+          <div class="card-title">Optional Follow-Up – Question 18</div>
+
+          <div class="sub-question" data-subquestion="How this experience influenced the way you approach challenges or adversity">
+            <div class="sub-question-title">Optional follow-up:</div>
+            <div class="question-text">
+              How has this experience influenced the way you approach challenges or adversity?
+            </div>
+            <textarea id="q18_follow"
+              placeholder="You might describe how this moment changed your mindset, habits, or confidence in facing future challenges."></textarea>
+          </div>
+        </div>
+
+        <div class="nav-buttons">
+          <button type="button" class="secondary" id="back3">⮜ Back</button>
+          <button type="button" id="next3">Next ⮕</button>
+        </div>
+      </div>
+
+      <!-- STEP 4 – QUESTION 19 -->
+      <div class="step" data-step="4">
+        <div class="card question" data-question="19. A time you experienced a betrayal or breach of trust">
+          <div class="card-title">Question 19 – Rebuilding trust</div>
+
+          <div class="sub-question" data-subquestion="19. Can you recall a time when you experienced a betrayal or breach of trust? How did you rebuild trust?">
+            <div class="sub-question-title">
+              Can you recall a time when you experienced a betrayal or breach of trust?
+            </div>
+            <div class="question-text">
+              How did you rebuild trust?
+            </div>
+
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q19" value="Allowed time to process the pain and rebuild slowly.">
+                A. Allowed time to process the pain and rebuild slowly.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q19" value="Communicated openly to address the breach.">
+                B. Communicated openly to address the breach.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q19" value="Set boundaries to protect yourself in the future.">
+                C. Set boundaries to protect yourself in the future.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q19" value="Focused on building trust with people who demonstrated reliability.">
+                D. Focused on building trust with people who demonstrated reliability.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q19" value="Other / Not Listed (please specify).">
+                E. Other/Not Listed (please specify):
+              </label>
+            </div>
+
+            <textarea id="q19_other"
+              placeholder="If ‘Other’ or if you’d like to describe this experience in more detail, you can write about it here."></textarea>
+          </div>
+        </div>
+
+        <div class="nav-buttons">
+          <button type="button" class="secondary" id="back4">⮜ Back</button>
+          <button type="button" id="next4" disabled>Next ⮕</button>
+        </div>
+      </div>
+
+      <!-- STEP 5 – QUESTION 19a -->
+      <div class="step" data-step="5">
+        <div class="card question" data-question="19a. What you learned about forgiveness and resilience">
+          <div class="card-title">Question 19a – Forgiveness and resilience</div>
+
+          <div class="sub-question" data-subquestion="19a. What did you learn about forgiveness and resilience?">
+            <div class="sub-question-title">
+              Looking at that situation:
+            </div>
+            <div class="question-text">
+              What did you learn about forgiveness and resilience?
+            </div>
+
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q19a" value="Forgiveness is a gift you give yourself, not just others.">
+                A. Forgiveness is a gift you give yourself, not just others.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q19a" value="Resilience is built by moving forward despite setbacks.">
+                B. Resilience is built by moving forward despite setbacks.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q19a" value="Trust can be rebuilt, but it requires effort and consistency.">
+                C. Trust can be rebuilt, but it requires effort and consistency.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q19a" value="It is okay to walk away from relationships that no longer serve you.">
+                D. It is okay to walk away from relationships that no longer serve you.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q19a" value="Other / Not Listed (please specify).">
+                E. Other/Not Listed (please specify):
+              </label>
+            </div>
+
+            <textarea id="q19a_other"
+              placeholder="If ‘Other’ or if you’d like to reflect more on what you learned, you can write about it here."></textarea>
+          </div>
+        </div>
+
+        <div class="nav-buttons">
+          <button type="button" class="secondary" id="back5">⮜ Back</button>
+          <button type="button" id="next5" disabled>Next ⮕</button>
+        </div>
+      </div>
+
+      <!-- STEP 6 – OPTIONAL FOLLOW-UP (19) -->
+      <div class="step" data-step="6">
+        <div class="card question" data-question="19. Optional follow-up on how you build trust now">
+          <div class="card-title">Optional Follow-Up – Question 19</div>
+
+          <div class="sub-question" data-subquestion="How this experience influenced the way you build trust in relationships now">
+            <div class="sub-question-title">Optional follow-up:</div>
+            <div class="question-text">
+              How has this experience influenced the way you build trust in relationships now?
+            </div>
+            <textarea id="q19_follow"
+              placeholder="You might reflect on boundaries, communication, or the kind of people you choose to trust."></textarea>
+          </div>
+        </div>
+
+        <div class="nav-buttons">
+          <button type="button" class="secondary" id="back6">⮜ Back</button>
+          <button type="button" id="next6">Next ⮕</button>
+        </div>
+      </div>
+
+      <!-- STEP 7 – QUESTION 20 -->
+      <div class="step" data-step="7">
+        <div class="card question" data-question="20. A moment when you felt you had reached your breaking point">
+          <div class="card-title">Question 20 – Finding inner strength</div>
+
+          <div class="sub-question" data-subquestion="20. Reflect on a moment when you felt like you had reached your breaking point. How did you find inner strength to persevere?">
+            <div class="sub-question-title">
+              Reflect on a moment when you felt like you had reached your breaking point.
+            </div>
+            <div class="question-text">
+              How did you find inner strength to persevere?
+            </div>
+
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q20" value="Turned to loved ones or a support network.">
+                A. Turned to loved ones or a support network.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q20" value="Reconnected with your purpose or goals.">
+                B. Reconnected with your purpose or goals.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q20" value="Took it one small step at a time.">
+                C. Took it one small step at a time.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q20" value="Found hope or inspiration in unexpected places.">
+                D. Found hope or inspiration in unexpected places.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q20" value="Other / Not Listed (please specify).">
+                E. Other/Not Listed (please specify):
+              </label>
+            </div>
+
+            <textarea id="q20_other"
+              placeholder="If ‘Other’ or if you’d like to describe this breaking point in more detail, you can write about it here."></textarea>
+          </div>
+        </div>
+
+        <div class="nav-buttons">
+          <button type="button" class="secondary" id="back7">⮜ Back</button>
+          <button type="button" id="next7" disabled>Next ⮕</button>
+        </div>
+      </div>
+
+      <!-- STEP 8 – QUESTION 20a -->
+      <div class="step" data-step="8">
+        <div class="card question" data-question="20a. How this moment shaped your character and resilience">
+          <div class="card-title">Question 20a – Character and resilience</div>
+
+          <div class="sub-question" data-subquestion="20a. How did it shape your character and resilience?">
+            <div class="sub-question-title">
+              Thinking about that breaking point:
+            </div>
+            <div class="question-text">
+              How did it shape your character and resilience?
+            </div>
+
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q20a" value="Taught you how to handle future challenges with grace.">
+                A. Taught you how to handle future challenges with grace.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q20a" value="Strengthened your belief in your own capabilities.">
+                B. Strengthened your belief in your own capabilities.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q20a" value="Deepened your empathy and understanding of other’s struggles.">
+                C. Deepened your empathy and understanding of other’s struggles.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q20a" value="Reinforced the importance of self-care and boundaries.">
+                D. Reinforced the importance of self-care and boundaries.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q20a" value="Other / Not Listed (please specify).">
+                E. Other/Not Listed (please specify):
+              </label>
+            </div>
+
+            <textarea id="q20a_other"
+              placeholder="If ‘Other’ or if you’d like to expand on how this shaped you, you can write about it here."></textarea>
+          </div>
+        </div>
+
+        <div class="nav-buttons">
+          <button type="button" class="secondary" id="back8">⮜ Back</button>
+          <button type="button" id="next8" disabled>Next ⮕</button>
+        </div>
+      </div>
+
+      <!-- STEP 9 – OPTIONAL FOLLOW-UP (20) + FINAL REFLECTION -->
+      <div class="step" data-step="9">
+        <div class="card question" data-question="20. Optional follow-up on what helped you persevere and which question mattered most">
+          <div class="card-title">Optional Follow-Up – Question 20 & Final Reflection</div>
+
+          <div class="sub-question" data-subquestion="Reflections on what helped you persevere and which question felt most significant">
+            <div class="sub-question-title">Optional follow-up:</div>
+            <div class="question-text">
+              In hindsight, what do you think was the most important factor in helping you persevere?
+            </div>
+            <textarea id="q20_follow"
+              placeholder="You might write about people, inner beliefs, habits, or moments that mattered most."></textarea>
+
+            <div class="sub-question-title" style="margin-top:10px;">Final reflection:</div>
+            <div class="question-text">
+              Which of these questions felt most significant to you? Why?
+            </div>
+            <textarea id="q_final"
+              placeholder="You can use this space to highlight the insight or story that stands out most for you right now."></textarea>
+          </div>
+        </div>
+
+        <div class="nav-buttons">
+          <button type="button" class="secondary" id="back9">⮜ Back</button>
+          <button type="button" id="finishBtn">Finish</button>
+        </div>
+      </div>
+    </form>
+
+    <div id="resultsSection" style="display:none; margin-top:20px;">
+      <h2 style="color:#f9fafb; text-shadow:0 2px 6px rgba(0,0,0,0.45);">Your Reflection Export</h2>
+      <p class="intro">
+        Below is your formatted reflection. It includes every option for each question, plus your written notes.
+      </p>
+      <button type="button" id="copyButton">📋 Copy this reflection</button>
+      <div class="status" id="statusMessage"></div>
+      <textarea id="resultsBox" readonly></textarea>
+      <p class="footer-note">
+        After clicking “Copy this reflection”, go to your email or message app and use
+        <strong>Paste</strong> (Ctrl+V / Cmd+V).
+      </p>
+    </div>
+  </main>
+</div>
+
+<script>
+  // ES5-friendly script with no arrow functions / let / const
+  // and avoiding newer APIs where possible.
+
+  // ---------- TIMER (30 MINUTES) ----------
+  var totalSeconds = 30 * 60;
+  var timerInterval = null;
+  var timeUp = false;
+  var timerEl = document.getElementById('timer');
+  var timeRemainingEl = document.getElementById('timeRemaining');
+  var timeUpBanner = document.getElementById('timeUpBanner');
+
+  function formatTime(seconds) {
+    var m = Math.floor(seconds / 60);
+    var s = seconds % 60;
+    var mm = m < 10 ? '0' + m : '' + m;
+    var ss = s < 10 ? '0' + s : '' + s;
+    return mm + ':' + ss;
+  }
+
+  function startTimer() {
+    timeRemainingEl.textContent = formatTime(totalSeconds);
+    timerInterval = setInterval(function() {
+      totalSeconds--;
+      if (totalSeconds <= 0) {
+        totalSeconds = 0;
+        clearInterval(timerInterval);
+        handleTimeUp();
+      }
+      timeRemainingEl.textContent = formatTime(totalSeconds);
+      if (totalSeconds <= 60 && !timeUp) {
+        if (timerEl.className.indexOf('ending') === -1) {
+          timerEl.className += ' ending';
+        }
+      }
+    }, 1000);
+  }
+
+  function handleTimeUp() {
+    timeUp = true;
+    timerEl.className = timerEl.className.replace(' ending', '');
+    if (timerEl.className.indexOf(' up') === -1) {
+      timerEl.className += ' up';
+    }
+    if (document.body.className.indexOf('time-up') === -1) {
+      document.body.className += ' time-up';
+    }
+    timeUpBanner.style.display = 'block';
+    var allInputs = document.querySelectorAll('#reflectionForm input, #reflectionForm textarea');
+    for (var i = 0; i < allInputs.length; i++) {
+      allInputs[i].disabled = true;
+    }
+  }
+
+  // ---------- STEPS ----------
+  var steps = document.querySelectorAll('.step');
+  var currentStep = 1;
+  var totalSteps = steps.length; // 9
+
+  function showStep(stepNumber) {
+    for (var i = 0; i < steps.length; i++) {
+      var step = steps[i];
+      var target = Number(step.getAttribute('data-step')) === stepNumber;
+      if (target) {
+        if (step.className.indexOf('active') === -1) {
+          step.className += ' active';
+        }
+      } else {
+        step.className = step.className.replace(' active', '');
+      }
+    }
+    currentStep = stepNumber;
+    if (subQuestionState[stepNumber]) {
+      updateSubNav(stepNumber);
+    }
+    enableOrDisableButtonsForStep(stepNumber);
+  }
+
+  // ---------- ANSWER CHECKING (for enabling Next/Finish) ----------
+  function isMainQuestionAnswered(stepNumber) {
+    var step = document.querySelector('.step[data-step="' + stepNumber + '"]');
+    if (!step) return false;
+
+    var checked = step.querySelector('input[type="radio"]:checked, input[type="checkbox"]:checked');
+    if (checked) return true;
+
+    var fields = step.querySelectorAll('textarea, input[type="text"]');
+    for (var i = 0; i < fields.length; i++) {
+      if (fields[i].value && fields[i].value.trim() !== '') {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function checkQuestionReward(stepNumber) {
+    // intentionally empty
+  }
+
+  // simple helper to find closest parent with a class (for older Safari)
+  function closestWithClass(element, className, stopAt) {
+    while (element && element !== stopAt && element.nodeType === 1) {
+      if ((' ' + element.className + ' ').indexOf(' ' + className + ' ') > -1) {
+        return element;
+      }
+      element = element.parentNode;
+    }
+    return null;
+  }
+
+  // ---------- SUB-QUESTION "PAGES" (ONE VISIBLE PER MAIN QUESTION) ----------
+  var subQuestionState = {}; // stepNumber -> { index, nodes, prevBtn, nextBtn, statusEl }
+
+  function initSubQuestions() {
+    for (var i = 0; i < steps.length; i++) {
+      var step = steps[i];
+      var stepNumber = Number(step.getAttribute('data-step'));
+      var subs = step.querySelectorAll('.sub-question');
+
+      if (!subQuestionState[stepNumber]) {
+        subQuestionState[stepNumber] = { index: 0, nodes: subs };
+      } else {
+        subQuestionState[stepNumber].nodes = subs;
+      }
+
+      // ensure only one active sub-question initially
+      for (var j = 0; j < subs.length; j++) {
+        subs[j].className = subs[j].className.replace(' active', '');
+      }
+      if (subs.length > 0) {
+        if (subs[0].className.indexOf('active') === -1) {
+          subs[0].className += ' active';
+        }
+      }
+
+      // If there were ever multiple sub-questions in one step, nav would be created here.
+      // In this section, each step is a single page, so this part won't run.
+      if (subs.length > 1) {
+        var nav = document.createElement('div');
+        nav.className = 'sub-nav';
+
+        var prevBtn = document.createElement('button');
+        prevBtn.type = 'button';
+        prevBtn.className = 'secondary sub-prev';
+        prevBtn.textContent = '⮜ Previous part';
+
+        var status = document.createElement('span');
+        status.className = 'sub-status';
+
+        var nextBtn = document.createElement('button');
+        nextBtn.type = 'button';
+        nextBtn.className = 'sub-next';
+        nextBtn.textContent = 'Next part ⮕';
+
+        nav.appendChild(prevBtn);
+        nav.appendChild(status);
+        nav.appendChild(nextBtn);
+
+        var card = step.querySelector('.card.question');
+        var navButtons = step.querySelector('.nav-buttons');
+        if (card && navButtons) {
+          step.insertBefore(nav, navButtons);
+        } else {
+          step.appendChild(nav);
+        }
+
+        subQuestionState[stepNumber].prevBtn = prevBtn;
+        subQuestionState[stepNumber].nextBtn = nextBtn;
+        subQuestionState[stepNumber].statusEl = status;
+
+        (function(stepNum) {
+          prevBtn.addEventListener('click', function() {
+            changeSubQuestion(stepNum, -1);
+          });
+          nextBtn.addEventListener('click', function() {
+            changeSubQuestion(stepNum, 1);
+          });
+        })(stepNumber);
+      }
+    }
+
+    // initial update for all steps
+    for (var s = 1; s <= steps.length; s++) {
+      if (subQuestionState[s]) {
+        updateSubNav(s);
+      }
+    }
+  }
+
+  function updateSubNav(stepNumber) {
+    var state = subQuestionState[stepNumber];
+    if (!state || !state.nodes || !state.nodes.length) return;
+
+    var total = state.nodes.length;
+    var idx = state.index;
+
+    if (idx < 0) idx = 0;
+    if (idx >= total) idx = total - 1;
+    state.index = idx;
+
+    for (var i = 0; i < total; i++) {
+      var sub = state.nodes[i];
+      sub.className = sub.className.replace(' active', '');
+      if (i === idx) {
+        if (sub.className.indexOf('active') === -1) {
+          sub.className += ' active';
+        }
+      }
+    }
+
+    if (state.prevBtn) {
+      state.prevBtn.disabled = (idx === 0);
+    }
+    if (state.nextBtn) {
+      state.nextBtn.disabled = (idx === total - 1);
+    }
+    if (state.statusEl) {
+      state.statusEl.textContent = 'Part ' + (idx + 1) + ' of ' + total;
+    }
+  }
+
+  function changeSubQuestion(stepNumber, direction) {
+    var state = subQuestionState[stepNumber];
+    if (!state || !state.nodes || !state.nodes.length) return;
+
+    var newIndex = state.index + direction;
+    if (newIndex < 0) newIndex = 0;
+    if (newIndex >= state.nodes.length) newIndex = state.nodes.length - 1;
+    if (newIndex === state.index) return;
+
+    state.index = newIndex;
+    updateSubNav(stepNumber);
+
+    enableOrDisableButtonsForStep(stepNumber);
+  }
+
+  // ---------- OPTION PILL SELECTION ----------
+  var optionGroups = document.querySelectorAll('.options-group');
+  for (var og = 0; og < optionGroups.length; og++) {
+    optionGroups[og].addEventListener('change', function(e) {
+      var target = e.target || e.srcElement;
+      if (!target || target.tagName !== 'INPUT') return;
+
+      var pill = closestWithClass(target, 'option-pill', this);
+      if (!pill) return;
+
+      if (target.type === 'radio') {
+        var allPills = this.querySelectorAll('.option-pill');
+        for (var i = 0; i < allPills.length; i++) {
+          allPills[i].className = allPills[i].className.replace(' selected', '');
+        }
+        if (pill.className.indexOf('selected') === -1) {
+          pill.className += ' selected';
+        }
+      } else if (target.type === 'checkbox') {
+        if (target.checked) {
+          if (pill.className.indexOf('selected') === -1) {
+            pill.className += ' selected';
+          }
+        } else {
+          pill.className = pill.className.replace(' selected', '');
+        }
+      }
+
+      var stepEl = closestWithClass(target, 'step', document.body);
+      if (stepEl) {
+        var stepNumber = Number(stepEl.getAttribute('data-step'));
+        enableOrDisableButtonsForStep(stepNumber);
+        checkQuestionReward(stepNumber);
+      }
+    });
+  }
+
+  // Also update when typing
+  var reflectionForm = document.getElementById('reflectionForm');
+  reflectionForm.addEventListener('input', function(e) {
+    var target = e.target || e.srcElement;
+    var stepEl = closestWithClass(target, 'step', document.body);
+    if (stepEl) {
+      var stepNumber = Number(stepEl.getAttribute('data-step'));
+      enableOrDisableButtonsForStep(stepNumber);
+      checkQuestionReward(stepNumber);
+    }
+  });
+
+  function enableOrDisableButtonsForStep(stepNumber) {
+    var stepEl = document.querySelector('.step[data-step="' + stepNumber + '"]');
+    if (!stepEl) return;
+
+    // Steps 3, 6, and 9 are optional follow-ups -> always allow Next/Finish
+    var alwaysEnabled = (stepNumber === 3 || stepNumber === 6 || stepNumber === 9);
+    var answered = alwaysEnabled ? true : isMainQuestionAnswered(stepNumber);
+
+    if (stepNumber === 1) {
+      if (next1) next1.disabled = !answered;
+    } else if (stepNumber === 2) {
+      if (next2) next2.disabled = !answered;
+    } else if (stepNumber === 3) {
+      if (next3) next3.disabled = !answered;
+    } else if (stepNumber === 4) {
+      if (next4) next4.disabled = !answered;
+    } else if (stepNumber === 5) {
+      if (next5) next5.disabled = !answered;
+    } else if (stepNumber === 6) {
+      if (next6) next6.disabled = !answered;
+    } else if (stepNumber === 7) {
+      if (next7) next7.disabled = !answered;
+    } else if (stepNumber === 8) {
+      if (next8) next8.disabled = !answered;
+    } else if (stepNumber === 9) {
+      if (finishBtn) finishBtn.disabled = !answered;
+    }
+  }
+
+  // ---------- STEP NAV BUTTONS ----------
+  var next1 = document.getElementById('next1');
+  var back2 = document.getElementById('back2');
+  var next2 = document.getElementById('next2');
+  var back3 = document.getElementById('back3');
+  var next3 = document.getElementById('next3');
+  var back4 = document.getElementById('back4');
+  var next4 = document.getElementById('next4');
+  var back5 = document.getElementById('back5');
+  var next5 = document.getElementById('next5');
+  var back6 = document.getElementById('back6');
+  var next6 = document.getElementById('next6');
+  var back7 = document.getElementById('back7');
+  var next7 = document.getElementById('next7');
+  var back8 = document.getElementById('back8');
+  var next8 = document.getElementById('next8');
+  var back9 = document.getElementById('back9');
+  var finishBtn = document.getElementById('finishBtn');
+
+  if (next1) next1.addEventListener('click', function() { showStep(2); });
+  if (back2) back2.addEventListener('click', function() { showStep(1); });
+  if (next2) next2.addEventListener('click', function() { showStep(3); });
+  if (back3) back3.addEventListener('click', function() { showStep(2); });
+  if (next3) next3.addEventListener('click', function() { showStep(4); });
+  if (back4) back4.addEventListener('click', function() { showStep(3); });
+  if (next4) next4.addEventListener('click', function() { showStep(5); });
+  if (back5) back5.addEventListener('click', function() { showStep(4); });
+  if (next5) next5.addEventListener('click', function() { showStep(6); });
+  if (back6) back6.addEventListener('click', function() { showStep(5); });
+  if (next6) next6.addEventListener('click', function() { showStep(7); });
+  if (back7) back7.addEventListener('click', function() { showStep(6); });
+  if (next7) next7.addEventListener('click', function() { showStep(8); });
+  if (back8) back8.addEventListener('click', function() { showStep(7); });
+  if (next8) next8.addEventListener('click', function() { showStep(9); });
+  if (back9) back9.addEventListener('click', function() { showStep(8); });
+
+  // When finish clicked, show results section + generate export, then hide the Finish button
+  if (finishBtn) {
+    finishBtn.addEventListener('click', function() {
+      generateExportText();
+      document.getElementById('resultsSection').style.display = 'block';
+      finishBtn.style.display = 'none'; // hide Finish on the final page
+      document.getElementById('resultsSection').scrollIntoView();
+    });
+  }
+
+  // Dash line used after each option ONLY
+  var dashLine = '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -';
+
+  // ---------- EXPORT TEXT ----------
+  function generateExportText() {
+    var allQuestions = document.querySelectorAll('.question');
+    var output = '';
+
+    output += '──────────────────────────────────────────────────────────────\n';
+    output += 'Section 4f: Challenges and Adversity – Reflection Summary\n';
+    output += '──────────────────────────────────────────────────────────────\n\n';
+    output += 'For each question below, all possible options are listed.\n';
+    output += 'Your own written notes follow each group of options where you added them.\n\n';
+
+    for (var qIndex = 0; qIndex < allQuestions.length; qIndex++) {
+      var q = allQuestions[qIndex];
+      var mainPrompt = q.getAttribute('data-question') || ('Question ' + (qIndex + 1));
+
+      output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+      output += mainPrompt + '\n';
+
+      var subQuestions = q.querySelectorAll('.sub-question');
+      for (var sIndex = 0; sIndex < subQuestions.length; sIndex++) {
+        var sub = subQuestions[sIndex];
+        var subPrompt = sub.getAttribute('data-subquestion') || '';
+        output += '\n ▸ ' + subPrompt + '\n';
+
+        var groups = sub.querySelectorAll('.options-group');
+        for (var gIndex = 0; gIndex < groups.length; gIndex++) {
+          var group = groups[gIndex];
+          var labels = group.querySelectorAll('label.option-pill');
+          if (labels.length > 0) {
+            output += ' Options:\n';
+            for (var lIndex = 0; lIndex < labels.length; lIndex++) {
+              var label = labels[lIndex];
+              var labelText = label.textContent.replace(/\s+/g, ' ').trim();
+              output += ' ' + labelText + '\n';
+              output += dashLine + '\n';
+            }
+          }
+        }
+
+        var notes = [];
+        var fields = sub.querySelectorAll('textarea, input[type="text"]');
+        for (var fIndex = 0; fIndex < fields.length; fIndex++) {
+          var field = fields[fIndex];
+          if (field.value && field.value.trim() !== '') {
+            notes.push(field.value.trim());
+          }
+        }
+
+        if (notes.length > 0) {
+          output += ' Notes and narrative reflections:\n';
+          for (var nIndex = 0; nIndex < notes.length; nIndex++) {
+            output += ' • ' + notes[nIndex] + '\n';
+          }
+        } else {
+          output += ' Notes and narrative reflections:\n';
+          output += ' • (no additional written notes provided for this part)\n';
+        }
+      }
+
+      output += '\n';
+    }
+
+    output += '──────────────────────────────────────────────────────────────\n';
+    output += 'End of Section 4f\n';
+    output += '──────────────────────────────────────────────────────────────\n';
+
+    document.getElementById('resultsBox').value = output;
+  }
+
+  // ---------- COPY BUTTON ----------
+  var copyButton = document.getElementById('copyButton');
+  copyButton.addEventListener('click', function() {
+    var statusMessage = document.getElementById('statusMessage');
+    var text = document.getElementById('resultsBox').value;
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text)
+        .then(function() {
+          statusMessage.textContent = '✨ Reflection copied! You can now paste it into an email or document.';
+        })
+        .catch(function() {
+          statusMessage.textContent = 'Copy failed. Please select all the text in the box and copy it manually.';
+        });
+    } else {
+      var box = document.getElementById('resultsBox');
+      box.focus();
+      box.select();
+      try {
+        var successful = document.execCommand('copy');
+        if (successful) {
+          statusMessage.textContent = '✨ Reflection copied! You can now paste it into an email or document.';
+        } else {
+          statusMessage.textContent = 'Copy failed. Please select all the text in the box and copy it manually.';
+        }
+      } catch (e) {
+        statusMessage.textContent = 'Copy failed. Please select all the text in the box and copy it manually.';
+      }
+    }
+  });
+
+  // ---------- INIT ----------
+  initSubQuestions();
+  startTimer();
+  showStep(1);
+</script>
+</body>
+</html>

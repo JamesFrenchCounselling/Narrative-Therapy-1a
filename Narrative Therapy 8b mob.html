@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Section 8b: Self-Compassion and Self-Care: Challenges and Adversity</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #1e3a8a 0, #4f46e5 25%, #ec4899 60%, #f97316 100%);
+      color: #111827;
+    }
+
+    .layout {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px 64px;
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 260px;
+      flex: 0 0 260px;
+      position: sticky;
+      top: 16px;
+      align-self: flex-start;
+    }
+
+    .page {
+      flex: 1;
+      min-width: 0;
+      padding-bottom: 32px; /* helps avoid “top half only” feel on mobile */
+    }
+
+    h1 {
+      font-size: 1.9rem;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #f9fafb;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.45);
+      line-height: 1.2;
+    }
+
+    p.intro {
+      margin-top: 0;
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+      color: #e5e7eb;
+      max-width: 760px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    }
+
+    .timer {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 3px;
+      padding: 8px 11px;
+      border-radius: 16px;
+      background: rgba(15,23,42,0.95);
+      border: 1px solid rgba(248,250,252,0.2);
+      box-shadow: 0 6px 18px rgba(15,23,42,0.7);
+      font-size: 0.88rem;
+      color: #e5e7eb;
+      width: 100%;
+    }
+    .timer span.label { opacity: 0.8; font-size: 0.78rem; }
+    .timer span.time { font-weight: 800; font-size: 1.2rem; letter-spacing: 0.08em; }
+    .timer.ending { border-color: #f97373; color: #fecaca; box-shadow: 0 0 14px rgba(248,113,113,0.7); }
+    .timer.up { opacity: 0.7; }
+
+    .time-up-banner {
+      display: none;
+      margin-bottom: 10px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(254,242,242,0.96);
+      color: #991b1b;
+      border: 1px solid #fecaca;
+      font-size: 0.84rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      max-width: 760px;
+    }
+
+    .time-up .time-up-banner { display: block; }
+    .time-up #reflectionForm input,
+    .time-up #reflectionForm textarea { pointer-events: none; opacity: 0.9; }
+
+    .card {
+      background: #f9fafb;
+      border-radius: 18px;
+      padding: 18px 16px;
+      box-shadow: 0 10px 22px rgba(15,23,42,0.25);
+      border: 1px solid #e5e7eb;
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .card-title { font-weight: 700; margin-bottom: 6px; color: #111827; }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 4px;
+      color: #111827;
+    }
+
+    .question-text {
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+      line-height: 1.35;
+    }
+
+    textarea,
+    input[type="text"] {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      font: inherit;
+      font-size: 1rem;
+      background: #ffffff;
+      min-height: 80px;
+      resize: vertical;
+      transition: border-color 0.15s ease-out, box-shadow 0.15s ease-out, transform 0.05s ease-out;
+    }
+
+    textarea:focus,
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 2px rgba(129,140,248,0.4);
+      transform: translateY(-1px);
+    }
+
+    .options-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 10px 0 10px;
+    }
+
+    /* Consistent option font size (mobile included) */
+    .option-pill {
+      display: inline-flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(129,140,248,0.7);
+      font-size: 0.95rem;
+      line-height: 1.25;
+      background: rgba(239,246,255,0.95);
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.05s ease-out, box-shadow 0.05s ease-out, background 0.1s ease-out, border-color 0.1s ease-out, color 0.1s ease-out;
+      width: 100%;
+    }
+    .option-pill input {
+      accent-color: #4b6bfb;
+      margin-top: 2px;
+      flex: 0 0 auto;
+    }
+    .option-pill:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 5px rgba(148,163,184,0.8);
+    }
+    .option-pill.selected {
+      background: linear-gradient(135deg, #22c55e, #a855f7);
+      color: #f9fafb;
+      border-color: transparent;
+      box-shadow: 0 4px 12px rgba(55,65,81,0.7);
+    }
+    .option-pill.selected input { accent-color: #fef9c3; }
+
+    .step { display: none; }
+    .step.active { display: block; }
+
+    .nav-buttons {
+      max-width: 760px;
+      margin: 14px auto 0;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      cursor: pointer;
+      border-radius: 999px;
+      border: none;
+      padding: 10px 18px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      background: radial-gradient(circle at 0% 0%, #f97316, #ec4899, #6366f1);
+      color: #f9fafb;
+      box-shadow: 0 8px 18px rgba(15,23,42,0.7);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: transform 0.07s ease, box-shadow 0.07s ease, opacity 0.1s ease;
+    }
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 11px 22px rgba(15,23,42,0.8);
+    }
+    button:active:not(:disabled) {
+      transform: translateY(1px);
+      box-shadow: 0 5px 11px rgba(15,23,42,0.75);
+    }
+    button:disabled {
+      opacity: 0.45;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .secondary {
+      background: #e5e7eb;
+      color: #111827;
+      box-shadow: 0 4px 10px rgba(55,65,81,0.5);
+      text-transform: none;
+      letter-spacing: 0.01em;
+    }
+
+    .status {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: #16a34a;
+      min-height: 1.2em;
+      max-width: 760px;
+    }
+
+    @media (max-width: 900px) {
+      .layout { flex-direction: column; }
+      .sidebar {
+        width: 100%;
+        flex: none;
+        position: static;
+        order: -1;
+      }
+      .page { width: 100%; }
+      button { width: 100%; justify-content: center; }
+      .nav-buttons { justify-content: stretch; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="timer" id="timer">
+        <span class="label">⏱️ Time left (Section 8b)</span>
+        <span class="time" id="timeRemaining">30:00</span>
+        <span style="font-size:0.75rem; opacity:0.75;">Up to 30 minutes to complete this week's narrative.</span>
+      </div>
+    </aside>
+
+    <main class="page">
+      <h1>Section 8b: Self-Compassion and Self-Care: Challenges and Adversity</h1>
+      <p class="intro">
+        Move through Questions 4, 5, and 6 one part at a time. At the end you’ll be able to copy a formatted reflection to send on.
+      </p>
+
+      <div class="time-up-banner" id="timeUpBanner">
+        The 30 minutes for this reflection have finished. Your answers are still here – you can review them and copy them at the end.
+      </div>
+
+      <form id="reflectionForm">
+
+        <!-- STEP 1 = Question 4 -->
+        <div class="step active" data-step="1">
+          <div class="card question" data-question="4. Saying no to protect your mental health" data-subquestion="What did you say no to?">
+            <div class="card-title">Step 1 – Question 4</div>
+            <div class="question-text">
+              Think about a time when you had to say no to someone or something to protect your own mental health. <br>
+              <strong>What did you say no to?</strong>
+            </div>
+
+            <div class="options-group" id="group_q4">
+              <label class="option-pill"><input type="radio" name="q4" value="A. A work-related task or responsibility.">A. A work-related task or responsibility.</label>
+              <label class="option-pill"><input type="radio" name="q4" value="B. A social commitment or event.">B. A social commitment or event.</label>
+              <label class="option-pill"><input type="radio" name="q4" value="C. Helping someone when you were already stretched thin.">C. Helping someone when you were already stretched thin.</label>
+              <label class="option-pill"><input type="radio" name="q4" value="D. Taking on additional responsibilities at home or elsewhere.">D. Taking on additional responsibilities at home or elsewhere.</label>
+              <label class="option-pill"><input type="radio" name="q4" value="E. Engaging in an activity that drained your energy.">E. Engaging in an activity that drained your energy.</label>
+              <label class="option-pill"><input type="radio" name="q4" value="F. A request that conflicted with your values or boundaries.">F. A request that conflicted with your values or boundaries.</label>
+              <label class="option-pill"><input type="radio" name="q4" value="G. Other/Not Listed (please specify).">G. Other/Not Listed (please specify):</label>
+            </div>
+
+            <textarea id="q4_other" placeholder="If ‘Other’ (or if you’d like to add detail), write it here."></textarea>
+          </div>
+
+          <div class="nav-buttons">
+            <span></span>
+            <button type="button" id="next1" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 2 = Question 4a -->
+        <div class="step" data-step="2">
+          <div class="card question" data-question="4. Saying no to protect your mental health" data-subquestion="How did saying no affect you?">
+            <div class="card-title">Step 2 – Question 4a</div>
+            <div class="question-text"><strong>How did saying no affect you?</strong></div>
+
+            <div class="options-group" id="group_q4a">
+              <label class="option-pill"><input type="radio" name="q4a" value="A. You felt empowered to protect your boundaries.">A. You felt empowered to protect your boundaries.</label>
+              <label class="option-pill"><input type="radio" name="q4a" value="B. You experienced relief and a sense of control.">B. You experienced relief and a sense of control.</label>
+              <label class="option-pill"><input type="radio" name="q4a" value="C. You initially felt guilty but recognised its necessity.">C. You initially felt guilty but recognised its necessity.</label>
+              <label class="option-pill"><input type="radio" name="q4a" value="D. You noticed an improvement in your mental or emotional well-being.">D. You noticed an improvement in your mental or emotional well-being.</label>
+              <label class="option-pill"><input type="radio" name="q4a" value="E. You realised how difficult but important it is to prioritise yourself.">E. You realised how difficult but important it is to prioritise yourself.</label>
+              <label class="option-pill"><input type="radio" name="q4a" value="F. You strengthened your ability to set boundaries in the future.">F. You strengthened your ability to set boundaries in the future.</label>
+              <label class="option-pill"><input type="radio" name="q4a" value="G. Other/Not Listed (please specify).">G. Other/Not Listed (please specify):</label>
+            </div>
+
+            <textarea id="q4a_other" placeholder="If ‘Other’ (or if you’d like to add detail), write it here."></textarea>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back2">⮜ Back</button>
+            <button type="button" id="next2" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 3 = Optional follow-up -->
+        <div class="step" data-step="3" data-optional="true">
+          <div class="card question" data-question="4. Saying no to protect your mental health" data-subquestion="Optional follow-up">
+            <div class="card-title">Step 3 – Optional Follow-Up</div>
+            <div class="question-text">
+              <strong>How can you continue to practice setting boundaries that support your mental health?</strong>
+            </div>
+            <textarea id="q4_follow" placeholder="Write as much or as little as you’d like."></textarea>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back3">⮜ Back</button>
+            <button type="button" id="next3">Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 4 = Question 5 -->
+        <div class="step" data-step="4">
+          <div class="card question" data-question="5. Struggling to be kind to yourself" data-subquestion="What thoughts or feelings were present?">
+            <div class="card-title">Step 4 – Question 5</div>
+            <div class="question-text">
+              Reflect on a moment when you struggled to be kind to yourself. <br>
+              <strong>What thoughts or feelings were present during this moment?</strong>
+            </div>
+
+            <div class="options-group" id="group_q5">
+              <label class="option-pill"><input type="radio" name="q5" value="A. Self-criticism or feelings of inadequacy.">A. Self-criticism or feelings of inadequacy.</label>
+              <label class="option-pill"><input type="radio" name="q5" value="B. Guilt or regret about a past action.">B. Guilt or regret about a past action.</label>
+              <label class="option-pill"><input type="radio" name="q5" value="C. Anxiety or fear of failure.">C. Anxiety or fear of failure.</label>
+              <label class="option-pill"><input type="radio" name="q5" value="D. Sadness or frustration with yourself.">D. Sadness or frustration with yourself.</label>
+              <label class="option-pill"><input type="radio" name="q5" value="E. Perfectionism or unrealistic expectations.">E. Perfectionism or unrealistic expectations.</label>
+              <label class="option-pill"><input type="radio" name="q5" value="F. A sense of isolation or disconnection.">F. A sense of isolation or disconnection.</label>
+              <label class="option-pill"><input type="radio" name="q5" value="G. Other/Not Listed (please specify).">G. Other/Not Listed (please specify):</label>
+            </div>
+
+            <textarea id="q5_other" placeholder="If ‘Other’ (or if you’d like to add detail), write it here."></textarea>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back4">⮜ Back</button>
+            <button type="button" id="next4" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 5 = Question 5a -->
+        <div class="step" data-step="5">
+          <div class="card question" data-question="5. Struggling to be kind to yourself" data-subquestion="How did you navigate these thoughts or feelings?">
+            <div class="card-title">Step 5 – Question 5a</div>
+            <div class="question-text"><strong>How did you navigate these thoughts or feelings?</strong></div>
+
+            <div class="options-group" id="group_q5a">
+              <label class="option-pill"><input type="radio" name="q5a" value="A. Reframed your self-talk to be more compassionate.">A. Reframed your self-talk to be more compassionate.</label>
+              <label class="option-pill"><input type="radio" name="q5a" value="B. Sought reassurance or perspective from someone you trust.">B. Sought reassurance or perspective from someone you trust.</label>
+              <label class="option-pill"><input type="radio" name="q5a" value="C. Gave yourself permission to take a break or rest.">C. Gave yourself permission to take a break or rest.</label>
+              <label class="option-pill"><input type="radio" name="q5a" value="D. Focused on the positives or lessons learned from the situation.">D. Focused on the positives or lessons learned from the situation.</label>
+              <label class="option-pill"><input type="radio" name="q5a" value="E. Practiced mindfulness to stay present.">E. Practiced mindfulness to stay present.</label>
+              <label class="option-pill"><input type="radio" name="q5a" value="F. Took small steps to regain confidence or control.">F. Took small steps to regain confidence or control.</label>
+              <label class="option-pill"><input type="radio" name="q5a" value="G. Other/Not Listed (please specify).">G. Other/Not Listed (please specify):</label>
+            </div>
+
+            <textarea id="q5a_other" placeholder="If ‘Other’ (or if you’d like to add detail), write it here."></textarea>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back5">⮜ Back</button>
+            <button type="button" id="next5" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 6 = Optional follow-up -->
+        <div class="step" data-step="6" data-optional="true">
+          <div class="card question" data-question="5. Struggling to be kind to yourself" data-subquestion="Optional follow-up">
+            <div class="card-title">Step 6 – Optional Follow-Up</div>
+            <div class="question-text">
+              <strong>What can you do to remind yourself to practice kindness toward yourself in similar situations?</strong>
+            </div>
+            <textarea id="q5_follow" placeholder="Write as much or as little as you’d like."></textarea>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back6">⮜ Back</button>
+            <button type="button" id="next6">Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 7 = Question 6 -->
+        <div class="step" data-step="7">
+          <div class="card question" data-question="6. Relaxation and peace" data-subquestion="What were you doing when you felt relaxed and at peace?">
+            <div class="card-title">Step 7 – Question 6</div>
+            <div class="question-text">
+              Think about a time when you felt truly relaxed and at peace. <br>
+              <strong>What were you doing when you felt relaxed and at peace?</strong>
+            </div>
+
+            <div class="options-group" id="group_q6">
+              <label class="option-pill"><input type="radio" name="q6" value="A. Spending time in nature or outdoors.">A. Spending time in nature or outdoors.</label>
+              <label class="option-pill"><input type="radio" name="q6" value="B. Engaging in a favourite hobby or creative activity.">B. Engaging in a favourite hobby or creative activity.</label>
+              <label class="option-pill"><input type="radio" name="q6" value="C. Enjoying quiet time alone or meditating.">C. Enjoying quiet time alone or meditating.</label>
+              <label class="option-pill"><input type="radio" name="q6" value="D. Connecting with loved ones or sharing meaningful moments.">D. Connecting with loved ones or sharing meaningful moments.</label>
+              <label class="option-pill"><input type="radio" name="q6" value="E. Practicing yoga, breathing exercises, or mindfulness.">E. Practicing yoga, breathing exercises, or mindfulness.</label>
+              <label class="option-pill"><input type="radio" name="q6" value="F. Traveling or exploring a new place.">F. Traveling or exploring a new place.</label>
+              <label class="option-pill"><input type="radio" name="q6" value="G. Other/Not Listed (please specify).">G. Other/Not Listed (please specify):</label>
+            </div>
+
+            <textarea id="q6_other" placeholder="If ‘Other’ (or if you’d like to add detail), write it here."></textarea>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back7">⮜ Back</button>
+            <button type="button" id="next7" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 8 = Question 6a -->
+        <div class="step" data-step="8">
+          <div class="card question" data-question="6. Relaxation and peace" data-subquestion="How can you recreate this experience?">
+            <div class="card-title">Step 8 – Question 6a</div>
+            <div class="question-text"><strong>How can you recreate this experience?</strong></div>
+
+            <div class="options-group" id="group_q6a">
+              <label class="option-pill"><input type="radio" name="q6a" value="A. Set aside dedicated time for relaxation regularly.">A. Set aside dedicated time for relaxation regularly.</label>
+              <label class="option-pill"><input type="radio" name="q6a" value="B. Plan activities or trips that bring you joy.">B. Plan activities or trips that bring you joy.</label>
+              <label class="option-pill"><input type="radio" name="q6a" value="C. Incorporate mindfulness or grounding practices into your routine.">C. Incorporate mindfulness or grounding practices into your routine.</label>
+              <label class="option-pill"><input type="radio" name="q6a" value="D. Spend more time in environments that calm you.">D. Spend more time in environments that calm you.</label>
+              <label class="option-pill"><input type="radio" name="q6a" value="E. Make time to nurture your relationships with loved ones.">E. Make time to nurture your relationships with loved ones.</label>
+              <label class="option-pill"><input type="radio" name="q6a" value="F. Rediscover hobbies or activities you’ve neglected.">F. Rediscover hobbies or activities you’ve neglected.</label>
+              <label class="option-pill"><input type="radio" name="q6a" value="G. Other/Not Listed (please specify).">G. Other/Not Listed (please specify):</label>
+            </div>
+
+            <textarea id="q6a_other" placeholder="If ‘Other’ (or if you’d like to add detail), write it here."></textarea>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back8">⮜ Back</button>
+            <button type="button" id="next8" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 9 = Optional follow-up (Finish only here) -->
+        <div class="step" data-step="9" data-optional="true">
+          <div class="card question" data-question="6. Relaxation and peace" data-subquestion="Optional follow-up">
+            <div class="card-title">Step 9 – Optional Follow-Up</div>
+            <div class="question-text">
+              <strong>What can you do to make relaxation and peace a consistent part of your life?</strong>
+            </div>
+            <textarea id="q6_follow" placeholder="Write as much or as little as you’d like."></textarea>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back9">⮜ Back</button>
+            <button type="button" id="finishBtn">Finish</button>
+          </div>
+        </div>
+
+      </form>
+
+      <div id="resultsSection" style="display:none; margin-top:20px;">
+        <h2 style="color:#f9fafb; text-shadow:0 2px 6px rgba(0,0,0,0.45); max-width:760px; margin-left:auto; margin-right:auto;">
+          Your Reflection Export
+        </h2>
+        <p class="intro" style="max-width:760px;">
+          Click the button to copy your formatted reflection.
+        </p>
+
+        <div style="max-width:760px; margin: 0 auto;">
+          <button type="button" id="copyButton">📋 Copy this reflection</button>
+          <div class="status" id="statusMessage"></div>
+        </div>
+
+        <!-- Hidden textarea used only for legacy copy fallback (not shown to the user) -->
+        <textarea id="hiddenCopyBox" readonly style="position:absolute; left:-9999px; top:0; height:1px; width:1px;"></textarea>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // ES5-friendly script with no arrow functions / let / const.
+
+    // ---------- TIMER (30 MINUTES) ----------
+    var totalSeconds = 30 * 60;
+    var timerInterval = null;
+    var timeUp = false;
+    var timerEl = document.getElementById('timer');
+    var timeRemainingEl = document.getElementById('timeRemaining');
+    var timeUpBanner = document.getElementById('timeUpBanner');
+
+    function formatTime(seconds) {
+      var m = Math.floor(seconds / 60);
+      var s = seconds % 60;
+      var mm = m < 10 ? '0' + m : '' + m;
+      var ss = s < 10 ? '0' + s : '' + s;
+      return mm + ':' + ss;
+    }
+
+    function startTimer() {
+      timeRemainingEl.textContent = formatTime(totalSeconds);
+      timerInterval = setInterval(function() {
+        totalSeconds--;
+        if (totalSeconds <= 0) {
+          totalSeconds = 0;
+          clearInterval(timerInterval);
+          handleTimeUp();
+        }
+        timeRemainingEl.textContent = formatTime(totalSeconds);
+        if (totalSeconds <= 60 && !timeUp) {
+          if (timerEl.className.indexOf('ending') === -1) {
+            timerEl.className += ' ending';
+          }
+        }
+      }, 1000);
+    }
+
+    function handleTimeUp() {
+      timeUp = true;
+      timerEl.className = timerEl.className.replace(' ending', '');
+      if (timerEl.className.indexOf(' up') === -1) {
+        timerEl.className += ' up';
+      }
+      if (document.body.className.indexOf('time-up') === -1) {
+        document.body.className += ' time-up';
+      }
+      timeUpBanner.style.display = 'block';
+
+      var allInputs = document.querySelectorAll('#reflectionForm input, #reflectionForm textarea');
+      for (var i = 0; i < allInputs.length; i++) {
+        allInputs[i].disabled = true;
+      }
+    }
+
+    // ---------- STEPS ----------
+    var steps = document.querySelectorAll('.step');
+    var currentStep = 1;
+    var totalSteps = steps.length; // 9
+
+    function showStep(stepNumber) {
+      for (var i = 0; i < steps.length; i++) {
+        var step = steps[i];
+        var target = Number(step.getAttribute('data-step')) === stepNumber;
+        if (target) {
+          if (step.className.indexOf('active') === -1) step.className += ' active';
+        } else {
+          step.className = step.className.replace(' active', '');
+        }
+      }
+      currentStep = stepNumber;
+
+      // bring the active step into view for mobile
+      var active = document.querySelector('.step[data-step="' + stepNumber + '"]');
+      if (active && active.scrollIntoView) {
+        active.scrollIntoView();
+      }
+
+      enableOrDisableButtonsForStep(stepNumber);
+    }
+
+    function isMainQuestionAnswered(stepNumber) {
+      var step = document.querySelector('.step[data-step="' + stepNumber + '"]');
+      if (!step) return false;
+
+      var checked = step.querySelector('input[type="radio"]:checked, input[type="checkbox"]:checked');
+      if (checked) return true;
+
+      var fields = step.querySelectorAll('textarea, input[type="text"]');
+      for (var i = 0; i < fields.length; i++) {
+        if (fields[i].value && fields[i].value.trim() !== '') return true;
+      }
+      return false;
+    }
+
+    function enableOrDisableButtonsForStep(stepNumber) {
+      var stepEl = document.querySelector('.step[data-step="' + stepNumber + '"]');
+      if (!stepEl) return;
+
+      var optional = (stepEl.getAttribute('data-optional') === 'true');
+      var answered = optional ? true : isMainQuestionAnswered(stepNumber);
+
+      // Next buttons 1..8
+      if (stepNumber >= 1 && stepNumber <= 8) {
+        var nextBtn = document.getElementById('next' + stepNumber);
+        if (nextBtn) nextBtn.disabled = !answered;
+      }
+
+      // Finish only on step 9 (optional => always enabled)
+      if (stepNumber === 9) {
+        var finishBtn = document.getElementById('finishBtn');
+        if (finishBtn) finishBtn.disabled = false;
+      }
+    }
+
+    // ---------- OPTION PILL SELECTION ----------
+    function closestWithClass(element, className, stopAt) {
+      while (element && element !== stopAt && element.nodeType === 1) {
+        if ((' ' + element.className + ' ').indexOf(' ' + className + ' ') > -1) return element;
+        element = element.parentNode;
+      }
+      return null;
+    }
+
+    var optionGroups = document.querySelectorAll('.options-group');
+    for (var og = 0; og < optionGroups.length; og++) {
+      optionGroups[og].addEventListener('change', function(e) {
+        var target = e.target || e.srcElement;
+        if (!target || target.tagName !== 'INPUT') return;
+
+        var pill = closestWithClass(target, 'option-pill', this);
+        if (!pill) return;
+
+        if (target.type === 'radio') {
+          var allPills = this.querySelectorAll('.option-pill');
+          for (var i = 0; i < allPills.length; i++) {
+            allPills[i].className = allPills[i].className.replace(' selected', '');
+          }
+          if (pill.className.indexOf('selected') === -1) pill.className += ' selected';
+        } else if (target.type === 'checkbox') {
+          if (target.checked) {
+            if (pill.className.indexOf('selected') === -1) pill.className += ' selected';
+          } else {
+            pill.className = pill.className.replace(' selected', '');
+          }
+        }
+
+        var stepEl = closestWithClass(target, 'step', document.body);
+        if (stepEl) {
+          enableOrDisableButtonsForStep(Number(stepEl.getAttribute('data-step')));
+        }
+      });
+    }
+
+    var reflectionForm = document.getElementById('reflectionForm');
+    reflectionForm.addEventListener('input', function(e) {
+      var target = e.target || e.srcElement;
+      var stepEl = closestWithClass(target, 'step', document.body);
+      if (stepEl) enableOrDisableButtonsForStep(Number(stepEl.getAttribute('data-step')));
+    });
+
+    // ---------- STEP NAV BUTTONS ----------
+    function bindNav(step, backId, nextId, nextStep) {
+      var backBtn = backId ? document.getElementById(backId) : null;
+      var nextBtn = nextId ? document.getElementById(nextId) : null;
+
+      if (backBtn) {
+        backBtn.addEventListener('click', function() {
+          showStep(step - 1);
+        });
+      }
+      if (nextBtn) {
+        nextBtn.addEventListener('click', function() {
+          showStep(nextStep);
+        });
+      }
+    }
+
+    bindNav(1, null, 'next1', 2);
+    bindNav(2, 'back2', 'next2', 3);
+    bindNav(3, 'back3', 'next3', 4);
+    bindNav(4, 'back4', 'next4', 5);
+    bindNav(5, 'back5', 'next5', 6);
+    bindNav(6, 'back6', 'next6', 7);
+    bindNav(7, 'back7', 'next7', 8);
+    bindNav(8, 'back8', 'next8', 9);
+
+    // ---------- EXPORT TEXT ----------
+    var dashLine = '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -';
+    var latestExportText = '';
+
+    function collectStepExport(stepNumber) {
+      var stepEl = document.querySelector('.step[data-step="' + stepNumber + '"]');
+      if (!stepEl) return '';
+
+      var card = stepEl.querySelector('.card.question');
+      if (!card) return '';
+
+      var out = '';
+      var mainQ = card.getAttribute('data-question') || '';
+      var subQ = card.getAttribute('data-subquestion') || '';
+
+      out += ' ▸ ' + subQ + '\n';
+
+      var groups = card.querySelectorAll('.options-group');
+      for (var gIndex = 0; gIndex < groups.length; gIndex++) {
+        var group = groups[gIndex];
+        var labels = group.querySelectorAll('label.option-pill');
+        if (labels.length > 0) {
+          out += ' Options:\n';
+          for (var lIndex = 0; lIndex < labels.length; lIndex++) {
+            var label = labels[lIndex];
+            var labelText = label.textContent.replace(/\s+/g, ' ').trim();
+            out += ' ' + labelText + '\n';
+            out += dashLine + '\n';
+          }
+        }
+      }
+
+      var notes = [];
+      var fields = card.querySelectorAll('textarea, input[type="text"]');
+      for (var fIndex = 0; fIndex < fields.length; fIndex++) {
+        var field = fields[fIndex];
+        if (field.value && field.value.trim() !== '') notes.push(field.value.trim());
+      }
+
+      out += ' Notes and narrative reflections:\n';
+      if (notes.length > 0) {
+        for (var nIndex = 0; nIndex < notes.length; nIndex++) {
+          out += ' • ' + notes[nIndex] + '\n';
+        }
+      } else {
+        out += ' • (no additional written notes provided for this part)\n';
+      }
+
+      return out;
+    }
+
+    function generateExportText() {
+      var output = '';
+      output += '──────────────────────────────────────────────────────────────\n';
+      output += 'Section 8b: Self-Compassion and Self-Care: Challenges and Adversity: Reflection Summary\n';
+      output += '──────────────────────────────────────────────────────────────\n\n';
+      output += 'For each question below, all possible options are listed.\n';
+      output += 'Your own written notes follow each part where you added them.\n\n';
+
+      // Group by main question (4, 5, 6), each with 3 parts
+      output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+      output += '4. Think about a time when you had to say no to someone or something to protect your own mental health.\n\n';
+      output += collectStepExport(1) + '\n';
+      output += collectStepExport(2) + '\n';
+      output += collectStepExport(3) + '\n';
+
+      output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+      output += '5. Reflect on a moment when you struggled to be kind to yourself.\n\n';
+      output += collectStepExport(4) + '\n';
+      output += collectStepExport(5) + '\n';
+      output += collectStepExport(6) + '\n';
+
+      output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+      output += '6. Think about a time when you felt truly relaxed and at peace.\n\n';
+      output += collectStepExport(7) + '\n';
+      output += collectStepExport(8) + '\n';
+      output += collectStepExport(9) + '\n';
+
+      output += '──────────────────────────────────────────────────────────────\n';
+      output += 'End of Section 8b\n';
+      output += '──────────────────────────────────────────────────────────────\n';
+
+      latestExportText = output;
+      return output;
+    }
+
+    // ---------- FINISH ----------
+    var finishBtn = document.getElementById('finishBtn');
+    finishBtn.addEventListener('click', function() {
+      generateExportText();
+      document.getElementById('resultsSection').style.display = 'block';
+      finishBtn.style.display = 'none';
+      document.getElementById('resultsSection').scrollIntoView();
+    });
+
+    // ---------- COPY BUTTON ----------
+    var copyButton = document.getElementById('copyButton');
+    copyButton.addEventListener('click', function() {
+      var statusMessage = document.getElementById('statusMessage');
+      var text = latestExportText || generateExportText();
+
+      if (!text || text.trim() === '') {
+        statusMessage.textContent = 'Nothing to copy yet.';
+        return;
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text)
+          .then(function() {
+            statusMessage.textContent = '✨ Reflection copied! You can now paste it into an email or document.';
+          })
+          .catch(function() {
+            legacyCopy(text, statusMessage);
+          });
+      } else {
+        legacyCopy(text, statusMessage);
+      }
+    });
+
+    function legacyCopy(text, statusMessage) {
+      var hidden = document.getElementById('hiddenCopyBox');
+      hidden.value = text;
+      hidden.focus();
+      hidden.select();
+      try {
+        var successful = document.execCommand('copy');
+        if (successful) {
+          statusMessage.textContent = '✨ Reflection copied! You can now paste it into an email or document.';
+        } else {
+          statusMessage.textContent = 'Copy failed. Please try again.';
+        }
+      } catch (e) {
+        statusMessage.textContent = 'Copy failed. Please try again.';
+      }
+    }
+
+    // ---------- INIT ----------
+    startTimer();
+    showStep(1);
+  </script>
+</body>
+</html>

@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Section 8d: Self-Compassion and Self – Care: Challenges and Adversity</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      min-height: 100dvh;
+      background: radial-gradient(circle at top, #1e3a8a 0, #4f46e5 25%, #ec4899 60%, #f97316 100%);
+      color: #111827;
+    }
+
+    .layout {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px 56px;
+      display: flex;
+      align-items: stretch;
+      gap: 24px;
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    .sidebar {
+      width: 260px;
+      flex: 0 0 260px;
+      position: sticky;
+      top: 16px;
+      align-self: flex-start;
+    }
+
+    .page {
+      flex: 1;
+      min-width: 0;
+      padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px));
+    }
+
+    h1 {
+      font-size: 1.9rem;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #f9fafb;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.45);
+    }
+
+    p.intro {
+      margin-top: 0;
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+      color: #e5e7eb;
+      max-width: 760px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    }
+
+    .timer {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 3px;
+      padding: 8px 11px;
+      border-radius: 16px;
+      background: rgba(15,23,42,0.95);
+      border: 1px solid rgba(248,250,252,0.2);
+      box-shadow: 0 6px 18px rgba(15,23,42,0.7);
+      font-size: 0.88rem;
+      color: #e5e7eb;
+      width: 100%;
+    }
+
+    .timer span.label { opacity: 0.8; font-size: 0.78rem; }
+    .timer span.time { font-weight: 800; font-size: 1.2rem; letter-spacing: 0.08em; }
+    .timer.ending {
+      border-color: #f97373;
+      color: #fecaca;
+      box-shadow: 0 0 14px rgba(248,113,113,0.7);
+    }
+    .timer.up { opacity: 0.75; }
+
+    .time-up-banner {
+      display: none;
+      margin-bottom: 10px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(254,242,242,0.96);
+      color: #991b1b;
+      border: 1px solid #fecaca;
+      font-size: 0.84rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .time-up .time-up-banner { display: block; }
+
+    .time-up #reflectionForm input,
+    .time-up #reflectionForm textarea {
+      pointer-events: none;
+      opacity: 0.92;
+    }
+
+    .card {
+      background: #f9fafb;
+      border-radius: 18px;
+      padding: 18px 16px;
+      box-shadow: 0 10px 22px rgba(15,23,42,0.25);
+      border: 1px solid #e5e7eb;
+      position: relative;
+      overflow: hidden;
+      scroll-margin-top: 14px;
+    }
+
+    .card-title {
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #111827;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 4px;
+      color: #111827;
+    }
+
+    .question-text {
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+    }
+
+    textarea,
+    input[type="text"] {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      font: inherit;
+      background: #ffffff;
+      min-height: 70px;
+      resize: vertical;
+      transition: border-color 0.15s ease-out, box-shadow 0.15s ease-out, transform 0.05s ease-out;
+    }
+
+    textarea:focus,
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 2px rgba(129,140,248,0.4);
+      transform: translateY(-1px);
+    }
+
+    .options-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin: 8px 0 10px;
+    }
+
+    /* Consistent option font size */
+    .option-pill {
+      display: inline-flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(129,140,248,0.7);
+      font-size: 0.95rem;
+      line-height: 1.25;
+      background: rgba(239,246,255,0.95);
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.05s ease-out, box-shadow 0.05s ease-out, background 0.1s ease-out, border-color 0.1s ease-out, color 0.1s ease-out;
+      white-space: normal;
+      word-break: break-word;
+    }
+
+    .option-pill input {
+      accent-color: #4b6bfb;
+      width: 1.05em;
+      height: 1.05em;
+      margin-top: 2px;
+      flex: 0 0 auto;
+    }
+
+    .option-pill:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 5px rgba(148,163,184,0.8);
+    }
+
+    .option-pill.selected {
+      background: linear-gradient(135deg, #22c55e, #a855f7);
+      color: #f9fafb;
+      border-color: transparent;
+      box-shadow: 0 4px 12px rgba(55,65,81,0.7);
+    }
+
+    .option-pill.selected input { accent-color: #fef9c3; }
+
+    .step { display: none; }
+    .step.active { display: block; }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 14px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      cursor: pointer;
+      border-radius: 999px;
+      border: none;
+      padding: 10px 18px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      background: radial-gradient(circle at 0% 0%, #f97316, #ec4899, #6366f1);
+      color: #f9fafb;
+      box-shadow: 0 8px 18px rgba(15,23,42,0.7);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: transform 0.07s ease, box-shadow 0.07s ease, opacity 0.1s ease;
+      touch-action: manipulation;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 11px 22px rgba(15,23,42,0.8);
+    }
+
+    button:active:not(:disabled) {
+      transform: translateY(1px);
+      box-shadow: 0 5px 11px rgba(15,23,42,0.75);
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .secondary {
+      background: #e5e7eb;
+      color: #111827;
+      box-shadow: 0 4px 10px rgba(55,65,81,0.5);
+      text-transform: none;
+      letter-spacing: 0.01em;
+    }
+
+    .status {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: #16a34a;
+      min-height: 1.2em;
+    }
+
+    .footer-note {
+      margin-top: 12px;
+      font-size: 0.8rem;
+      color: #e5e7eb;
+    }
+
+    /* Hidden copy buffer (not visible, but selectable for execCommand fallback) */
+    #copyBuffer {
+      position: fixed;
+      left: -9999px;
+      top: 0;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        flex-direction: column;
+        padding: 18px 12px 64px;
+      }
+      .sidebar {
+        width: 100%;
+        flex: none;
+        position: static;
+        order: -1;
+      }
+      .timer {
+        border-radius: 14px;
+      }
+      h1 { font-size: 1.65rem; }
+      .option-pill { font-size: 0.95rem; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="timer" id="timer">
+        <span class="label">⏱️ Time left (Section 8d)</span>
+        <span class="time" id="timeRemaining">30:00</span>
+        <span style="font-size:0.75rem; opacity:0.75;">Up to 30 minutes to complete this week's narrative.</span>
+      </div>
+    </aside>
+
+    <main class="page">
+      <h1>Section 8d: Self-Compassion and Self – Care: Challenges and Adversity</h1>
+      <p class="intro">
+        Move through Questions 11, 12, and 13 one step at a time. At the end you’ll be able to copy a formatted reflection to send on.
+      </p>
+
+      <div class="time-up-banner" id="timeUpBanner">
+        The 30 minutes for this reflection have finished. Your answers are still here – you can review them and copy them at the end.
+      </div>
+
+      <form id="reflectionForm">
+
+        <!-- STEP 1 = Question 11 -->
+        <div class="step active" data-step="1">
+          <div class="card">
+            <div class="card-title">Question 11 – Disconnected from your own needs</div>
+            <div class="question-text">
+              Reflect on a time when you felt disconnected from your own needs. What caused this disconnection, how long did it last, and how did you address it?
+            </div>
+            <textarea id="q11_narr" placeholder="Write about the situation, what you noticed, and roughly how long it lasted..."></textarea>
+          </div>
+
+          <div class="nav-buttons">
+            <span></span>
+            <button type="button" class="nav-next" data-go="2" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 2 = Question 11a -->
+        <div class="step" data-step="2">
+          <div class="card">
+            <div class="card-title">Question 11a – What caused this disconnection?</div>
+
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q11_cause" value="Overcommitting to work, family, or various social obligations.">
+                A. Overcommitting to work, family, or various social obligations.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q11_cause" value="Experiencing stress, burnout, or overwhelming emotional fatigue.">
+                B. Experiencing stress, burnout, or overwhelming emotional fatigue.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q11_cause" value="Neglecting physical, emotional, or mental health needs.">
+                C. Neglecting physical, emotional, or mental health needs.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q11_cause" value="Prioritising other's needs over your personal well-being.">
+                D. Prioritising other's needs over your personal well-being.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q11_cause" value="Struggling with self-doubt or frequently feeling unworthy of care.">
+                E. Struggling with self-doubt or frequently feeling unworthy of care.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q11_cause" value="Facing a significant life transition, challenge, or personal loss.">
+                F. Facing a significant life transition, challenge, or personal loss.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q11_cause" value="Other / Not Listed (please specify).">
+                G. Other / Not Listed (please specify):
+              </label>
+            </div>
+
+            <textarea id="q11_cause_other" placeholder="If ‘Other’, please specify here (optional)."></textarea>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary nav-back" data-go="1">⮜ Back</button>
+            <button type="button" class="nav-next" data-go="3" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 3 = Optional Follow-Up (includes addressing + follow-up) -->
+        <div class="step" data-step="3">
+          <div class="card">
+            <div class="card-title">Question 11 – Addressing the disconnection</div>
+
+            <div class="question-text" style="margin-top:6px; font-weight:700;">How did you address this disconnection?</div>
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q11_address" value="Took a meaningful break to reflect on your personal needs.">
+                A. Took a meaningful break to reflect on your personal needs.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q11_address" value="Reached out to someone trusted for support or helpful advice.">
+                B. Reached out to someone trusted for support or helpful advice.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q11_address" value="Developed a structured plan to include consistent self-care practices.">
+                C. Developed a structured plan to include consistent self-care practices.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q11_address" value="Set healthy boundaries to protect your time, energy, and mental health.">
+                D. Set healthy boundaries to protect your time, energy, and mental health.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q11_address" value="Practiced mindfulness or soothing relaxation techniques regularly.">
+                E. Practiced mindfulness or soothing relaxation techniques regularly.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q11_address" value="Allowed yourself enough time to recover without unnecessary judgment.">
+                F. Allowed yourself enough time to recover without unnecessary judgment.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q11_address" value="Other / Not Listed (please specify).">
+                G. Other / Not Listed (please specify):
+              </label>
+            </div>
+            <textarea id="q11_address_other" placeholder="If ‘Other’, please specify here (optional)."></textarea>
+
+            <div class="question-text" style="margin-top:12px; font-weight:700;">Optional follow-up:</div>
+            <div class="question-text">How has this experience shaped the way you prioritise and address your needs now?</div>
+            <textarea id="q11_follow" placeholder="Optional: write what changed for you after this experience..."></textarea>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary nav-back" data-go="2">⮜ Back</button>
+            <button type="button" class="nav-next" data-go="4" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 4 = Question 12 -->
+        <div class="step" data-step="4">
+          <div class="card">
+            <div class="card-title">Question 12 – Self-compassionate mantra or affirmation</div>
+            <div class="question-text">
+              Think about a self-compassionate mantra or affirmation that resonates with you. How has it helped you navigate challenges, and how do you incorporate it into your daily life?
+            </div>
+            <textarea id="q12_narr" placeholder="Write about when you use it, what it changes for you, and how it fits into daily life..."></textarea>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary nav-back" data-go="3">⮜ Back</button>
+            <button type="button" class="nav-next" data-go="5" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 5 = Question 12a -->
+        <div class="step" data-step="5">
+          <div class="card">
+            <div class="card-title">Question 12a – Which mantra resonates most?</div>
+            <div class="question-text">Which of these self-compassionate mantras or affirmations most closely resonates with your own?</div>
+
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q12_mantra" value="I am doing the absolute best I can, and that’s enough for now.">
+                A. “I am doing the absolute best I can, and that’s enough for now.”
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q12_mantra" value="It’s okay to rest when needed and take care of myself completely.">
+                B. “It’s okay to rest when needed and take care of myself completely.”
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q12_mantra" value="I am fully worthy of love and deep compassion, including my own.">
+                C. “I am fully worthy of love and deep compassion, including my own.”
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q12_mantra" value="Mistakes are an important part of learning; I can grow from every one.">
+                D. “Mistakes are an important part of learning; I can grow from every one.”
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q12_mantra" value="I release the constant need to always be perfect in everything.">
+                E. “I release the constant need to always be perfect in everything.”
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q12_mantra" value="I will treat myself with the same gentle kindness I show others.">
+                F. “I will treat myself with the same gentle kindness I show others.”
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q12_mantra" value="Other / Not Listed (please specify).">
+                G. Other / Not Listed (please specify):
+              </label>
+            </div>
+
+            <textarea id="q12_mantra_other" placeholder="If ‘Other’, please specify here (optional)."></textarea>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary nav-back" data-go="4">⮜ Back</button>
+            <button type="button" class="nav-next" data-go="6" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 6 = Optional Follow-Up -->
+        <div class="step" data-step="6" data-optional="true">
+          <div class="card">
+            <div class="card-title">Question 12 – Optional follow-up</div>
+            <div class="question-text">What impact might this mantra or affirmation have on your overall mindset or behaviour?</div>
+            <textarea id="q12_follow" placeholder="Optional: write what you expect to shift (thought patterns, self-talk, choices, behaviours)..."></textarea>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary nav-back" data-go="5">⮜ Back</button>
+            <button type="button" class="nav-next" data-go="7">Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 7 = Question 13 -->
+        <div class="step" data-step="7">
+          <div class="card">
+            <div class="card-title">Question 13 – Burnout</div>
+            <div class="question-text">
+              Describe a moment when you felt burnout. What were the circumstances, how did you recover, and what preventive measures have you taken since then?
+            </div>
+            <textarea id="q13_narr" placeholder="Write about what happened, what you noticed in yourself, and what changed afterwards..."></textarea>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary nav-back" data-go="6">⮜ Back</button>
+            <button type="button" class="nav-next" data-go="8" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 8 = Question 13a -->
+        <div class="step" data-step="8">
+          <div class="card">
+            <div class="card-title">Question 13a – What were the circumstances?</div>
+
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q13_cause" value="Taking on far too many responsibilities all at the same time.">
+                A. Taking on far too many responsibilities all at the same time.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q13_cause" value="Failing to set healthy boundaries or consistently say no when necessary.">
+                B. Failing to set healthy boundaries or consistently say no when necessary.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q13_cause" value="Ignoring critical signs of stress, exhaustion, or emotional fatigue.">
+                C. Ignoring critical signs of stress, exhaustion, or emotional fatigue.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q13_cause" value="Experiencing prolonged emotional or significant physical challenges over time.">
+                D. Experiencing prolonged emotional or significant physical challenges over time.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q13_cause" value="Feeling unsupported, unappreciated, or undervalued in your efforts.">
+                E. Feeling unsupported, unappreciated, or undervalued in your efforts.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q13_cause" value="Pushing yourself hard to meet unrealistic or unsustainable expectations.">
+                F. Pushing yourself hard to meet unrealistic or unsustainable expectations.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q13_cause" value="Other / Not Listed (please specify).">
+                G. Other / Not Listed (please specify):
+              </label>
+            </div>
+
+            <textarea id="q13_cause_other" placeholder="If ‘Other’, please specify here (optional)."></textarea>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary nav-back" data-go="7">⮜ Back</button>
+            <button type="button" class="nav-next" data-go="9" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 9 = Question 13b + Optional Follow-Up (LAST STEP) -->
+        <div class="step" data-step="9">
+          <div class="card">
+            <div class="card-title">Question 13 – Recovery and prevention</div>
+
+            <div class="question-text" style="margin-top:6px; font-weight:700;">How did you recover from burnout?</div>
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q13_recover" value="Took intentional time off to fully rest and completely recharge yourself.">
+                A. Took intentional time off to fully rest and completely recharge yourself.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q13_recover" value="Reduced your workload, responsibilities, or overall obligations significantly.">
+                B. Reduced your workload, responsibilities, or overall obligations significantly.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q13_recover" value="Focused deeply on self-care practices and effective stress management techniques.">
+                C. Focused deeply on self-care practices and effective stress management techniques.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q13_recover" value="Sought helpful guidance or direct emotional support from others.">
+                D. Sought helpful guidance or direct emotional support from others.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q13_recover" value="Made intentional lifestyle changes to improve balance and overall well-being.">
+                E. Made intentional lifestyle changes to improve balance and overall well-being.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q13_recover" value="Adjusted your priorities thoughtfully to align with what matters most to you.">
+                F. Adjusted your priorities thoughtfully to align with what matters most to you.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q13_recover" value="Other / Not Listed (please specify).">
+                G. Other / Not Listed (please specify):
+              </label>
+            </div>
+
+            <textarea id="q13_recover_other" placeholder="If ‘Other’, please specify here (optional)."></textarea>
+
+            <div class="question-text" style="margin-top:12px; font-weight:700;">Optional follow-up:</div>
+            <div class="question-text">What steps do you take now to recognise and prevent burnout before it occurs?</div>
+            <textarea id="q13_follow" placeholder="Optional: write early warning signs you look for, boundaries, routines, supports, or check-ins..."></textarea>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary nav-back" data-go="8">⮜ Back</button>
+            <button type="button" id="finishBtn" disabled>Finish</button>
+          </div>
+        </div>
+
+      </form>
+
+      <div id="resultsSection" style="display:none; margin-top:20px;">
+        <h2 style="color:#f9fafb; text-shadow:0 2px 6px rgba(0,0,0,0.45);">Your Reflection Export</h2>
+        <p class="intro">
+          Click the button below to copy your formatted reflection. It includes every option for each question, plus your written notes.
+        </p>
+        <button type="button" id="copyButton">📋 Copy this reflection</button>
+        <div class="status" id="statusMessage"></div>
+
+        <!-- hidden buffer for copy fallback (no visible textbox shown) -->
+        <textarea id="copyBuffer" aria-hidden="true" tabindex="-1"></textarea>
+
+        <p class="footer-note">
+          After clicking “Copy this reflection”, go to your email or message app and use <strong>Paste</strong> (Ctrl+V / Cmd+V).
+        </p>
+      </div>
+
+    </main>
+  </div>
+
+<script>
+  // ES5-friendly script with no arrow functions / let / const
+
+  // ---------- TIMER (30 MINUTES) ----------
+  var totalSeconds = 30 * 60;
+  var timerInterval = null;
+  var timeUp = false;
+  var timerEl = document.getElementById('timer');
+  var timeRemainingEl = document.getElementById('timeRemaining');
+  var timeUpBanner = document.getElementById('timeUpBanner');
+
+  function formatTime(seconds) {
+    var m = Math.floor(seconds / 60);
+    var s = seconds % 60;
+    var mm = m < 10 ? '0' + m : '' + m;
+    var ss = s < 10 ? '0' + s : '' + s;
+    return mm + ':' + ss;
+  }
+
+  function startTimer() {
+    timeRemainingEl.textContent = formatTime(totalSeconds);
+    timerInterval = setInterval(function() {
+      totalSeconds--;
+      if (totalSeconds <= 0) {
+        totalSeconds = 0;
+        clearInterval(timerInterval);
+        handleTimeUp();
+      }
+      timeRemainingEl.textContent = formatTime(totalSeconds);
+      if (totalSeconds <= 60 && !timeUp) {
+        if (timerEl.className.indexOf('ending') === -1) {
+          timerEl.className += ' ending';
+        }
+      }
+    }, 1000);
+  }
+
+  function handleTimeUp() {
+    timeUp = true;
+    timerEl.className = timerEl.className.replace(' ending', '');
+    if (timerEl.className.indexOf(' up') === -1) {
+      timerEl.className += ' up';
+    }
+    if (document.body.className.indexOf('time-up') === -1) {
+      document.body.className += ' time-up';
+    }
+    timeUpBanner.style.display = 'block';
+
+    var allInputs = document.querySelectorAll('#reflectionForm input, #reflectionForm textarea');
+    for (var i = 0; i < allInputs.length; i++) {
+      allInputs[i].disabled = true;
+    }
+  }
+
+  // ---------- HELPERS ----------
+  function closestWithClass(element, className, stopAt) {
+    while (element && element !== stopAt && element.nodeType === 1) {
+      if ((' ' + element.className + ' ').indexOf(' ' + className + ' ') > -1) {
+        return element;
+      }
+      element = element.parentNode;
+    }
+    return null;
+  }
+
+  // ---------- STEPS ----------
+  var steps = document.querySelectorAll('.step');
+  var currentStep = 1;
+  var totalSteps = steps.length; // 9
+
+  function showStep(stepNumber) {
+    for (var i = 0; i < steps.length; i++) {
+      var step = steps[i];
+      var target = Number(step.getAttribute('data-step')) === stepNumber;
+      if (target) {
+        if (step.className.indexOf('active') === -1) {
+          step.className += ' active';
+        }
+      } else {
+        step.className = step.className.replace(' active', '');
+      }
+    }
+    currentStep = stepNumber;
+
+    // Keep the view feeling "full-screen" on mobile: jump to top of page content.
+    window.scrollTo(0, 0);
+
+    // Refresh button enabled states
+    enableOrDisableButtonsForStep(stepNumber);
+  }
+
+  function isStepOptional(stepNumber) {
+    var stepEl = document.querySelector('.step[data-step="' + stepNumber + '"]');
+    if (!stepEl) return false;
+    return stepEl.getAttribute('data-optional') === 'true';
+  }
+
+  function isStepAnswered(stepNumber) {
+    if (isStepOptional(stepNumber)) return true;
+
+    var step = document.querySelector('.step[data-step="' + stepNumber + '"]');
+    if (!step) return false;
+
+    var checked = step.querySelector('input[type="radio"]:checked, input[type="checkbox"]:checked');
+    if (checked) return true;
+
+    var fields = step.querySelectorAll('textarea, input[type="text"]');
+    for (var i = 0; i < fields.length; i++) {
+      if (fields[i].value && fields[i].value.trim() !== '') {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function enableOrDisableButtonsForStep(stepNumber) {
+    var stepEl = document.querySelector('.step[data-step="' + stepNumber + '"]');
+    if (!stepEl) return;
+
+    var answered = isStepAnswered(stepNumber);
+
+    // enable/disable next on this step
+    var nextBtn = stepEl.querySelector('.nav-next');
+    if (nextBtn) nextBtn.disabled = !answered;
+
+    // enable/disable finish on last step
+    if (stepNumber === totalSteps) {
+      var finishBtn = document.getElementById('finishBtn');
+      if (finishBtn) finishBtn.disabled = !answered;
+    }
+  }
+
+  // ---------- OPTION PILL SELECTION ----------
+  var optionGroups = document.querySelectorAll('.options-group');
+  for (var og = 0; og < optionGroups.length; og++) {
+    optionGroups[og].addEventListener('change', function(e) {
+      var target = e.target || e.srcElement;
+      if (!target || target.tagName !== 'INPUT') return;
+
+      var pill = closestWithClass(target, 'option-pill', this);
+      if (!pill) return;
+
+      if (target.type === 'radio') {
+        var allPills = this.querySelectorAll('.option-pill');
+        for (var i = 0; i < allPills.length; i++) {
+          allPills[i].className = allPills[i].className.replace(' selected', '');
+        }
+        if (pill.className.indexOf('selected') === -1) {
+          pill.className += ' selected';
+        }
+      } else if (target.type === 'checkbox') {
+        if (target.checked) {
+          if (pill.className.indexOf('selected') === -1) pill.className += ' selected';
+        } else {
+          pill.className = pill.className.replace(' selected', '');
+        }
+      }
+
+      var stepEl = closestWithClass(target, 'step', document.body);
+      if (stepEl) {
+        var stepNumber = Number(stepEl.getAttribute('data-step'));
+        enableOrDisableButtonsForStep(stepNumber);
+      }
+    });
+  }
+
+  // Update when typing
+  var reflectionForm = document.getElementById('reflectionForm');
+  reflectionForm.addEventListener('input', function(e) {
+    var target = e.target || e.srcElement;
+    var stepEl = closestWithClass(target, 'step', document.body);
+    if (stepEl) {
+      var stepNumber = Number(stepEl.getAttribute('data-step'));
+      enableOrDisableButtonsForStep(stepNumber);
+    }
+  });
+
+  // ---------- STEP NAV (delegated) ----------
+  document.addEventListener('click', function(e) {
+    var target = e.target || e.srcElement;
+    if (!target) return;
+
+    // handle Next buttons
+    if ((' ' + target.className + ' ').indexOf(' nav-next ') > -1) {
+      var goTo = Number(target.getAttribute('data-go'));
+      if (goTo && goTo >= 1 && goTo <= totalSteps) {
+        showStep(goTo);
+      }
+      return;
+    }
+
+    // handle Back buttons
+    if ((' ' + target.className + ' ').indexOf(' nav-back ') > -1) {
+      var goBack = Number(target.getAttribute('data-go'));
+      if (goBack && goBack >= 1 && goBack <= totalSteps) {
+        showStep(goBack);
+      }
+      return;
+    }
+  });
+
+  // ---------- EXPORT ----------
+  // Dash line used after each option ONLY
+  var dashLine = '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -';
+
+  function getCheckedValue(name) {
+    var el = document.querySelector('input[name="' + name + '"]:checked');
+    return el ? el.value : '';
+  }
+
+  function getText(id) {
+    var el = document.getElementById(id);
+    if (!el) return '';
+    return (el.value && el.value.trim() !== '') ? el.value.trim() : '';
+  }
+
+  function formatOptions(optionsArray) {
+    var out = ' Options:\n';
+    for (var i = 0; i < optionsArray.length; i++) {
+      out += ' ' + optionsArray[i] + '\n';
+      out += dashLine + '\n';
+    }
+    return out;
+  }
+
+  var latestExportText = '';
+
+  function generateExportText() {
+    var output = '';
+
+    output += '──────────────────────────────────────────────────────────────\n';
+    output += 'Section 8d: Self-Compassion and Self – Care: Challenges and Adversity: Reflection Summary\n';
+    output += '──────────────────────────────────────────────────────────────\n\n';
+    output += 'For each question below, all possible options are listed.\n';
+    output += 'Your own written notes follow each group of options where you added them.\n\n';
+
+    // Q11
+    output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+    output += '11. Disconnected from your own needs\n\n';
+
+    output += ' ▸ 11. Reflection narrative\n';
+    var q11Narr = getText('q11_narr');
+    output += ' Notes and narrative reflections:\n';
+    output += q11Narr ? (' • ' + q11Narr + '\n') : ' • (no additional written notes provided for this part)\n';
+    output += '\n';
+
+    output += ' ▸ 11a. What caused this disconnection?\n';
+    output += formatOptions([
+      'A. Overcommitting to work, family, or various social obligations.',
+      'B. Experiencing stress, burnout, or overwhelming emotional fatigue.',
+      'C. Neglecting physical, emotional, or mental health needs.',
+      'D. Prioritising other\'s needs over your personal well-being.',
+      'E. Struggling with self-doubt or frequently feeling unworthy of care.',
+      'F. Facing a significant life transition, challenge, or personal loss.',
+      'G. Other / Not Listed (please specify):'
+    ]);
+    var q11Cause = getCheckedValue('q11_cause');
+    var q11CauseOther = getText('q11_cause_other');
+    output += ' Notes and narrative reflections:\n';
+    if (q11Cause) output += ' • Selected: ' + q11Cause + '\n';
+    if (q11CauseOther) output += ' • Other (specified): ' + q11CauseOther + '\n';
+    if (!q11Cause && !q11CauseOther) output += ' • (no additional written notes provided for this part)\n';
+    output += '\n';
+
+    output += ' ▸ 11b. How did you address this disconnection?\n';
+    output += formatOptions([
+      'A. Took a meaningful break to reflect on your personal needs.',
+      'B. Reached out to someone trusted for support or helpful advice.',
+      'C. Developed a structured plan to include consistent self-care practices.',
+      'D. Set healthy boundaries to protect your time, energy, and mental health.',
+      'E. Practiced mindfulness or soothing relaxation techniques regularly.',
+      'F. Allowed yourself enough time to recover without unnecessary judgment.',
+      'G. Other / Not Listed (please specify):'
+    ]);
+    var q11Address = getCheckedValue('q11_address');
+    var q11AddressOther = getText('q11_address_other');
+    var q11Follow = getText('q11_follow');
+
+    output += ' Notes and narrative reflections:\n';
+    if (q11Address) output += ' • Selected: ' + q11Address + '\n';
+    if (q11AddressOther) output += ' • Other (specified): ' + q11AddressOther + '\n';
+    if (q11Follow) output += ' • Follow-up: ' + q11Follow + '\n';
+    if (!q11Address && !q11AddressOther && !q11Follow) output += ' • (no additional written notes provided for this part)\n';
+    output += '\n';
+
+    // Q12
+    output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+    output += '12. Self-compassionate mantra or affirmation\n\n';
+
+    output += ' ▸ 12. Reflection narrative\n';
+    var q12Narr = getText('q12_narr');
+    output += ' Notes and narrative reflections:\n';
+    output += q12Narr ? (' • ' + q12Narr + '\n') : ' • (no additional written notes provided for this part)\n';
+    output += '\n';
+
+    output += ' ▸ 12a. Which mantra resonates most?\n';
+    output += formatOptions([
+      'A. "I am doing the absolute best I can, and that’s enough for now."',
+      'B. "It’s okay to rest when needed and take care of myself completely."',
+      'C. "I am fully worthy of love and deep compassion, including my own."',
+      'D. "Mistakes are an important part of learning; I can grow from every one."',
+      'E. "I release the constant need to always be perfect in everything."',
+      'F. "I will treat myself with the same gentle kindness I show others."',
+      'G. Other / Not Listed (please specify):'
+    ]);
+    var q12Mantra = getCheckedValue('q12_mantra');
+    var q12MantraOther = getText('q12_mantra_other');
+
+    output += ' Notes and narrative reflections:\n';
+    if (q12Mantra) output += ' • Selected: ' + q12Mantra + '\n';
+    if (q12MantraOther) output += ' • Other (specified): ' + q12MantraOther + '\n';
+    if (!q12Mantra && !q12MantraOther) output += ' • (no additional written notes provided for this part)\n';
+    output += '\n';
+
+    output += ' ▸ 12b. Optional follow-up: Impact on mindset or behaviour\n';
+    var q12Follow = getText('q12_follow');
+    output += ' Notes and narrative reflections:\n';
+    output += q12Follow ? (' • ' + q12Follow + '\n') : ' • (no additional written notes provided for this part)\n';
+    output += '\n';
+
+    // Q13
+    output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+    output += '13. Burnout\n\n';
+
+    output += ' ▸ 13. Reflection narrative\n';
+    var q13Narr = getText('q13_narr');
+    output += ' Notes and narrative reflections:\n';
+    output += q13Narr ? (' • ' + q13Narr + '\n') : ' • (no additional written notes provided for this part)\n';
+    output += '\n';
+
+    output += ' ▸ 13a. Circumstances that contributed to burnout\n';
+    output += formatOptions([
+      'A. Taking on far too many responsibilities all at the same time.',
+      'B. Failing to set healthy boundaries or consistently say no when necessary.',
+      'C. Ignoring critical signs of stress, exhaustion, or emotional fatigue.',
+      'D. Experiencing prolonged emotional or significant physical challenges over time.',
+      'E. Feeling unsupported, unappreciated, or undervalued in your efforts.',
+      'F. Pushing yourself hard to meet unrealistic or unsustainable expectations.',
+      'G. Other / Not Listed (please specify):'
+    ]);
+    var q13Cause = getCheckedValue('q13_cause');
+    var q13CauseOther = getText('q13_cause_other');
+    output += ' Notes and narrative reflections:\n';
+    if (q13Cause) output += ' • Selected: ' + q13Cause + '\n';
+    if (q13CauseOther) output += ' • Other (specified): ' + q13CauseOther + '\n';
+    if (!q13Cause && !q13CauseOther) output += ' • (no additional written notes provided for this part)\n';
+    output += '\n';
+
+    output += ' ▸ 13b. How did you recover from burnout?\n';
+    output += formatOptions([
+      'A. Took intentional time off to fully rest and completely recharge yourself.',
+      'B. Reduced your workload, responsibilities, or overall obligations significantly.',
+      'C. Focused deeply on self-care practices and effective stress management techniques.',
+      'D. Sought helpful guidance or direct emotional support from others.',
+      'E. Made intentional lifestyle changes to improve balance and overall well-being.',
+      'F. Adjusted your priorities thoughtfully to align with what matters most to you.',
+      'G. Other / Not Listed (please specify):'
+    ]);
+    var q13Recover = getCheckedValue('q13_recover');
+    var q13RecoverOther = getText('q13_recover_other');
+    var q13Follow = getText('q13_follow');
+
+    output += ' Notes and narrative reflections:\n';
+    if (q13Recover) output += ' • Selected: ' + q13Recover + '\n';
+    if (q13RecoverOther) output += ' • Other (specified): ' + q13RecoverOther + '\n';
+    if (q13Follow) output += ' • Follow-up: ' + q13Follow + '\n';
+    if (!q13Recover && !q13RecoverOther && !q13Follow) output += ' • (no additional written notes provided for this part)\n';
+    output += '\n';
+
+    output += '──────────────────────────────────────────────────────────────\n';
+    output += 'End of Section 8d\n';
+    output += '──────────────────────────────────────────────────────────────\n';
+
+    latestExportText = output;
+
+    // keep hidden buffer in sync for fallback copy
+    var copyBuffer = document.getElementById('copyBuffer');
+    copyBuffer.value = latestExportText;
+  }
+
+  // ---------- FINISH ----------
+  var finishBtn = document.getElementById('finishBtn');
+  finishBtn.addEventListener('click', function() {
+    generateExportText();
+    document.getElementById('resultsSection').style.display = 'block';
+    finishBtn.style.display = 'none';
+    document.getElementById('resultsSection').scrollIntoView();
+  });
+
+  // ---------- COPY BUTTON ----------
+  var copyButton = document.getElementById('copyButton');
+  copyButton.addEventListener('click', function() {
+    var statusMessage = document.getElementById('statusMessage');
+    var text = latestExportText || '';
+
+    if (!text) {
+      statusMessage.textContent = 'Nothing to copy yet — press Finish first.';
+      return;
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text)
+        .then(function() {
+          statusMessage.textContent = '✨ Reflection copied! You can now paste it into an email or document.';
+        })
+        .catch(function() {
+          fallbackCopy(statusMessage);
+        });
+    } else {
+      fallbackCopy(statusMessage);
+    }
+  });
+
+  function fallbackCopy(statusMessage) {
+    var box = document.getElementById('copyBuffer');
+    box.focus();
+    box.select();
+    try {
+      var successful = document.execCommand('copy');
+      if (successful) {
+        statusMessage.textContent = '✨ Reflection copied! You can now paste it into an email or document.';
+      } else {
+        statusMessage.textContent = 'Copy failed. Please try again.';
+      }
+    } catch (e) {
+      statusMessage.textContent = 'Copy failed. Please try again.';
+    }
+  }
+
+  // ---------- INIT ----------
+  startTimer();
+  showStep(1);
+  enableOrDisableButtonsForStep(1);
+</script>
+</body>
+</html>

@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Section 5e: Challenges and Adversity</title>
+  <!-- Mobile-friendly scaling -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh; /* ensure it uses full height on mobile */
+      background: radial-gradient(circle at top, #1e3a8a 0, #4f46e5 25%, #ec4899 60%, #f97316 100%);
+      color: #111827;
+    }
+    .layout {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      min-height: 100vh; /* helps avoid "top half only" feeling */
+    }
+    .sidebar {
+      width: 260px;
+      flex: 0 0 260px;
+      position: sticky;
+      top: 16px;
+      align-self: flex-start;
+    }
+    .page {
+      flex: 1;
+      min-width: 0;
+    }
+    h1 {
+      font-size: 1.9rem;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #f9fafb;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.45);
+    }
+    h1 span.badge {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(251,191,36,0.95);
+      color: #78350f;
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+    }
+    p.intro {
+      margin-top: 0;
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+      color: #e5e7eb;
+      max-width: 760px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    }
+
+    .timer {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 3px;
+      padding: 8px 11px;
+      border-radius: 16px;
+      background: rgba(15,23,42,0.95);
+      border: 1px solid rgba(248,250,252,0.2);
+      box-shadow: 0 6px 18px rgba(15,23,42,0.0.7);
+      font-size: 0.88rem;
+      color: #e5e7eb;
+    }
+    .timer span.label {
+      opacity: 0.8;
+      font-size: 0.78rem;
+    }
+    .timer span.time {
+      font-weight: 800;
+      font-size: 1.2rem;
+      letter-spacing: 0.08em;
+    }
+    .timer.ending {
+      border-color: #f97373;
+      color: #fecaca;
+      box-shadow: 0 0 14px rgba(248,113,113,0.7);
+    }
+    .timer.up {
+      opacity: 0.7;
+    }
+    .time-up-banner {
+      display: none;
+      margin-bottom: 10px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(254,242,242,0.96);
+      color: #991b1b;
+      border: 1px solid #fecaca;
+      font-size: 0.84rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .time-up .time-up-banner {
+      display: block;
+    }
+    .time-up #reflectionForm input,
+    .time-up #reflectionForm textarea {
+      pointer-events: none;
+      opacity: 0.9;
+    }
+
+    .card {
+      background: #f9fafb;
+      border-radius: 18px;
+      padding: 18px 16px;
+      box-shadow: 0 10px 22px rgba(15,23,42,0.25);
+      border: 1px solid #e5e7eb;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .card-title {
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #111827;
+    }
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 4px;
+      color: #111827;
+    }
+    .question-text {
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+    }
+    textarea,
+    input[type="text"] {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      font: inherit;
+      background: #ffffff;
+      min-height: 70px;
+      resize: vertical;
+      transition: border-color 0.15s ease-out, box-shadow 0.15s ease-out, transform 0.05s ease-out;
+    }
+    textarea:focus,
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 2px rgba(129,140,248,0.4);
+      transform: translateY(-1px);
+    }
+
+    .options-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin: 8px 0 10px;
+    }
+    .option-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(129,140,248,0.7);
+      font-size: 0.95rem; /* consistent size for all options */
+      line-height: 1.4;
+      background: rgba(239,246,255,0.95);
+      cursor: pointer;
+      user-select: none;
+      width: 100%; /* nicer wrapping on mobile */
+      transition: transform 0.05s ease-out, box-shadow 0.05s ease-out, background 0.1s ease-out, border-color 0.1s ease-out, color 0.1s ease-out;
+    }
+    .option-pill input {
+      accent-color: #4b6bfb;
+      margin: 0;
+    }
+    .option-pill:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 5px rgba(148,163,184,0.8);
+    }
+    .option-pill.selected {
+      background: linear-gradient(135deg, #22c55e, #a855f7);
+      color: #f9fafb;
+      border-color: transparent;
+      box-shadow: 0 4px 12px rgba(55,65,81,0.7);
+    }
+    .option-pill.selected input {
+      accent-color: #fef9c3;
+    }
+
+    .sub-question {
+      margin-top: 12px;
+    }
+    .sub-question-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #111827;
+    }
+
+    .step {
+      display: none;
+    }
+    .step.active {
+      display: block;
+    }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 14px;
+      gap: 10px;
+    }
+    button {
+      cursor: pointer;
+      border-radius: 999px;
+      border: none;
+      padding: 10px 18px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      background: radial-gradient(circle at 0% 0%, #f97316, #ec4899, #6366f1);
+      color: #f9fafb;
+      box-shadow: 0 8px 18px rgba(15,23,42,0.7);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: transform 0.07s ease, box-shadow 0.07s ease, opacity 0.1s ease;
+    }
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 11px 22px rgba(15,23,42,0.8);
+    }
+    button:active:not(:disabled) {
+      transform: translateY(1px);
+      box-shadow: 0 5px 11px rgba(15,23,42,0.75);
+    }
+    button:disabled {
+      opacity: 0.45;
+      cursor: default;
+      box-shadow: none;
+    }
+    .secondary {
+      background: #e5e7eb;
+      color: #111827;
+      box-shadow: 0 4px 10px rgba(55,65,81,0.5);
+      text-transform: none;
+      letter-spacing: 0.01em;
+    }
+
+    #resultsBox {
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      position: absolute;
+      left: -9999px;
+      top: auto;
+      pointer-events: none;
+      border-radius: 12px;
+      border: 1px dashed #e5e7eb;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 0.9rem;
+      background: #f9fafb;
+      box-shadow: inset 0 0 8px rgba(148,163,184,0.5);
+      white-space: pre-wrap;
+    }
+    .status {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: #16a34a;
+      min-height: 1.2em;
+    }
+    .footer-note {
+      margin-top: 12px;
+      font-size: 0.8rem;
+      color: #e5e7eb;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .sidebar {
+        width: 100%;
+        flex: none;
+        position: static;
+        order: -1;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+  <!-- Sidebar with timer -->
+  <aside class="sidebar">
+    <div class="timer" id="timer">
+      <span class="label">⏱️ Time left (Section 5e)</span>
+      <span class="time" id="timeRemaining">30:00</span>
+      <span style="font-size:0.75rem; opacity:0.75;">Up to 30 minutes to complete this reflection.</span>
+    </div>
+  </aside>
+
+  <!-- Main question page -->
+  <main class="page">
+    <h1>Section 5e: Challenges and Adversity</h1>
+    <p class="intro">
+      This sequence explores moments of disconnection from your values, shifts in your beliefs, and times you’ve
+      felt a strong sense of injustice. Move through each step one at a time. At the end you’ll be able to copy a
+      formatted reflection to send on.
+    </p>
+
+    <div class="time-up-banner" id="timeUpBanner">
+      The 30 minutes for this reflection have finished. Your answers are still here – you can review them and copy them at the end.
+    </div>
+
+    <form id="reflectionForm">
+      <!-- STEP 1 – Question 13 (what caused the disconnection) -->
+      <div class="step active" data-step="1">
+        <div class="card question" data-question="13. Disconnection from your values – what caused it?">
+          <div class="card-title">Question 13 – Disconnection from your values</div>
+
+          <div class="sub-question" data-subquestion="13. What specific factors or circumstances caused this sense of disconnection?">
+            <div class="sub-question-title">
+              Can you recall a time when you felt disconnected from your values?
+            </div>
+            <div class="question-text">
+              What specific factors or circumstances caused this sense of disconnection in your life?
+            </div>
+
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q13_causes" value="Pressure to prioritise others’ needs, expectations, or demands over your own values.">
+                A. Pressure to prioritise others’ needs, expectations, or demands over your own values.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q13_causes" value="A difficult decision where the outcome conflicted with your beliefs or priorities.">
+                B. A difficult decision where the outcome conflicted with your beliefs or priorities.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q13_causes" value="External circumstances that made it challenging to act on or express your values.">
+                C. External circumstances that made it challenging to act on or express your values.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q13_causes" value="A period of uncertainty, self-doubt, or confusion about your core principles.">
+                D. A period of uncertainty, self-doubt, or confusion about your core principles.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q13_causes" value="An environment that made you feel out of alignment with your authentic self.">
+                E. An environment that made you feel out of alignment with your authentic self.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q13_causes" value="Other/Not Listed (please specify).">
+                F. Other/Not Listed (please specify):
+              </label>
+            </div>
+
+            <textarea id="q13_causes_other"
+              placeholder="If ‘Other’ or if you’d like to describe this experience in more detail, you can write about it here."></textarea>
+          </div>
+        </div>
+
+        <div class="nav-buttons">
+          <span></span>
+          <button type="button" class="next-step" data-goto="2" disabled>Next ⮕</button>
+        </div>
+      </div>
+
+      <!-- STEP 2 – Question 13a (how you addressed it) -->
+      <div class="step" data-step="2">
+        <div class="card question" data-question="13a. How you addressed or resolved the disconnection">
+          <div class="card-title">Question 13a – Realigning with your values</div>
+
+          <div class="sub-question" data-subquestion="13a. How you addressed or resolved this disconnection to realign with your values">
+            <div class="sub-question-title">
+              How did you address or resolve this disconnection?
+            </div>
+            <div class="question-text">
+              How did you address or resolve this disconnection to realign with your values?
+            </div>
+
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q13_address" value="Took time for self-reflection and re-evaluated your values to guide your actions.">
+                A. Took time for self-reflection and re-evaluated your values to guide your actions.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q13_address" value="Sought guidance, support, or advice from trusted individuals in your life.">
+                B. Sought guidance, support, or advice from trusted individuals in your life.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q13_address" value="Made intentional changes to better align your life with your values and goals.">
+                C. Made intentional changes to better align your life with your values and goals.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q13_address" value="Accepted the disconnection as temporary and worked gradually to rebuild over time.">
+                D. Accepted the disconnection as temporary and worked gradually to rebuild over time.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q13_address" value="Used the experience to redefine your priorities and regain clarity about your values.">
+                E. Used the experience to redefine your priorities and regain clarity about your values.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q13_address" value="Other/Not Listed (please specify).">
+                F. Other/Not Listed (please specify):
+              </label>
+            </div>
+
+            <textarea id="q13_address_other"
+              placeholder="If ‘Other’ or if you’d like to describe how you realigned with your values in more detail, you can write about it here."></textarea>
+          </div>
+        </div>
+
+        <div class="nav-buttons">
+          <button type="button" class="secondary prev-step" data-goto="1">⮜ Back</button>
+          <button type="button" class="next-step" data-goto="3" disabled>Next ⮕</button>
+        </div>
+      </div>
+
+      <!-- STEP 3 – Question 13 Optional follow-up -->
+      <div class="step" data-step="3" data-optional="true">
+        <div class="card question" data-question="13b. Insights about your values from this disconnection">
+          <div class="card-title">Question 13 – Optional follow-up</div>
+
+          <div class="sub-question" data-subquestion="Optional follow-up: Insights you gained about your values and how you prioritise them now">
+            <div class="sub-question-title">Optional follow-up:</div>
+            <div class="question-text">
+              What insights did you gain about your values during this time of disconnection, and how do you prioritise them now?
+            </div>
+            <textarea id="q13_follow"
+              placeholder="You might write about what this experience taught you about your values and how you live them today."></textarea>
+          </div>
+        </div>
+
+        <div class="nav-buttons">
+          <button type="button" class="secondary prev-step" data-goto="2">⮜ Back</button>
+          <button type="button" class="next-step" data-goto="4">Next ⮕</button>
+        </div>
+      </div>
+
+      <!-- STEP 4 – Question 14 (what prompted the change) -->
+      <div class="step" data-step="4">
+        <div class="card question" data-question="14. What prompted you to re-evaluate or change a belief or value?">
+          <div class="card-title">Question 14 – Re-evaluating a belief or value</div>
+
+          <div class="sub-question" data-subquestion="14. What prompted you to re-evaluate or modify this belief or value?">
+            <div class="sub-question-title">
+              Think about a belief or value that you have re-evaluated or modified over time.
+            </div>
+            <div class="question-text">
+              What prompted you to re-evaluate or change this belief or value in your life?
+            </div>
+
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q14_prompt" value="A significant life event or personal experience that directly challenged your belief.">
+                A. A significant life event or personal experience that directly challenged your belief.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q14_prompt" value="Exposure to new ideas, perspectives, or ways of thinking that broadened your view.">
+                B. Exposure to new ideas, perspectives, or ways of thinking that broadened your view.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q14_prompt" value="A meaningful conversation or relationship that shifted your understanding or priorities.">
+                C. A meaningful conversation or relationship that shifted your understanding or priorities.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q14_prompt" value="A growing sense that the belief or value no longer aligned with your true self.">
+                D. A growing sense that the belief or value no longer aligned with your true self.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q14_prompt" value="Experiencing conflict or discomfort with the way the belief influenced your decisions.">
+                E. Experiencing conflict or discomfort with the way the belief influenced your decisions.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q14_prompt" value="Other/Not Listed (please specify).">
+                F. Other/Not Listed (please specify):
+              </label>
+            </div>
+
+            <textarea id="q14_prompt_other"
+              placeholder="If ‘Other’ or if you’d like to describe this turning point in more detail, you can write about it here."></textarea>
+          </div>
+        </div>
+
+        <div class="nav-buttons">
+          <button type="button" class="secondary prev-step" data-goto="3">⮜ Back</button>
+          <button type="button" class="next-step" data-goto="5" disabled>Next ⮕</button>
+        </div>
+      </div>
+
+      <!-- STEP 5 – Question 14a (impact of the change) -->
+      <div class="step" data-step="5">
+        <div class="card question" data-question="14a. How this change has impacted your life">
+          <div class="card-title">Question 14a – Impact of this change</div>
+
+          <div class="sub-question" data-subquestion="14a. How this change has impacted your personal or professional life">
+            <div class="sub-question-title">
+              How has this change impacted your personal or professional life in meaningful ways?
+            </div>
+            <div class="question-text">
+              Choose the response that best reflects how this shift has influenced you.
+            </div>
+
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q14_impact" value="It has made you more open-minded, adaptable, and accepting of change.">
+                A. It has made you more open-minded, adaptable, and accepting of change.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q14_impact" value="It has strengthened your connection to your core values and personal authenticity.">
+                B. It has strengthened your connection to your core values and personal authenticity.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q14_impact" value="It has improved your relationships by fostering greater understanding and empathy.">
+                C. It has improved your relationships by fostering greater understanding and empathy.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q14_impact" value="It has brought clarity and confidence to your decision-making processes.">
+                D. It has brought clarity and confidence to your decision-making processes.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q14_impact" value="It has allowed you to let go of outdated perspectives or limitations.">
+                E. It has allowed you to let go of outdated perspectives or limitations.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q14_impact" value="Other/Not Listed (please specify).">
+                F. Other/Not Listed (please specify):
+              </label>
+            </div>
+
+            <textarea id="q14_impact_other"
+              placeholder="If ‘Other’ or if you’d like to describe the impact in more depth, you can write about it here."></textarea>
+          </div>
+        </div>
+
+        <div class="nav-buttons">
+          <button type="button" class="secondary prev-step" data-goto="4">⮜ Back</button>
+          <button type="button" class="next-step" data-goto="6" disabled>Next ⮕</button>
+        </div>
+      </div>
+
+      <!-- STEP 6 – Question 14 Optional follow-up -->
+      <div class="step" data-step="6" data-optional="true">
+        <div class="card question" data-question="14b. How this shift in beliefs has influenced your relationships or approach to challenges">
+          <div class="card-title">Question 14 – Optional follow-up</div>
+
+          <div class="sub-question" data-subquestion="Optional follow-up: How this shift in beliefs has influenced your relationships or approach to challenges">
+            <div class="sub-question-title">Optional follow-up:</div>
+            <div class="question-text">
+              How has this shift in beliefs influenced your relationships or approach to challenges in life?
+            </div>
+            <textarea id="q14_follow"
+              placeholder="You might write about how you now relate to others, or how you meet difficulties differently because of this change."></textarea>
+          </div>
+        </div>
+
+        <div class="nav-buttons">
+          <button type="button" class="secondary prev-step" data-goto="5">⮜ Back</button>
+          <button type="button" class="next-step" data-goto="7">Next ⮕</button>
+        </div>
+      </div>
+
+      <!-- STEP 7 – Question 15 (what caused the sense of injustice) -->
+      <div class="step" data-step="7">
+        <div class="card question" data-question="15. What caused your intense feeling of injustice?">
+          <div class="card-title">Question 15 – A strong sense of injustice</div>
+
+          <div class="sub-question" data-subquestion="15. What specific factors or experiences caused this intense feeling of injustice?">
+            <div class="sub-question-title">
+              Reflect on a moment when you felt a strong sense of injustice.
+            </div>
+            <div class="question-text">
+              What specific factors or experiences caused this intense feeling of injustice?
+            </div>
+
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q15_causes" value="Witnessing or experiencing unfair treatment of someone or a group of people.">
+                A. Witnessing or experiencing unfair treatment of someone or a group of people.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q15_causes" value="Being personally treated unfairly, unequally, or without due consideration.">
+                B. Being personally treated unfairly, unequally, or without due consideration.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q15_causes" value="Observing a systemic issue or societal problem that felt deeply wrong.">
+                C. Observing a systemic issue or societal problem that felt deeply wrong.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q15_causes" value="A conflict or situation where someone’s needs were ignored, dismissed, or marginalised.">
+                D. A conflict or situation where someone’s needs were ignored, dismissed, or marginalised.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q15_causes" value="Feeling powerless or silenced in the face of inequality or discrimination.">
+                E. Feeling powerless or silenced in the face of inequality or discrimination.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q15_causes" value="Other/Not Listed (please specify).">
+                F. Other/Not Listed (please specify):
+              </label>
+            </div>
+
+            <textarea id="q15_causes_other"
+              placeholder="If ‘Other’ or if you’d like to describe this feeling of injustice in more detail, you can write about it here."></textarea>
+          </div>
+        </div>
+
+        <div class="nav-buttons">
+          <button type="button" class="secondary prev-step" data-goto="6">⮜ Back</button>
+          <button type="button" class="next-step" data-goto="8" disabled>Next ⮕</button>
+        </div>
+      </div>
+
+      <!-- STEP 8 – Question 15a (how you responded) -->
+      <div class="step" data-step="8">
+        <div class="card question" data-question="15a. How you responded to this experience of injustice">
+          <div class="card-title">Question 15a – Your response</div>
+
+          <div class="sub-question" data-subquestion="15a. How you responded to this experience of injustice and what actions you took">
+            <div class="sub-question-title">
+              How did you respond to this experience of injustice, and what actions did you take?
+            </div>
+            <div class="question-text">
+              Choose the response that best reflects how you responded.
+            </div>
+
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q15_response" value="Spoke up, advocated, or took action to address the injustice or inequity.">
+                A. Spoke up, advocated, or took action to address the injustice or inequity.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q15_response" value="Offered meaningful support or assistance to those who were directly impacted.">
+                B. Offered meaningful support or assistance to those who were directly impacted.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q15_response" value="Reflected on the situation to learn and prevent similar injustices in the future.">
+                C. Reflected on the situation to learn and prevent similar injustices in the future.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q15_response" value="Redirected your energy toward constructive, empowering, or meaningful action.">
+                D. Redirected your energy toward constructive, empowering, or meaningful action.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q15_response" value="Found ways to channel your emotions into creating change or raising awareness.">
+                E. Found ways to channel your emotions into creating change or raising awareness.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q15_response" value="Other/Not Listed (please specify).">
+                F. Other/Not Listed (please specify):
+              </label>
+            </div>
+
+            <textarea id="q15_response_other"
+              placeholder="If ‘Other’ or if you’d like to describe your response in more depth, you can write about it here."></textarea>
+          </div>
+        </div>
+
+        <div class="nav-buttons">
+          <button type="button" class="secondary prev-step" data-goto="7">⮜ Back</button>
+          <button type="button" class="next-step" data-goto="9" disabled>Next ⮕</button>
+        </div>
+      </div>
+
+      <!-- STEP 9 – Question 15 Optional follow-up -->
+      <div class="step" data-step="9" data-optional="true">
+        <div class="card question" data-question="15b. How your response has influenced your sense of agency, advocacy, or empowerment">
+          <div class="card-title">Question 15 – Optional follow-up</div>
+
+          <div class="sub-question" data-subquestion="Optional follow-up: How your response has influenced your sense of agency, advocacy, or empowerment">
+            <div class="sub-question-title">Optional follow-up:</div>
+            <div class="question-text">
+              How has your response to this experience influenced your sense of agency, advocacy, or empowerment for yourself and others?
+            </div>
+            <textarea id="q15_follow"
+              placeholder="You might write about how this experience shaped your motivation to speak up, support others, or create change."></textarea>
+          </div>
+        </div>
+
+        <div class="nav-buttons">
+          <button type="button" class="secondary prev-step" data-goto="8">⮜ Back</button>
+          <button type="button" class="finish-step" id="finishBtn">Finish</button>
+        </div>
+      </div>
+    </form>
+
+    <div id="resultsSection" style="display:none; margin-top:20px;">
+      <h2 style="color:#f9fafb; text-shadow:0 2px 6px rgba(0,0,0,0.45);">Your Reflection Export</h2>
+      <p class="intro">
+        Your formatted reflection has been generated in the background. Click the button below to copy it so you can paste it into an email or document.
+      </p>
+      <button type="button" id="copyButton">📋 Copy this reflection</button>
+      <div class="status" id="statusMessage"></div>
+      <!-- Hidden textarea used only for copying -->
+      <textarea id="resultsBox" readonly></textarea>
+      <p class="footer-note">
+        After clicking “Copy this reflection”, go to your email or message app and use
+        <strong>Paste</strong> (Ctrl+V / Cmd+V).
+      </p>
+    </div>
+  </main>
+</div>
+
+<script>
+  // ---------- TIMER (30 MINUTES) ----------
+  var totalSeconds = 30 * 60;
+  var timerInterval = null;
+  var timeUp = false;
+  var timerEl = document.getElementById('timer');
+  var timeRemainingEl = document.getElementById('timeRemaining');
+  var timeUpBanner = document.getElementById('timeUpBanner');
+
+  function formatTime(seconds) {
+    var m = Math.floor(seconds / 60);
+    var s = seconds % 60;
+    var mm = m < 10 ? '0' + m : '' + m;
+    var ss = s < 10 ? '0' + s : '' + s;
+    return mm + ':' + ss;
+  }
+
+  function startTimer() {
+    timeRemainingEl.textContent = formatTime(totalSeconds);
+    timerInterval = setInterval(function() {
+      totalSeconds--;
+      if (totalSeconds <= 0) {
+        totalSeconds = 0;
+        clearInterval(timerInterval);
+        handleTimeUp();
+      }
+      timeRemainingEl.textContent = formatTime(totalSeconds);
+      if (totalSeconds <= 60 && !timeUp) {
+        if (timerEl.className.indexOf('ending') === -1) {
+          timerEl.className += ' ending';
+        }
+      }
+    }, 1000);
+  }
+
+  function handleTimeUp() {
+    timeUp = true;
+    timerEl.className = timerEl.className.replace(' ending', '');
+    if (timerEl.className.indexOf(' up') === -1) {
+      timerEl.className += ' up';
+    }
+    if (document.body.className.indexOf('time-up') === -1) {
+      document.body.className += ' time-up';
+    }
+    timeUpBanner.style.display = 'block';
+    var allInputs = document.querySelectorAll('#reflectionForm input, #reflectionForm textarea');
+    for (var i = 0; i < allInputs.length; i++) {
+      allInputs[i].disabled = true;
+    }
+  }
+
+  // ---------- STEPS ----------
+  var steps = document.querySelectorAll('.step');
+  var currentStep = 1;
+  var totalSteps = steps.length; // 9
+
+  function showStep(stepNumber) {
+    for (var i = 0; i < steps.length; i++) {
+      var step = steps[i];
+      var target = Number(step.getAttribute('data-step')) === stepNumber;
+      if (target) {
+        if (step.className.indexOf('active') === -1) {
+          step.className += ' active';
+        }
+      } else {
+        step.className = step.className.replace(' active', '');
+      }
+    }
+    currentStep = stepNumber;
+    window.scrollTo(0, 0);
+  }
+
+  // ---------- ANSWER CHECKING (for enabling Next/Finish) ----------
+  function isMainQuestionAnswered(stepNumber) {
+    var step = document.querySelector('.step[data-step="' + stepNumber + '"]');
+    if (!step) return false;
+
+    // Any radio or checkbox selected?
+    var checked = step.querySelector('input[type="radio"]:checked, input[type="checkbox"]:checked');
+    if (checked) return true;
+
+    // Or any text entered into a field on that step?
+    var fields = step.querySelectorAll('textarea, input[type="text"]');
+    for (var i = 0; i < fields.length; i++) {
+      if (fields[i].value && fields[i].value.trim() !== '') {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function checkQuestionReward(stepNumber) {
+    // intentionally empty (hook for gamification if needed)
+  }
+
+  // simple helper to find closest parent with a class
+  function closestWithClass(element, className, stopAt) {
+    while (element && element !== stopAt && element.nodeType === 1) {
+      if ((' ' + element.className + ' ').indexOf(' ' + className + ' ') > -1) {
+        return element;
+      }
+      element = element.parentNode;
+    }
+    return null;
+  }
+
+  // ---------- OPTION PILL SELECTION ----------
+  var optionGroups = document.querySelectorAll('.options-group');
+  for (var og = 0; og < optionGroups.length; og++) {
+    optionGroups[og].addEventListener('change', function(e) {
+      var target = e.target || e.srcElement;
+      if (!target || target.tagName !== 'INPUT') return;
+
+      var pill = closestWithClass(target, 'option-pill', this);
+      if (!pill) return;
+
+      if (target.type === 'radio') {
+        var allPills = this.querySelectorAll('.option-pill');
+        for (var i = 0; i < allPills.length; i++) {
+          allPills[i].className = allPills[i].className.replace(' selected', '');
+        }
+        if (pill.className.indexOf('selected') === -1) {
+          pill.className += ' selected';
+        }
+      } else if (target.type === 'checkbox') {
+        if (target.checked) {
+          if (pill.className.indexOf('selected') === -1) {
+            pill.className += ' selected';
+          }
+        } else {
+          pill.className = pill.className.replace(' selected', '');
+        }
+      }
+
+      var stepEl = closestWithClass(target, 'step', document.body);
+      if (stepEl) {
+        var stepNumber = Number(stepEl.getAttribute('data-step'));
+        enableOrDisableButtonsForStep(stepNumber);
+        checkQuestionReward(stepNumber);
+      }
+    });
+  }
+
+  // Also update when typing
+  var reflectionForm = document.getElementById('reflectionForm');
+  reflectionForm.addEventListener('input', function(e) {
+    var target = e.target || e.srcElement;
+    var stepEl = closestWithClass(target, 'step', document.body);
+    if (stepEl) {
+      var stepNumber = Number(stepEl.getAttribute('data-step'));
+      enableOrDisableButtonsForStep(stepNumber);
+      checkQuestionReward(stepNumber);
+    }
+  });
+
+  function enableOrDisableButtonsForStep(stepNumber) {
+    var stepEl = document.querySelector('.step[data-step="' + stepNumber + '"]');
+    if (!stepEl) return;
+
+    var isOptional = stepEl.getAttribute('data-optional') === 'true';
+    var answered = isOptional ? true : isMainQuestionAnswered(stepNumber);
+
+    var nextBtn = stepEl.querySelector('.next-step');
+    var finishBtn = stepEl.querySelector('.finish-step');
+
+    if (nextBtn) {
+      nextBtn.disabled = !answered;
+    }
+    if (finishBtn) {
+      finishBtn.disabled = !answered;
+    }
+  }
+
+  // ---------- STEP NAV BUTTONS ----------
+  var nextButtons = document.querySelectorAll('.next-step');
+  for (var nb = 0; nb < nextButtons.length; nb++) {
+    nextButtons[nb].addEventListener('click', function() {
+      var goto = this.getAttribute('data-goto');
+      if (goto) {
+        showStep(Number(goto));
+        enableOrDisableButtonsForStep(Number(goto));
+      }
+    });
+  }
+
+  var prevButtons = document.querySelectorAll('.prev-step');
+  for (var pb = 0; pb < prevButtons.length; pb++) {
+    prevButtons[pb].addEventListener('click', function() {
+      var goto = this.getAttribute('data-goto');
+      if (goto) {
+        showStep(Number(goto));
+        enableOrDisableButtonsForStep(Number(goto));
+      }
+    });
+  }
+
+  var finishBtn = document.getElementById('finishBtn');
+
+  // When finish clicked, show results section + generate export, then hide the Finish button
+  finishBtn.addEventListener('click', function() {
+    generateExportText();
+    document.getElementById('resultsSection').style.display = 'block';
+    finishBtn.style.display = 'none';
+    document.getElementById('resultsSection').scrollIntoView();
+  });
+
+  // Dash line used after each option ONLY
+  var dashLine = '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -';
+
+  // ---------- EXPORT TEXT ----------
+  function generateExportText() {
+    var allQuestions = document.querySelectorAll('.question');
+    var output = '';
+
+    output += '──────────────────────────────────────────────────────────────\n';
+    output += 'Section 5e: Challenges and Adversity – Reflection Summary\n';
+    output += '──────────────────────────────────────────────────────────────\n\n';
+    output += 'For each question below, all possible options are listed.\n';
+    output += 'Your own written notes follow each group of options where you added them.\n\n';
+
+    for (var qIndex = 0; qIndex < allQuestions.length; qIndex++) {
+      var q = allQuestions[qIndex];
+      var mainPrompt = q.getAttribute('data-question') || ('Question ' + (qIndex + 1));
+
+      output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+      output += mainPrompt + '\n';
+
+      var subQuestions = q.querySelectorAll('.sub-question');
+      for (var sIndex = 0; sIndex < subQuestions.length; sIndex++) {
+        var sub = subQuestions[sIndex];
+        var subPrompt = sub.getAttribute('data-subquestion') || '';
+        output += '\n ▸ ' + subPrompt + '\n';
+
+        var groups = sub.querySelectorAll('.options-group');
+        for (var gIndex = 0; gIndex < groups.length; gIndex++) {
+          var group = groups[gIndex];
+          var labels = group.querySelectorAll('label.option-pill');
+          if (labels.length > 0) {
+            output += ' Options:\n';
+            for (var lIndex = 0; lIndex < labels.length; lIndex++) {
+              var label = labels[lIndex];
+              var labelText = label.textContent.replace(/\s+/g, ' ').trim();
+              output += ' ' + labelText + '\n';
+              output += dashLine + '\n';
+            }
+          }
+        }
+
+        var notes = [];
+        var fields = sub.querySelectorAll('textarea, input[type="text"]');
+        for (var fIndex = 0; fIndex < fields.length; fIndex++) {
+          var field = fields[fIndex];
+          if (field.value && field.value.trim() !== '') {
+            notes.push(field.value.trim());
+          }
+        }
+
+        if (notes.length > 0) {
+          output += ' Notes and narrative reflections:\n';
+          for (var nIndex = 0; nIndex < notes.length; nIndex++) {
+            output += ' • ' + notes[nIndex] + '\n';
+          }
+        } else {
+          output += ' Notes and narrative reflections:\n';
+          output += ' • (no additional written notes provided for this part)\n';
+        }
+      }
+
+      output += '\n';
+    }
+
+    output += '──────────────────────────────────────────────────────────────\n';
+    output += 'End of Section 5e\n';
+    output += '──────────────────────────────────────────────────────────────\n';
+
+    document.getElementById('resultsBox').value = output;
+  }
+
+  // ---------- COPY BUTTON ----------
+  var copyButton = document.getElementById('copyButton');
+  copyButton.addEventListener('click', function() {
+    var statusMessage = document.getElementById('statusMessage');
+    var text = document.getElementById('resultsBox').value;
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text)
+        .then(function() {
+          statusMessage.textContent = '✨ Reflection copied! You can now paste it into an email or document.';
+        })
+        .catch(function() {
+          statusMessage.textContent = 'Copy failed. Please try again or copy manually.';
+        });
+    } else {
+      var box = document.getElementById('resultsBox');
+      box.focus();
+      box.select();
+      try {
+        var successful = document.execCommand('copy');
+        if (successful) {
+          statusMessage.textContent = '✨ Reflection copied! You can now paste it into an email or document.';
+        } else {
+          statusMessage.textContent = 'Copy failed. Please try again or copy manually.';
+        }
+      } catch (e) {
+        statusMessage.textContent = 'Copy failed. Please try again or copy manually.';
+      }
+    }
+  });
+
+  // ---------- INIT ----------
+  startTimer();
+  showStep(1);
+  enableOrDisableButtonsForStep(1);
+</script>
+</body>
+</html>
