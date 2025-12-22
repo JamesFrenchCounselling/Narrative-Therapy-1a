@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- ✅ NEW: makes layout render at proper scale on phones -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Section 1b – Identity Exploration, Misunderstanding & Belonging</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    /* ✅ NEW: stop mobile browsers randomly resizing text */
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at top, #1e3a8a 0, #4f46e5 25%, #ec4899 60%, #f97316 100%);
+      color: #111827;
+    }
+
+    .layout {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+    }
+
+    .sidebar {
+      width: 260px;
+      flex: 0 0 260px;
+      position: sticky;
+      top: 16px;
+      align-self: flex-start;
+    }
+
+    .page {
+      flex: 1;
+      min-width: 0;
+    }
+
+    h1 {
+      font-size: 1.9rem;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #f9fafb;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.45);
+    }
+
+    h1 span.badge {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(251,191,36,0.95);
+      color: #78350f;
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+    }
+
+    p.intro {
+      margin-top: 0;
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+      color: #e5e7eb;
+      max-width: 760px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    }
+
+    /* Sidebar cards (stats + timer) */
+    .gamify-panel {
+      background: linear-gradient(135deg, rgba(15,23,42,0.96), rgba(30,64,175,0.98));
+      border-radius: 18px;
+      padding: 10px 14px;
+      border: 1px solid rgba(191,219,254,0.3);
+      box-shadow: 0 10px 25px rgba(15,23,42,0.7);
+      color: #e5e7eb;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .gamify-panel::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(251,191,36,0.3) 0, transparent 50%),
+        radial-gradient(circle at 80% 0%, rgba(236,72,153,0.3) 0, transparent 55%),
+        radial-gradient(circle at 0% 100%, rgba(34,197,94,0.3) 0, transparent 55%);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .gamify-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .gamify-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 4px;
+      font-size: 0.84rem;
+    }
+
+    .gamify-header strong {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    #scoreLabel {
+      font-weight: 700;
+      font-size: 0.9rem;
+      background: rgba(15,23,42,0.8);
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(248,250,252,0.15);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.7);
+      overflow: hidden;
+      position: relative;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.6);
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #22c55e, #fbbf24, #fb923c, #ec4899, #22c55e);
+      background-size: 200% 100%;
+      animation: progressGlow 4s linear infinite;
+      transition: width 0.3s ease-out;
+    }
+
+    @keyframes progressGlow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    .progress-label {
+      margin-top: 4px;
+      font-size: 0.78rem;
+      color: #e5e7eb;
+    }
+
+    .quest-log {
+      margin-top: 4px;
+      border-top: 1px solid rgba(148,163,184,0.35);
+      padding-top: 4px;
+    }
+
+    .quest-title {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.9;
+      margin-bottom: 2px;
+    }
+
+    .quest-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      font-size: 0.75rem;
+    }
+
+    .quest-list li {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 2px;
+      opacity: 0.9;
+    }
+
+    .quest-badge {
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(209,213,219,0.9);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.68rem;
+      background: rgba(15,23,42,0.8);
+    }
+
+    .quest-list li.completed {
+      color: #bbf7d0;
+    }
+
+    .quest-list li.completed .quest-badge {
+      background: radial-gradient(circle at 30% 0, #fef3c7 0, #22c55e 40%, #166534 100%);
+      border-color: #bbf7d0;
+      box-shadow: 0 0 6px rgba(34,197,94,0.9);
+    }
+
+    .quest-list li.completed .quest-badge::before {
+      content: "✓";
+    }
+
+    .quest-list li:not(.completed) .quest-badge::before {
+      content: "";
+    }
+
+    .reward-flash {
+      margin-top: 2px;
+      font-size: 0.78rem;
+      color: #fef3c7;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+    }
+
+    .reward-flash.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .timer {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 3px;
+      padding: 8px 11px;
+      border-radius: 16px;
+      background: rgba(15,23,42,0.95);
+      border: 1px solid rgba(248,250,252,0.2);
+      box-shadow: 0 6px 18px rgba(15,23,42,0.7);
+      font-size: 0.88rem;
+      color: #e5e7eb;
+    }
+
+    .timer span.label {
+      opacity: 0.8;
+      font-size: 0.78rem;
+    }
+
+    .timer span.time {
+      font-weight: 800;
+      font-size: 1.2rem;
+      letter-spacing: 0.08em;
+    }
+
+    .timer.ending {
+      border-color: #f97373;
+      color: #fecaca;
+      box-shadow: 0 0 14px rgba(248,113,113,0.7);
+    }
+
+    .timer.up {
+      opacity: 0.7;
+    }
+
+    .time-up-banner {
+      display: none;
+      margin-bottom: 10px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(254,242,242,0.96);
+      color: #991b1b;
+      border: 1px solid #fecaca;
+      font-size: 0.84rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .time-up .time-up-banner {
+      display: block;
+    }
+
+    .time-up #reflectionForm input,
+    .time-up #reflectionForm textarea {
+      pointer-events: none;
+      opacity: 0.9;
+    }
+
+    .card {
+      background: #f9fafb;
+      border-radius: 18px;
+      padding: 18px 16px;
+      box-shadow: 0 10px 22px rgba(15,23,42,0.25);
+      border: 1px solid #e5e7eb;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-title {
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #111827;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 4px;
+      color: #111827;
+    }
+
+    .question-text {
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+    }
+
+    textarea,
+    input[type="text"] {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      font: inherit;
+      background: #ffffff;
+      min-height: 70px;
+      resize: vertical;
+      transition: border-color 0.15s ease-out, box-shadow 0.15s ease-out, transform 0.05s ease-out;
+    }
+
+    textarea:focus,
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 2px rgba(129,140,248,0.4);
+      transform: translateY(-1px);
+    }
+
+    .options-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin: 8px 0 10px;
+    }
+
+    .option-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(129,140,248,0.7);
+      font-size: 0.9rem;
+      background: rgba(239,246,255,0.95);
+      cursor: pointer;
+      user-select: none;
+      transition:
+        transform 0.05s ease-out,
+        box-shadow 0.05s ease-out,
+        background 0.1s ease-out,
+        border-color 0.1s ease-out,
+        color 0.1s ease-out;
+    }
+
+    .option-pill input {
+      accent-color: #4b6bfb;
+    }
+
+    .option-pill:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 5px rgba(148,163,184,0.8);
+    }
+
+    .option-pill.selected {
+      background: linear-gradient(135deg, #22c55e, #a855f7);
+      color: #f9fafb;
+      border-color: transparent;
+      box-shadow: 0 4px 12px rgba(55,65,81,0.7);
+    }
+
+    .option-pill.selected input {
+      accent-color: #fef9c3;
+    }
+
+    .sub-question {
+      margin-top: 12px;
+    }
+
+    .sub-question-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #111827;
+    }
+
+    .step {
+      display: none;
+    }
+
+    .step.active {
+      display: block;
+    }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 14px;
+      gap: 10px;
+    }
+
+    button {
+      cursor: pointer;
+      border-radius: 999px;
+      border: none;
+      padding: 10px 18px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      background: radial-gradient(circle at 0% 0%, #f97316, #ec4899, #6366f1);
+      color: #f9fafb;
+      box-shadow: 0 8px 18px rgba(15,23,42,0.7);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: transform 0.07s ease, box-shadow 0.07s ease, opacity 0.1s ease;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 11px 22px rgba(15,23,42,0.8);
+    }
+
+    button:active:not(:disabled) {
+      transform: translateY(1px);
+      box-shadow: 0 5px 11px rgba(15,23,42,0.75);
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .secondary {
+      background: #e5e7eb;
+      color: #111827;
+      box-shadow: 0 4px 10px rgba(55,65,81,0.5);
+      text-transform: none;
+      letter-spacing: 0.01em;
+    }
+
+    #resultsBox {
+      width: 100%;
+      min-height: 200px;
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px dashed #e5e7eb;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 0.9rem;
+      background: #f9fafb;
+      box-shadow: inset 0 0 8px rgba(148,163,184,0.5);
+      white-space: pre-wrap;
+    }
+
+    .status {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: #16a34a;
+      min-height: 1.2em;
+    }
+
+    .footer-note {
+      margin-top: 12px;
+      font-size: 0.8rem;
+      color: #e5e7eb;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        flex: none;
+        position: static;
+        order: -1;
+      }
+    }
+
+    /* ✅ NEW: ensure answer text is a consistent size on small screens */
+    @media (max-width: 600px) {
+      .option-pill {
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar with stats + timer (always visible via sticky) -->
+    <aside class="sidebar">
+      <div class="gamify-panel">
+        <div class="gamify-inner">
+          <div class="gamify-header">
+            <strong>Narrative Therapy Progress</strong>
+            <span id="scoreLabel">0</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+          <div class="progress-label" id="progressText">
+            0%
+          </div>
+          <div class="quest-log">
+            <div class="quest-title">Questions Completed</div>
+            <ul class="quest-list">
+              <li id="quest1"><span class="quest-badge"></span>Complete Question 4</li>
+              <li id="quest2"><span class="quest-badge"></span>Complete Question 5</li>
+              <li id="quest3"><span class="quest-badge"></span>Complete Question 6 & copy</li>
+            </ul>
+          </div>
+          <div class="reward-flash" id="rewardFlash">
+            ⭐ +10 unlocked! Nice insight.
+          </div>
+        </div>
+      </div>
+
+      <div class="timer" id="timer">
+        <span class="label">⏱️ Time left (Section 1b)</span>
+        <span class="time" id="timeRemaining">30:00</span>
+        <span style="font-size:0.75rem; opacity:0.75;">Up to 30 minutes to complete this week's narrative.</span>
+      </div>
+    </aside>
+
+    <!-- Main question page -->
+    <main class="page">
+      <h1>
+        Section 1b: Identity Exploration, Misunderstanding & Belonging
+      </h1>
+
+      <p class="intro">
+        This sequence explores embracing new parts of yourself, times you felt misunderstood, and experiences of belonging.
+        Move through Questions 4, 5, and 6 one at a time. At the end you’ll be able to copy a formatted reflection to send on.
+      </p>
+
+      <div class="time-up-banner" id="timeUpBanner">
+        The 30 minutes for this reflection have finished. Your answers are still here – you can review them
+        and copy them at the end.
+      </div>
+
+      <form id="reflectionForm">
+        <!-- STEP 1 – QUESTION 4a -->
+        <div class="step active" data-step="1" data-question-group="4">
+          <div class="card question" data-question="4. Exploring or embracing a new aspect of identity">
+            <div class="card-title">Question 4 – Exploring a new aspect of your identity</div>
+
+            <div class="sub-question" data-subquestion="4a. Circumstances or events that prompted this exploration">
+              <div class="sub-question-title">
+                Reflect on a time when you explored or embraced a new aspect of your identity.
+              </div>
+              <div class="question-text">
+                What circumstances or events prompted you to explore this new dimension of yourself?
+              </div>
+
+              <div class="options-group">
+                <label class="option-pill">
+                  <input type="radio" name="q4a" value="Curiosity about a part of yourself you hadn’t explored.">
+                  A. Curiosity about a part of yourself you hadn’t explored.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q4a" value="A life transition or new opportunity.">
+                  B. A life transition or new opportunity.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q4a" value="A relationship or connection with someone.">
+                  C. A relationship or connection with someone.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q4a" value="Exposure to a different culture, group, or environment.">
+                  D. Exposure to a different culture, group, or environment.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q4a" value="Realising that an old belief or habit no longer reflected who you are.">
+                  E. Realising that an old belief or habit no longer reflected who you are.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q4a" value="Other / Not Listed (please specify).">
+                  F. Other / Not Listed (please specify):
+                </label>
+              </div>
+              <textarea id="q4a_other" placeholder="If ‘Other’ or if you’d like to describe this time more fully, you can write about it here."></textarea>
+            </div>
+          </div>
+
+          <div class="nav-buttons">
+            <span></span>
+            <button type="button" class="next-btn" data-next-step="2" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 2 – QUESTION 4b -->
+        <div class="step" data-step="2" data-question-group="4">
+          <div class="card question" data-question="4. Exploring or embracing a new aspect of identity">
+            <div class="card-title">Question 4 – Exploring a new aspect of your identity</div>
+
+            <div class="sub-question" data-subquestion="4b. Most important lessons or insights you gained">
+              <div class="sub-question-title">
+                What were the most important lessons or insights you gained through this exploration?
+              </div>
+
+              <div class="options-group">
+                <label class="option-pill">
+                  <input type="radio" name="q4b" value="New strengths or interests you didn’t know you had.">
+                  A. New strengths or interests you didn’t know you had.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q4b" value="A deeper understanding of how your identity has evolved.">
+                  B. A deeper understanding of how your identity has evolved.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q4b" value="An expanded perspective on your life and relationships.">
+                  C. An expanded perspective on your life and relationships.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q4b" value="Greater confidence in embracing change.">
+                  D. Greater confidence in embracing change.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q4b" value="A sense of liberation from preconceived limitations or expectations.">
+                  E. A sense of liberation from preconceived limitations or expectations.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q4b" value="Other / Not Listed (please specify).">
+                  F. Other / Not Listed (please specify):
+                </label>
+              </div>
+              <textarea id="q4b_other" placeholder="If ‘Other’ or if you’d like to say more about the lessons and insights, you can write it here."></textarea>
+            </div>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary back-btn" data-prev-step="1">⮜ Back</button>
+            <button type="button" class="next-btn" data-next-step="3" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 3 – QUESTION 4c FOLLOW-UP (OPTIONAL, SEPARATE PAGE) -->
+        <div class="step" data-step="3" data-question-group="4" data-optional="true">
+          <div class="card question" data-question="4. Exploring or embracing a new aspect of identity">
+            <div class="card-title">Question 4 – Exploring a new aspect of your identity</div>
+
+            <div class="sub-question" data-subquestion="4c. How this exploration supports future growth and transformation">
+              <div class="sub-question-title">
+                Optional follow-up:
+              </div>
+              <div class="question-text">
+                How has this exploration helped you embrace future opportunities for growth, self-discovery, or transformation in your life?
+              </div>
+              <textarea id="q4_follow" placeholder="You might write about how this experience shapes your openness to change and new versions of yourself."></textarea>
+            </div>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary back-btn" data-prev-step="2">⮜ Back</button>
+            <button type="button" class="next-btn" data-next-step="4">Next Question ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 4 – QUESTION 5a -->
+        <div class="step" data-step="4" data-question-group="5">
+          <div class="card question" data-question="5. Feeling misunderstood or misrepresented by others">
+            <div class="card-title">Question 5 – Feeling misunderstood or misrepresented</div>
+
+            <div class="sub-question" data-subquestion="5a. Factors or circumstances that contributed to feeling misunderstood or misrepresented">
+              <div class="sub-question-title">
+                Think about a time when you felt misunderstood or misrepresented by others.
+              </div>
+              <div class="question-text">
+                What specific factors or circumstances contributed to your feeling of being misunderstood or misrepresented?
+              </div>
+
+              <div class="options-group">
+                <label class="option-pill">
+                  <input type="radio" name="q5a" value="Assumptions others made about you.">
+                  A. Assumptions others made about you.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q5a" value="A lack of communication or understanding in a relationship.">
+                  B. A lack of communication or understanding in a relationship.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q5a" value="Being judged based on stereotypes or biases.">
+                  C. Being judged based on stereotypes or biases.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q5a" value="A situation where you felt your voice wasn’t heard.">
+                  D. A situation where you felt your voice wasn’t heard.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q5a" value="Having your intentions misinterpreted or misconstrued in a critical moment.">
+                  E. Having your intentions misinterpreted or misconstrued in a critical moment.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q5a" value="Other / Not Listed (please specify).">
+                  F. Other / Not Listed (please specify):
+                </label>
+              </div>
+              <textarea id="q5a_other" placeholder="If ‘Other’ or if you’d like to describe this experience more fully, you can write about it here."></textarea>
+            </div>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary back-btn" data-prev-step="3">⮜ Back</button>
+            <button type="button" class="next-btn" data-next-step="5" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 5 – QUESTION 5b -->
+        <div class="step" data-step="5" data-question-group="5">
+          <div class="card question" data-question="5. Feeling misunderstood or misrepresented by others">
+            <div class="card-title">Question 5 – Feeling misunderstood or misrepresented</div>
+
+            <div class="sub-question" data-subquestion="5b. How you chose to respond and what actions you took">
+              <div class="sub-question-title">
+                How did you choose to respond to this experience, and what actions did you take?
+              </div>
+
+              <div class="options-group">
+                <label class="option-pill">
+                  <input type="radio" name="q5b" value="Tried to explain or share your perspective.">
+                  A. Tried to explain or share your perspective.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q5b" value="Reflected on why the misunderstanding occurred.">
+                  B. Reflected on why the misunderstanding occurred.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q5b" value="Chose to focus on those who truly understand you.">
+                  C. Chose to focus on those who truly understand you.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q5b" value="Used it as an opportunity for growth or learning.">
+                  D. Used it as an opportunity for growth or learning.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q5b" value="Allowed yourself to let go of the need to be understood by everyone.">
+                  E. Allowed yourself to let go of the need to be understood by everyone.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q5b" value="Other / Not Listed (please specify).">
+                  F. Other / Not Listed (please specify):
+                </label>
+              </div>
+              <textarea id="q5b_other" placeholder="If ‘Other’ or if you’d like to say more about how you responded, you can write it here."></textarea>
+            </div>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary back-btn" data-prev-step="4">⮜ Back</button>
+            <button type="button" class="next-btn" data-next-step="6" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 6 – QUESTION 5c FOLLOW-UP (OPTIONAL, SEPARATE PAGE) -->
+        <div class="step" data-step="6" data-question-group="5" data-optional="true">
+          <div class="card question" data-question="5. Feeling misunderstood or misrepresented by others">
+            <div class="card-title">Question 5 – Feeling misunderstood or misrepresented</div>
+
+            <div class="sub-question" data-subquestion="5c. How this influenced how you communicate and express your identity">
+              <div class="sub-question-title">
+                Optional follow-up:
+              </div>
+              <div class="question-text">
+                How did this experience influence the way you communicate and express your identity to others, particularly in similar situations moving forward?
+              </div>
+              <textarea id="q5_follow" placeholder="You might write about changes in your boundaries, communication style, or who you choose to share certain parts of yourself with."></textarea>
+            </div>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary back-btn" data-prev-step="5">⮜ Back</button>
+            <button type="button" class="next-btn" data-next-step="7">Next Question ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 7 – QUESTION 6a -->
+        <div class="step" data-step="7" data-question-group="6">
+          <div class="card question" data-question="6. Feeling a strong sense of belonging in a community or group">
+            <div class="card-title">Question 6 – A moment of belonging in a community or group</div>
+
+            <div class="sub-question" data-subquestion="6a. Factors or experiences that made you feel connected and included">
+              <div class="sub-question-title">
+                Think about a specific time when you felt a strong sense of belonging in a community or group.
+              </div>
+              <div class="question-text">
+                What were the factors or experiences that made you feel connected and included?
+              </div>
+
+              <div class="options-group">
+                <label class="option-pill">
+                  <input type="radio" name="q6a" value="Shared values or interests with the group.">
+                  A. Shared values or interests with the group.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q6a" value="Feeling welcomed or included by others.">
+                  B. Feeling welcomed or included by others.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q6a" value="Building meaningful relationships within the group.">
+                  C. Building meaningful relationships within the group.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q6a" value="Contributing to the group in a meaningful way.">
+                  D. Contributing to the group in a meaningful way.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q6a" value="Feeling a mutual sense of trust and support with others in the group.">
+                  E. Feeling a mutual sense of trust and support with others in the group.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q6a" value="Other / Not Listed (please specify).">
+                  F. Other / Not Listed (please specify):
+                </label>
+              </div>
+              <textarea id="q6a_other" placeholder="If ‘Other’ or if you’d like to describe this sense of belonging more fully, you can write about it here."></textarea>
+            </div>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary back-btn" data-prev-step="6">⮜ Back</button>
+            <button type="button" class="next-btn" data-next-step="8" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 8 – QUESTION 6b -->
+        <div class="step" data-step="8" data-question-group="6">
+          <div class="card question" data-question="6. Feeling a strong sense of belonging in a community or group">
+            <div class="card-title">Question 6 – A moment of belonging in a community or group</div>
+
+            <div class="sub-question" data-subquestion="6b. How this impacted your understanding of your identity and sense of self">
+              <div class="sub-question-title">
+                How did this experience impact your understanding of your identity and sense of self?
+              </div>
+
+              <div class="options-group">
+                <label class="option-pill">
+                  <input type="radio" name="q6b" value="It reinforced your connection to your values or beliefs.">
+                  A. It reinforced your connection to your values or beliefs.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q6b" value="It helped you feel more confident in social settings.">
+                  B. It helped you feel more confident in social settings.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q6b" value="It deepened your understanding of the importance of community.">
+                  C. It deepened your understanding of the importance of community.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q6b" value="It inspired you to seek or create similar experiences.">
+                  D. It inspired you to seek or create similar experiences.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q6b" value="It gave you a sense of purpose through collective effort or collaboration.">
+                  E. It gave you a sense of purpose through collective effort or collaboration.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q6b" value="Other / Not Listed (please specify).">
+                  F. Other / Not Listed (please specify):
+                </label>
+              </div>
+              <textarea id="q6b_other" placeholder="If ‘Other’ or if you’d like to describe the impact in more detail, you can write it here."></textarea>
+            </div>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary back-btn" data-prev-step="7">⮜ Back</button>
+            <button type="button" class="next-btn" data-next-step="9" disabled>Next ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 9 – QUESTION 6c FOLLOW-UP (OPTIONAL, SEPARATE PAGE) -->
+        <div class="step" data-step="9" data-question-group="6" data-optional="true">
+          <div class="card question" data-question="6. Feeling a strong sense of belonging in a community or group">
+            <div class="card-title">Question 6 – A moment of belonging in a community or group</div>
+
+            <div class="sub-question" data-subquestion="6c. What made this group or community feel supportive and connected">
+              <div class="sub-question-title">
+                Optional follow-up:
+              </div>
+              <div class="question-text">
+                What specific aspects of this group or community made you feel supported, valued, and connected?
+              </div>
+              <textarea id="q6_follow" placeholder="You might write about behaviours, norms, people, or rituals that made this sense of belonging possible."></textarea>
+            </div>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary back-btn" data-prev-step="8">⮜ Back</button>
+            <button type="button" id="finishBtn">Finish</button>
+          </div>
+        </div>
+      </form>
+
+      <div id="resultsSection" style="display:none; margin-top:20px;">
+        <h2 style="color:#f9fafb; text-shadow:0 2px 6px rgba(0,0,0,0.45);">Your Reflection Export</h2>
+        <p class="intro">
+          Below is your formatted reflection. It includes every option for each question, with a <strong>*</strong> next to the options you selected,
+          plus your written notes.
+        </p>
+        <button type="button" id="copyButton">📋 Copy this reflection</button>
+        <div class="status" id="statusMessage"></div>
+        <textarea id="resultsBox" readonly></textarea>
+        <p class="footer-note">
+          After clicking “Copy this reflection”, go to your email or message app and use <strong>Paste</strong> (Ctrl+V / Cmd+V).
+        </p>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // ---------- TIMER (30 MINUTES) ----------
+    let totalSeconds = 30 * 60;
+    let timerInterval = null;
+    let timeUp = false;
+
+    const timerEl = document.getElementById('timer');
+    const timeRemainingEl = document.getElementById('timeRemaining');
+    const timeUpBanner = document.getElementById('timeUpBanner');
+
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      const mm = m < 10 ? '0' + m : '' + m;
+      const ss = s < 10 ? '0' + s : '' + s;
+      return mm + ':' + ss;
+    }
+
+    function startTimer() {
+      timeRemainingEl.textContent = formatTime(totalSeconds);
+      timerInterval = setInterval(() => {
+        totalSeconds--;
+        if (totalSeconds <= 0) {
+          totalSeconds = 0;
+          clearInterval(timerInterval);
+          handleTimeUp();
+        }
+        timeRemainingEl.textContent = formatTime(totalSeconds);
+
+        if (totalSeconds <= 60 && !timeUp) {
+          timerEl.classList.add('ending');
+        }
+      }, 1000);
+    }
+
+    function handleTimeUp() {
+      timeUp = true;
+      timerEl.classList.remove('ending');
+      timerEl.classList.add('up');
+      document.body.classList.add('time-up');
+      timeUpBanner.style.display = 'block';
+      const allInputs = document.querySelectorAll('#reflectionForm input, #reflectionForm textarea');
+      allInputs.forEach(el => el.disabled = true);
+    }
+
+    // ---------- STEPS ----------
+    const steps = document.querySelectorAll('.step');
+    let currentStep = 1;
+    const totalSteps = steps.length;
+
+    function showStep(stepNumber) {
+      if (stepNumber < 1 || stepNumber > totalSteps) return;
+      steps.forEach(step => {
+        step.classList.toggle('active', Number(step.dataset.step) === stepNumber);
+      });
+      currentStep = stepNumber;
+      updateProgress();
+    }
+
+    // ---------- PROGRESS / SCORE / QUESTIONS COMPLETED ----------
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    const scoreLabel = document.getElementById('scoreLabel');
+    const rewardFlash = document.getElementById('rewardFlash');
+    const quest1 = document.getElementById('quest1');
+    const quest2 = document.getElementById('quest2');
+    const quest3 = document.getElementById('quest3');
+
+    // Question groups correspond to main Questions 4, 5, 6
+    const questionGroupsIds = ['4', '5', '6'];
+
+    let copiedOnce = false;
+    let rewardTimeout = null;
+
+    function isStepAnswered(stepEl) {
+      if (!stepEl) return false;
+
+      // ✅ NEW: optional steps are allowed to proceed with no input
+      if (stepEl.dataset.optional === 'true') return true;
+
+      const checked = stepEl.querySelector('input[type="radio"]:checked, input[type="checkbox"]:checked');
+      if (checked) return true;
+
+      const fields = stepEl.querySelectorAll('textarea, input[type="text"]');
+      for (const field of fields) {
+        if (field.value && field.value.trim() !== '') {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function isQuestionGroupAnswered(groupId) {
+      // Any answered field (option or text) for that main question (4,5,6)
+      const radios = document.querySelectorAll('input[type="radio"][name^="q' + groupId + '"]');
+      for (const r of radios) {
+        if (r.checked) return true;
+      }
+
+      const checkboxes = document.querySelectorAll('input[type="checkbox"][name^="q' + groupId + '"]');
+      for (const c of checkboxes) {
+        if (c.checked) return true;
+      }
+
+      const textFields = document.querySelectorAll(
+        'textarea[id^="q' + groupId + '"], input[type="text"][id^="q' + groupId + '"]'
+      );
+      for (const field of textFields) {
+        if (field.value && field.value.trim() !== '') {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    function answeredQuestionsCount() {
+      let count = 0;
+      questionGroupsIds.forEach(id => {
+        if (isQuestionGroupAnswered(id)) count++;
+      });
+      return count;
+    }
+
+    function updateQuests(percent) {
+      quest1.classList.toggle('completed', isQuestionGroupAnswered('4'));
+      quest2.classList.toggle('completed', isQuestionGroupAnswered('5'));
+      const allAnswered = answeredQuestionsCount() === questionGroupsIds.length;
+      quest3.classList.toggle('completed', allAnswered && copiedOnce);
+    }
+
+    function showReward(message) {
+      if (rewardTimeout) clearTimeout(rewardTimeout);
+      rewardFlash.textContent = message;
+      rewardFlash.classList.add('visible');
+      rewardTimeout = setTimeout(() => {
+        rewardFlash.classList.remove('visible');
+      }, 1500);
+    }
+
+    function updateProgress() {
+      const answered = answeredQuestionsCount();
+      const totalQuestions = questionGroupsIds.length;
+      const percent = Math.round((answered / totalQuestions) * 100);
+      const points = answered * 100; // 100 points per main question
+
+      progressFill.style.width = percent + '%';
+      scoreLabel.textContent = points.toString();
+
+      if (percent === 0) {
+        progressText.textContent = '0%';
+      } else if (percent < 100) {
+        progressText.textContent = percent + '%';
+      } else {
+        progressText.textContent = '100%';
+      }
+
+      updateQuests(percent);
+    }
+
+    const questionAnsweredState = {'4': false, '5': false, '6': false};
+
+    function checkQuestionReward(stepNumber) {
+      const stepEl = document.querySelector('.step[data-step="' + stepNumber + '"]');
+      if (!stepEl) return;
+      const groupId = stepEl.dataset.questionGroup;
+      if (!groupId) return;
+
+      const nowAnswered = isQuestionGroupAnswered(groupId);
+      if (nowAnswered && !questionAnsweredState[groupId]) {
+        questionAnsweredState[groupId] = true;
+        showReward('⭐ +100 – Question ' + groupId + ' logged!');
+      }
+      updateProgress();
+    }
+
+    // ---------- OPTION PILL SELECTION ----------
+    document.querySelectorAll('.options-group').forEach(group => {
+      group.addEventListener('change', (e) => {
+        const target = e.target;
+        if (!target || target.tagName !== 'INPUT') return;
+        const pill = target.closest('.option-pill');
+        if (!pill) return;
+
+        if (target.type === 'radio') {
+          group.querySelectorAll('.option-pill').forEach(p => p.classList.remove('selected'));
+          pill.classList.add('selected');
+        } else if (target.type === 'checkbox') {
+          pill.classList.toggle('selected', target.checked);
+        }
+
+        const stepEl = target.closest('.step');
+        if (stepEl) {
+          const stepNumber = Number(stepEl.dataset.step);
+          enableOrDisableButtonsForStep(stepNumber);
+          checkQuestionReward(stepNumber);
+        }
+      });
+    });
+
+    // Also update when typing
+    document.getElementById('reflectionForm').addEventListener('input', (e) => {
+      const stepEl = e.target.closest('.step');
+      if (stepEl) {
+        const stepNumber = Number(stepEl.dataset.step);
+        enableOrDisableButtonsForStep(stepNumber);
+        checkQuestionReward(stepNumber);
+      }
+    });
+
+    function enableOrDisableButtonsForStep(stepNumber) {
+      const stepEl = document.querySelector('.step[data-step="' + stepNumber + '"]');
+      if (!stepEl) return;
+      const answered = isStepAnswered(stepEl);
+
+      const nextBtn = stepEl.querySelector('.next-btn');
+      const finishBtn = stepEl.querySelector('#finishBtn');
+
+      if (nextBtn) {
+        nextBtn.disabled = !answered;
+      }
+      if (finishBtn) {
+        finishBtn.disabled = !answered;
+      }
+    }
+
+    // ---------- STEP NAV BUTTONS ----------
+    document.querySelectorAll('[data-next-step]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = Number(btn.getAttribute('data-next-step'));
+        showStep(target);
+      });
+    });
+
+    document.querySelectorAll('[data-prev-step]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = Number(btn.getAttribute('data-prev-step'));
+        showStep(target);
+      });
+    });
+
+    // When finish clicked, show results section + generate export
+    document.getElementById('finishBtn').addEventListener('click', () => {
+      generateExportText();
+      document.getElementById('resultsSection').style.display = 'block';
+      copiedOnce = false; // they still need to press copy
+      updateProgress();
+      const finishBtn = document.getElementById('finishBtn');
+      finishBtn.style.display = 'none'; // hide Finish on the final page
+      document.getElementById('resultsSection').scrollIntoView({behavior: 'smooth'});
+    });
+
+    // Dash line (40 dashes) used after each option ONLY
+    const dashLine = '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -';
+
+    // ---------- EXPORT TEXT (FULL OPTIONS WITH * + DASH LINES BETWEEN OPTIONS) ----------
+    function generateExportText() {
+      const allQuestions = Array.from(document.querySelectorAll('.question'));
+      let output = '';
+
+      output += '──────────────────────────────────────────────────────────────\n';
+      output += 'Section 1b – Identity Exploration, Misunderstanding & Belonging: Reflection Summary\n';
+      output += '──────────────────────────────────────────────────────────────\n\n';
+      output += 'For each question below, all possible options are listed.\n';
+      output += 'An asterisk (*) marks the options you selected; unmarked options were not selected.\n';
+      output += 'Your own written notes follow each group of options where you added them.\n\n';
+
+      // Group sub-questions by main question prompt so splitting into multiple pages
+      // still exports as a single Question 4, 5, 6 block.
+      const questionMap = new Map();
+
+      allQuestions.forEach(q => {
+        const mainPrompt = q.dataset.question || '';
+        let group = questionMap.get(mainPrompt);
+        if (!group) {
+          group = { prompt: mainPrompt, subQuestions: [] };
+          questionMap.set(mainPrompt, group);
+        }
+        const subQuestions = Array.from(q.querySelectorAll('.sub-question'));
+        group.subQuestions.push(...subQuestions);
+      });
+
+      // Sort by numeric question number (4, 5, 6)
+      const groupedQuestions = Array.from(questionMap.values()).sort((a, b) => {
+        const numA = parseInt(a.prompt, 10);
+        const numB = parseInt(b.prompt, 10);
+        if (isNaN(numA) || isNaN(numB)) return 0;
+        return numA - numB;
+      });
+
+      groupedQuestions.forEach(group => {
+        const mainPrompt = group.prompt || '';
+
+        output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+        output += mainPrompt + '\n';
+
+        const subQuestions = group.subQuestions;
+
+        subQuestions.forEach(sub => {
+          const subPrompt = sub.dataset.subquestion || '';
+          output += '\n  ▸ ' + subPrompt + '\n';
+
+          // List all options with "*" for chosen, plain for others, and dash line after each
+          const groups = sub.querySelectorAll('.options-group');
+          groups.forEach(groupEl => {
+            const labels = groupEl.querySelectorAll('label.option-pill');
+            if (labels.length > 0) {
+              output += '    Options (* = chosen):\n';
+              labels.forEach(label => {
+                const input = label.querySelector('input');
+                const labelText = label.textContent.trim().replace(/\s+/g, ' ');
+                const isSelected = input && input.checked;
+                const prefix = isSelected ? '* ' : '  ';
+                output += '      ' + prefix + labelText + '\n';
+                output += dashLine + '\n';
+              });
+            }
+          });
+
+          const notes = [];
+          const fields = sub.querySelectorAll('textarea, input[type="text"]');
+          fields.forEach(field => {
+            if (field.value && field.value.trim() !== '') {
+              notes.push(field.value.trim());
+            }
+          });
+
+          if (notes.length > 0) {
+            output += '    Notes and narrative reflections:\n';
+            notes.forEach(note => {
+              output += '      • ' + note + '\n';
+            });
+          } else {
+            output += '    Notes and narrative reflections:\n';
+            output += '      • (no additional written notes provided for this part)\n';
+          }
+        });
+
+        output += '\n';
+      });
+
+      output += '──────────────────────────────────────────────────────────────\n';
+      output += 'End of Section 1b\n';
+      output += '──────────────────────────────────────────────────────────────\n';
+
+      document.getElementById('resultsBox').value = output;
+    }
+
+    // ---------- COPY BUTTON ----------
+    document.getElementById('copyButton').addEventListener('click', () => {
+      const statusMessage = document.getElementById('statusMessage');
+      const text = document.getElementById('resultsBox').value;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text)
+          .then(() => {
+            statusMessage.textContent = '✨ Reflection copied! You can now paste it into an email or document.';
+            copiedOnce = true;
+            updateProgress();
+          })
+          .catch(() => {
+            statusMessage.textContent = 'Copy failed. Please select all the text in the box and copy it manually.';
+          });
+      } else {
+        const box = document.getElementById('resultsBox');
+        box.select();
+        try {
+          document.execCommand('copy');
+          statusMessage.textContent = '✨ Reflection copied! You can now paste it into an email or document.';
+          copiedOnce = true;
+          updateProgress();
+        } catch (e) {
+          statusMessage.textContent = 'Copy failed. Please select all the text in the box and copy it manually.';
+        }
+      }
+    });
+
+    // ---------- INIT ----------
+    startTimer();
+    updateProgress();
+    enableOrDisableButtonsForStep(1);
+  </script>
+</body>
+</html>
