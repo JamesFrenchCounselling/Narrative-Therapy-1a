@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <!-- NEW: make mobile render at proper scale -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Section 9a</title>
+
+  <style>
+    /* NEW: prevent iOS from randomly resizing some text blocks */
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #1e3a8a 0, #4f46e5 25%, #ec4899 60%, #f97316 100%);
+      color: #111827;
+      padding: 24px 14px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 18px;
+      padding: 22px 18px;
+      box-shadow: 0 18px 55px rgba(0,0,0,0.35);
+      backdrop-filter: blur(10px);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.35rem, 1rem + 1vw, 2rem);
+      line-height: 1.2;
+      color: #111827;
+    }
+
+    .intro {
+      margin: 0 0 16px;
+      color: #374151;
+      line-height: 1.5;
+      font-size: 0.95rem;
+    }
+
+    .timer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(17,24,39,0.15);
+      background: rgba(255,255,255,0.75);
+      margin: 14px 0 18px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    }
+
+    .timer span.label { opacity: 0.8; font-size: 0.78rem; }
+    .timer span.time {
+      font-weight: 800;
+      font-size: 1.2rem;
+      letter-spacing: 0.08em;
+    }
+
+    .timer.ending {
+      border-color: #f97373;
+      color: #fecaca;
+      box-shadow: 0 0 0 4px rgba(248,113,113,0.22);
+    }
+
+    .timer.up {
+      border-color: #ef4444;
+      color: #fee2e2;
+      box-shadow: 0 0 0 4px rgba(239,68,68,0.22);
+    }
+
+    .timeUpBanner {
+      display: none;
+      margin: 10px 0 18px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(239,68,68,0.14);
+      border: 1px solid rgba(239,68,68,0.35);
+      color: #7f1d1d;
+      font-size: 0.95rem;
+      line-height: 1.35;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.85);
+      border: 1px solid rgba(17,24,39,0.12);
+      border-radius: 16px;
+      padding: 18px 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.10);
+      margin: 12px 0;
+    }
+
+    .card-title {
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
+
+    .question-text {
+      font-size: 1.05rem;
+      line-height: 1.4;
+      margin-bottom: 12px;
+      color: #111827;
+      font-weight: 700;
+    }
+
+    .helper {
+      margin: 0 0 14px;
+      color: #374151;
+      font-size: 0.95rem;
+      line-height: 1.45;
+    }
+
+    .options-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 12px 0 10px;
+    }
+
+    .option-pill {
+      display: block;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(17,24,39,0.14);
+      background: rgba(255,255,255,0.65);
+      cursor: pointer;
+      transition: transform 0.05s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+      line-height: 1.4;
+      color: #111827;
+      user-select: none;
+    }
+
+    .option-pill:hover {
+      border-color: rgba(79,70,229,0.35);
+      box-shadow: 0 10px 22px rgba(79,70,229,0.12);
+      background: rgba(255,255,255,0.82);
+    }
+
+    .option-pill:active { transform: translateY(1px); }
+
+    .option-pill input {
+      margin-right: 10px;
+      transform: translateY(1px);
+    }
+
+    .option-pill.selected {
+      border-color: rgba(79,70,229,0.55);
+      background: rgba(79,70,229,0.10);
+      box-shadow: 0 12px 28px rgba(79,70,229,0.18);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(17,24,39,0.18);
+      background: rgba(255,255,255,0.75);
+      color: #111827;
+      font-size: 0.98rem;
+      line-height: 1.45;
+      outline: none;
+      resize: vertical;
+    }
+
+    textarea:focus {
+      border-color: rgba(79,70,229,0.45);
+      box-shadow: 0 0 0 4px rgba(79,70,229,0.16);
+    }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-weight: 800;
+      background: linear-gradient(180deg, rgba(79,70,229,0.95), rgba(236,72,153,0.90));
+      color: #fff;
+      box-shadow: 0 12px 26px rgba(0,0,0,0.18);
+      transition: transform 0.05s ease, opacity 0.18s ease, filter 0.18s ease;
+    }
+
+    button:hover { filter: brightness(1.05); }
+    button:active { transform: translateY(1px); }
+    button:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
+
+    button.secondary {
+      background: rgba(17,24,39,0.12);
+      color: #111827;
+      box-shadow: none;
+      border: 1px solid rgba(17,24,39,0.14);
+    }
+
+    .step { display: none; }
+    .step.active { display: block; }
+
+    #resultsSection {
+      display: none;
+      margin-top: 20px;
+    }
+
+    .resultsBox {
+      width: 100%;
+      min-height: 260px;
+      margin-top: 14px;
+      border-radius: 14px;
+      padding: 12px 12px;
+      border: 1px solid rgba(17,24,39,0.18);
+      background: rgba(255,255,255,0.78);
+      color: #111827;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.92rem;
+      line-height: 1.5;
+      white-space: pre;
+    }
+
+    .status {
+      margin-top: 10px;
+      font-size: 0.95rem;
+      color: #111827;
+    }
+
+    /* time-up mode: visibly disable inputs */
+    body.time-up textarea,
+    body.time-up input {
+      opacity: 0.60;
+    }
+
+    @media (max-width: 540px) {
+      body { padding: 18px 10px; }
+      .nav-buttons { flex-direction: column; align-items: stretch; }
+      button { width: 100%; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Section 9a – Attachment Patterns: Challenges & Adversity</h1>
+    <p class="intro">
+      Please answer each question in order. You have 30 minutes. When time is up, you can still
+      navigate to the end to copy your reflection export.
+    </p>
+
+    <div class="timer" id="timer">
+      <span class="label">Time remaining</span>
+      <span class="time" id="timeRemaining">30:00</span>
+    </div>
+
+    <div class="timeUpBanner" id="timeUpBanner">
+      ⏰ Time is up. Your inputs are now locked. You can still navigate to the end to copy your reflection.
+    </div>
+
+    <form id="reflectionForm">
+      <!-- STEP 1 = Q1 MCQ -->
+      <div class="step active" data-step="1" data-optional="false">
+        <div class="card question" data-question="1. Relationship with primary caregivers during childhood">
+          <div class="card-title">Question 1</div>
+          <div class="question-text">
+            Which of these options most accurately defines your relationship with your primary caregivers during childhood?
+          </div>
+
+          <div class="options-group">
+            <label class="option-pill">
+              <input type="radio" name="q1_choice" value="They were consistently responsive, supportive, and emotionally attuned, making me feel secure and understood throughout my upbringing.">
+              A. They were consistently responsive, supportive, and emotionally attuned, making me feel secure and understood throughout my upbringing.
+            </label>
+
+            <label class="option-pill">
+              <input type="radio" name="q1_choice" value="They were loving but inconsistent in meeting my emotional and physical needs, leaving some uncertainty.">
+              B. They were loving but inconsistent in meeting my emotional and physical needs, leaving some uncertainty.
+            </label>
+
+            <label class="option-pill">
+              <input type="radio" name="q1_choice" value="They were distant, emotionally unavailable, or disengaged, creating a sense of disconnect in our relationship.">
+              C. They were distant, emotionally unavailable, or disengaged, creating a sense of disconnect in our relationship.
+            </label>
+
+            <label class="option-pill">
+              <input type="radio" name="q1_choice" value="They were overly involved or controlling, limiting my ability to express myself freely or independently.">
+              D. They were overly involved or controlling, limiting my ability to express myself freely or independently.
+            </label>
+
+            <label class="option-pill">
+              <input type="radio" name="q1_choice" value="They were neglectful, critical, or abusive, and I often felt unsafe, unseen, or emotionally unsupported.">
+              E. They were neglectful, critical, or abusive, and I often felt unsafe, unseen, or emotionally unsupported.
+            </label>
+
+            <label class="option-pill">
+              <input type="radio" name="q1_choice" value="They were dismissive of my emotions, which made sharing feelings uncomfortable or difficult for me.">
+              F. They were dismissive of my emotions, which made sharing feelings uncomfortable or difficult for me.
+            </label>
+
+            <label class="option-pill">
+              <input type="radio" name="q1_choice" value="They tried their best despite facing significant life stressors (e.g. illness, work, mental health) that limited their availability or consistency.">
+              G. They tried their best despite facing significant life stressors (e.g. illness, work, mental health) that limited their availability or consistency.
+            </label>
+
+            <label class="option-pill">
+              <input type="radio" name="q1_choice" value="Other / Not Listed (please specify).">
+              H. Other / Not Listed (please specify).
+            </label>
+          </div>
+
+          <div class="nav-buttons">
+            <span></span>
+            <button type="button" id="next1" disabled>Next ⮕</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2 = Q1a Other (NOW OPTIONAL so you can always proceed) -->
+      <div class="step" data-step="2" data-optional="true">
+        <div class="card question" data-question="1a. If Other / Not Listed, specify. (Or add any detail you’d like.)">
+          <div class="card-title">Question 1a</div>
+          <div class="question-text">
+            If you selected “Other / Not Listed,” please specify. (Or add any detail you’d like.)
+          </div>
+          <p class="helper">Optional.</p>
+          <textarea id="q1a_other" placeholder="Optional: write here..."></textarea>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back2">⮜ Back</button>
+            <button type="button" id="next2" disabled>Next ⮕</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 = Q1 Follow-up (optional) -->
+      <div class="step" data-step="3" data-optional="true">
+        <div class="card question" data-question="1b. Is there an example or memory from your childhood that clearly illustrates your choice?">
+          <div class="card-title">Question 1b</div>
+          <div class="question-text">
+            Is there an example or memory from your childhood that clearly illustrates your choice, particularly around how your caregivers responded to your emotional needs?
+          </div>
+          <p class="helper">Optional.</p>
+          <textarea id="q1_follow1" placeholder="Optional: write here..."></textarea>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back3">⮜ Back</button>
+            <button type="button" id="next3">Next ⮕</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4 = Q2 MCQ -->
+      <div class="step" data-step="4" data-optional="false">
+        <div class="card question" data-question="2. Think about your earliest memories of seeking comfort or support. How did your caregivers respond to your emotional needs in those moments, both positively and negatively?">
+          <div class="card-title">Question 2</div>
+          <div class="question-text">
+            Think about your earliest memories of seeking comfort or support. How did your caregivers respond to your emotional needs in those moments, both positively and negatively?
+          </div>
+
+          <div class="options-group">
+            <label class="option-pill">
+              <input type="radio" name="q2_choice" value="They consistently comforted me in a way that made me feel safe, understood, and soothed.">
+              A. They consistently comforted me in a way that made me feel safe, understood, and soothed.
+            </label>
+
+            <label class="option-pill">
+              <input type="radio" name="q2_choice" value="They sometimes responded with warmth and care, but at other times they were distracted, inconsistent, or unavailable.">
+              B. They sometimes responded with warmth and care, but at other times they were distracted, inconsistent, or unavailable.
+            </label>
+
+            <label class="option-pill">
+              <input type="radio" name="q2_choice" value="They often dismissed, minimized, or ignored my emotional needs, and I learned to keep emotions to myself.">
+              C. They often dismissed, minimized, or ignored my emotional needs, and I learned to keep emotions to myself.
+            </label>
+
+            <label class="option-pill">
+              <input type="radio" name="q2_choice" value="They responded in a way that felt intrusive, overly intense, or controlling, which made me feel overwhelmed or dependent.">
+              D. They responded in a way that felt intrusive, overly intense, or controlling, which made me feel overwhelmed or dependent.
+            </label>
+
+            <label class="option-pill">
+              <input type="radio" name="q2_choice" value="They responded with anger, criticism, punishment, or emotional withdrawal, which made seeking comfort feel unsafe or risky.">
+              E. They responded with anger, criticism, punishment, or emotional withdrawal, which made seeking comfort feel unsafe or risky.
+            </label>
+
+            <label class="option-pill">
+              <input type="radio" name="q2_choice" value="They were facing their own struggles (e.g. stress, trauma, mental health, addiction), and their responses were shaped by their circumstances.">
+              F. They were facing their own struggles (e.g. stress, trauma, mental health, addiction), and their responses were shaped by their circumstances.
+            </label>
+
+            <label class="option-pill">
+              <input type="radio" name="q2_choice" value="Other / Not Listed (please specify).">
+              G. Other / Not Listed (please specify).
+            </label>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back4">⮜ Back</button>
+            <button type="button" id="next4" disabled>Next ⮕</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 5 = Q2a Other (NOW OPTIONAL so you can always proceed) -->
+      <div class="step" data-step="5" data-optional="true">
+        <div class="card question" data-question="2a. If Other / Not Listed, specify. (Or add any detail you’d like.)">
+          <div class="card-title">Question 2a</div>
+          <div class="question-text">
+            If you selected “Other / Not Listed,” please specify. (Or add any detail you’d like.)
+          </div>
+          <p class="helper">Optional.</p>
+          <textarea id="q2a_other" placeholder="Optional: write here..."></textarea>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back5">⮜ Back</button>
+            <button type="button" id="next5" disabled>Next ⮕</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 6 = Q2 Follow-up (optional) -->
+      <div class="step" data-step="6" data-optional="true">
+        <div class="card question" data-question="2b. How did your caregivers’ responses to your emotional and physical needs shape the way you currently seek comfort, support, or closeness?">
+          <div class="card-title">Question 2b</div>
+          <div class="question-text">
+            How did your caregivers’ responses to your emotional and physical needs shape the way you currently seek comfort, support, or closeness in relationships?
+          </div>
+          <p class="helper">Optional.</p>
+          <textarea id="q2_follow1" placeholder="Optional: write here..."></textarea>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back6">⮜ Back</button>
+            <button type="button" id="next6">Next ⮕</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 7 = Q3 MCQ -->
+      <div class="step" data-step="7" data-optional="false">
+        <div class="card question" data-question="3. Think about a time when you were in distress, sad, overwhelmed, or afraid as a child. How did your caregivers respond?">
+          <div class="card-title">Question 3</div>
+          <div class="question-text">
+            Think about a time when you were in distress, sad, overwhelmed, or afraid as a child. How did your caregivers respond?
+          </div>
+
+          <div class="options-group">
+            <label class="option-pill">
+              <input type="radio" name="q3_choice" value="They noticed and responded quickly, offering comfort, validation, and reassurance.">
+              A. They noticed and responded quickly, offering comfort, validation, and reassurance.
+            </label>
+
+            <label class="option-pill">
+              <input type="radio" name="q3_choice" value="They responded sometimes, but other times they were preoccupied, delayed, or inconsistent.">
+              B. They responded sometimes, but other times they were preoccupied, delayed, or inconsistent.
+            </label>
+
+            <label class="option-pill">
+              <input type="radio" name="q3_choice" value="They dismissed my feelings, told me to stop overreacting, or expected me to cope on my own.">
+              C. They dismissed my feelings, told me to stop overreacting, or expected me to cope on my own.
+            </label>
+
+            <label class="option-pill">
+              <input type="radio" name="q3_choice" value="They became anxious, overwhelmed, or overly involved, making me feel responsible for their emotions or reactions.">
+              D. They became anxious, overwhelmed, or overly involved, making me feel responsible for their emotions or reactions.
+            </label>
+
+            <label class="option-pill">
+              <input type="radio" name="q3_choice" value="They responded with anger, criticism, shame, or punishment, which made me fear expressing vulnerability.">
+              E. They responded with anger, criticism, shame, or punishment, which made me fear expressing vulnerability.
+            </label>
+
+            <label class="option-pill">
+              <input type="radio" name="q3_choice" value="They were unavailable due to external pressures (work, stress, illness, addiction), and their absence shaped how I learned to cope.">
+              F. They were unavailable due to external pressures (work, stress, illness, addiction), and their absence shaped how I learned to cope.
+            </label>
+
+            <label class="option-pill">
+              <input type="radio" name="q3_choice" value="Other / Not Listed (please specify).">
+              G. Other / Not Listed (please specify).
+            </label>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back7">⮜ Back</button>
+            <button type="button" id="next7" disabled>Next ⮕</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 8 = Q3a Other (NOW OPTIONAL so you can always proceed) -->
+      <div class="step" data-step="8" data-optional="true">
+        <div class="card question" data-question="3a. If Other / Not Listed, specify. (Or add any detail you’d like.)">
+          <div class="card-title">Question 3a</div>
+          <div class="question-text">
+            If you selected “Other / Not Listed,” please specify. (Or add any detail you’d like.)
+          </div>
+          <p class="helper">Optional.</p>
+          <textarea id="q3a_other" placeholder="Optional: write here..."></textarea>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back8">⮜ Back</button>
+            <button type="button" id="next8" disabled>Next ⮕</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 9 = Q3 Follow-up (optional) -->
+      <div class="step" data-step="9" data-optional="true">
+        <div class="card question" data-question="3b. How do you believe these early responses shaped the way you handle distress, vulnerability, or closeness in adult relationships?">
+          <div class="card-title">Question 3b</div>
+          <div class="question-text">
+            How do you believe these early responses shaped the way you handle distress, vulnerability, or closeness in adult relationships?
+          </div>
+          <p class="helper">Optional.</p>
+          <textarea id="q3_follow1" placeholder="Optional: write here..."></textarea>
+        </div>
+
+        <div class="nav-buttons">
+          <button type="button" class="secondary" id="back9">⮜ Back</button>
+          <button type="button" id="finishBtn">Finish</button>
+        </div>
+      </div>
+    </form>
+
+    <div id="resultsSection">
+      <div class="card">
+        <div class="card-title">Export</div>
+        <div class="question-text">Your Reflection Export</div>
+        <p class="helper">Click the button to copy your formatted reflection.</p>
+        <button type="button" id="copyButton">📋 Copy this reflection</button>
+        <div class="status" id="statusMessage"></div>
+        <textarea id="resultsBox" class="resultsBox" readonly></textarea>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // ES5-friendly script with no arrow functions / let / const
+  // and avoiding newer APIs where possible.
+
+  // ---------- TIMER (30 MINUTES) ----------
+  var totalSeconds = 30 * 60;
+  var timerInterval = null;
+  var timeUp = false;
+  var timerEl = document.getElementById('timer');
+  var timeRemainingEl = document.getElementById('timeRemaining');
+  var timeUpBanner = document.getElementById('timeUpBanner');
+
+  function formatTime(seconds) {
+    var m = Math.floor(seconds / 60);
+    var s = seconds % 60;
+    var mm = m < 10 ? '0' + m : '' + m;
+    var ss = s < 10 ? '0' + s : '' + s;
+    return mm + ':' + ss;
+  }
+
+  function startTimer() {
+    timeRemainingEl.textContent = formatTime(totalSeconds);
+    timerInterval = setInterval(function() {
+      if (totalSeconds <= 0) {
+        clearInterval(timerInterval);
+        timeRemainingEl.textContent = '00:00';
+        handleTimeUp();
+        return;
+      }
+      totalSeconds -= 1;
+      timeRemainingEl.textContent = formatTime(totalSeconds);
+
+      if (totalSeconds <= 60 && !timeUp) {
+        if (timerEl.className.indexOf('ending') === -1) {
+          timerEl.className += ' ending';
+        }
+      }
+    }, 1000);
+  }
+
+  function handleTimeUp() {
+    timeUp = true;
+    timerEl.className = timerEl.className.replace(' ending', '');
+    if (timerEl.className.indexOf(' up') === -1) {
+      timerEl.className += ' up';
+    }
+    if (document.body.className.indexOf('time-up') === -1) {
+      document.body.className += ' time-up';
+    }
+    timeUpBanner.style.display = 'block';
+    var allInputs = document.querySelectorAll('#reflectionForm input, #reflectionForm textarea');
+    for (var i = 0; i < allInputs.length; i++) {
+      allInputs[i].disabled = true;
+    }
+    unlockNavigation();
+  }
+
+  function unlockNavigation() {
+    // When time is up, allow moving through steps to reach the export screen
+    // even if some mandatory steps were left unanswered.
+    for (var s = 1; s <= 8; s++) {
+      var nb = document.getElementById('next' + s);
+      if (nb) nb.disabled = false;
+    }
+    var fb = document.getElementById('finishBtn');
+    if (fb) fb.disabled = false;
+  }
+
+  // ---------- STEPS (9) ----------
+  var steps = document.querySelectorAll('.step');
+  var currentStep = 1;
+
+  function showStep(stepNumber) {
+    for (var i = 0; i < steps.length; i++) {
+      var step = steps[i];
+      var target = Number(step.getAttribute('data-step')) === stepNumber;
+      if (target) {
+        if (step.className.indexOf('active') === -1) {
+          step.className += ' active';
+        }
+      } else {
+        step.className = step.className.replace(' active', '');
+      }
+    }
+    currentStep = stepNumber;
+
+    // keep view stable
+    window.scrollTo(0, 0);
+
+    enableOrDisableButtonsForStep(stepNumber);
+  }
+
+  function closestWithClass(el, className, stopAt) {
+    var element = el;
+    while (element && element !== stopAt && element !== document) {
+      if (element.classList && element.classList.contains(className)) return element;
+      element = element.parentNode;
+    }
+    return null;
+  }
+
+  function isStepAnswered(stepNumber) {
+    var stepEl = null;
+    for (var i = 0; i < steps.length; i++) {
+      if (Number(steps[i].getAttribute('data-step')) === stepNumber) {
+        stepEl = steps[i];
+        break;
+      }
+    }
+    if (!stepEl) return true;
+
+    var optional = (stepEl.getAttribute('data-optional') === 'true');
+    if (optional) return true;
+
+    // Mandatory: require radio selection OR non-empty textarea
+    var radios = stepEl.querySelectorAll('input[type="radio"]');
+    for (var r = 0; r < radios.length; r++) {
+      if (radios[r].checked) return true;
+    }
+    var textareas = stepEl.querySelectorAll('textarea');
+    for (var t = 0; t < textareas.length; t++) {
+      if (textareas[t].value && textareas[t].value.trim().length > 0) return true;
+    }
+    return false;
+  }
+
+  function enableOrDisableButtonsForStep(stepNumber) {
+
+    // If time is up, keep navigation enabled so the user can reach the export screen.
+    if (timeUp) {
+      var nb = document.getElementById('next' + stepNumber);
+      if (nb) nb.disabled = false;
+      if (stepNumber === 9) {
+        var fb = document.getElementById('finishBtn');
+        if (fb) fb.disabled = false;
+      }
+      return;
+    }
+
+    var answered = isStepAnswered(stepNumber);
+
+    var nextBtn = document.getElementById('next' + stepNumber);
+    if (nextBtn) nextBtn.disabled = !answered;
+
+    if (stepNumber === 9) {
+      var finishBtn = document.getElementById('finishBtn');
+      if (finishBtn) finishBtn.disabled = !answered;
+    }
+  }
+
+  // ---------- OPTION PILL SELECTION STYLES ----------
+  var pills = document.querySelectorAll('.option-pill');
+  for (var p = 0; p < pills.length; p++) {
+    pills[p].addEventListener('change', function(e) {
+      var input = e.target || e.srcElement;
+      if (!input) return;
+
+      var groupName = input.name;
+      // radio: clear selected class for same-name group
+      if (input.type === 'radio') {
+        var groupInputs = document.querySelectorAll('input[name="' + groupName + '"]');
+        for (var i = 0; i < groupInputs.length; i++) {
+          var pill = closestWithClass(groupInputs[i], 'option-pill', document.body);
+          if (pill) pill.className = pill.className.replace(' selected', '');
+        }
+      }
+
+      var thisPill = closestWithClass(input, 'option-pill', document.body);
+      if (thisPill && input.checked) {
+        if (thisPill.className.indexOf('selected') === -1) thisPill.className += ' selected';
+      }
+
+      var stepEl = closestWithClass(input, 'step', document.body);
+      if (stepEl) enableOrDisableButtonsForStep(Number(stepEl.getAttribute('data-step')));
+    });
+  }
+
+  // Also update when typing
+  var reflectionForm = document.getElementById('reflectionForm');
+  reflectionForm.addEventListener('input', function(e) {
+    var target = e.target || e.srcElement;
+    var stepEl = closestWithClass(target, 'step', document.body);
+    if (stepEl) enableOrDisableButtonsForStep(Number(stepEl.getAttribute('data-step')));
+  });
+
+  // ---------- STEP NAV ----------
+  function bindNav(fromStep, toStep, btnId) {
+    var btn = document.getElementById(btnId);
+    if (!btn) return;
+    btn.addEventListener('click', function() {
+      showStep(toStep);
+    });
+  }
+
+  // Next
+  bindNav(1, 2, 'next1');
+  bindNav(2, 3, 'next2');
+  bindNav(3, 4, 'next3');
+  bindNav(4, 5, 'next4');
+  bindNav(5, 6, 'next5');
+  bindNav(6, 7, 'next6');
+  bindNav(7, 8, 'next7');
+  bindNav(8, 9, 'next8');
+
+  // Back
+  bindNav(2, 1, 'back2');
+  bindNav(3, 2, 'back3');
+  bindNav(4, 3, 'back4');
+  bindNav(5, 4, 'back5');
+  bindNav(6, 5, 'back6');
+  bindNav(7, 6, 'back7');
+  bindNav(8, 7, 'back8');
+  bindNav(9, 8, 'back9');
+
+  // ---------- EXPORT TEXT ----------
+  function getRadioValue(name) {
+    var els = document.querySelectorAll('input[name="' + name + '"]');
+    for (var i = 0; i < els.length; i++) {
+      if (els[i].checked) return els[i].value;
+    }
+    return '';
+  }
+
+  function getTrimmedValue(id) {
+    var el = document.getElementById(id);
+    if (!el) return '';
+    return (el.value || '').trim();
+  }
+
+  // 60 dashes, each separated by a space:
+  var dashLine = (function(){ var s = ''; for (var i = 0; i < 60; i++) { s += '- '; } return s.trim(); })();
+
+  function addNotesBlock(notesArr) {
+    var out = ' Notes and narrative reflections:\n';
+    var hasAny = false;
+    for (var i = 0; i < notesArr.length; i++) {
+      if (notesArr[i] && notesArr[i].trim() !== '') {
+        hasAny = true;
+        out += ' • ' + notesArr[i].trim() + '\n';
+      }
+    }
+    if (!hasAny) {
+      out += ' • (no additional written notes provided for this part)\n';
+    }
+    return out;
+  }
+
+  function generateExportText() {
+    var output = '';
+
+    output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+    output += 'Section 9a: Attachment Patterns: Challenges & Adversity — Reflection Summary\n';
+    output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+
+    // Q1
+    output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+    output += '1. Which of these options most accurately defines your relationship with your primary caregivers during childhood?\n\n';
+    output += ' Options:\n';
+    output += ' A. They were consistently responsive, supportive, and emotionally attuned, making me feel secure and understood throughout my upbringing.\n' + dashLine + '\n';
+    output += ' B. They were loving but inconsistent in meeting my emotional and physical needs, leaving some uncertainty.\n' + dashLine + '\n';
+    output += ' C. They were distant, emotionally unavailable, or disengaged, creating a sense of disconnect in our relationship.\n' + dashLine + '\n';
+    output += ' D. They were overly involved or controlling, limiting my ability to express myself freely or independently.\n' + dashLine + '\n';
+    output += ' E. They were neglectful, critical, or abusive, and I often felt unsafe, unseen, or emotionally unsupported.\n' + dashLine + '\n';
+    output += ' F. They were dismissive of my emotions, which made sharing feelings uncomfortable or difficult for me.\n' + dashLine + '\n';
+    output += ' G. They tried their best despite facing significant life stressors (e.g. illness, work, mental health) that limited their availability or consistency.\n' + dashLine + '\n';
+    output += ' H. Other / Not Listed (please specify).\n' + dashLine + '\n\n';
+    output += ' Your selected option:\n';
+    var q1Sel = getRadioValue('q1_choice');
+    output += ' • ' + (q1Sel ? (q1Sel + ' *') : '(no option selected)') + '\n\n';
+    output += addNotesBlock([
+      getTrimmedValue('q1a_other'),
+      getTrimmedValue('q1_follow1')
+    ]);
+    output += '\n';
+
+    // Q2
+    output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+    output += '2. Think about your earliest memories of seeking comfort or support. How did your caregivers respond to your emotional needs in those moments, both positively and negatively?\n\n';
+    output += ' Options:\n';
+    output += ' A. They consistently comforted me in a way that made me feel safe, understood, and soothed.\n' + dashLine + '\n';
+    output += ' B. They sometimes responded with warmth and care, but at other times they were distracted, inconsistent, or unavailable.\n' + dashLine + '\n';
+    output += ' C. They often dismissed, minimized, or ignored my emotional needs, and I learned to keep emotions to myself.\n' + dashLine + '\n';
+    output += ' D. They responded in a way that felt intrusive, overly intense, or controlling, which made me feel overwhelmed or dependent.\n' + dashLine + '\n';
+    output += ' E. They responded with anger, criticism, punishment, or emotional withdrawal, which made seeking comfort feel unsafe or risky.\n' + dashLine + '\n';
+    output += ' F. They were facing their own struggles (e.g. stress, trauma, mental health, addiction), and their responses were shaped by their circumstances.\n' + dashLine + '\n';
+    output += ' G. Other / Not Listed (please specify).\n' + dashLine + '\n\n';
+    output += ' Your selected option:\n';
+    var q2Sel = getRadioValue('q2_choice');
+    output += ' • ' + (q2Sel ? (q2Sel + ' *') : '(no option selected)') + '\n\n';
+    output += addNotesBlock([
+      getTrimmedValue('q2a_other'),
+      getTrimmedValue('q2_follow1')
+    ]);
+    output += '\n';
+
+    // Q3
+    output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+    output += '3. Think about a time when you were in distress, sad, overwhelmed, or afraid as a child. How did your caregivers respond?\n\n';
+    output += ' Options:\n';
+    output += ' A. They noticed and responded quickly, offering comfort, validation, and reassurance.\n' + dashLine + '\n';
+    output += ' B. They responded sometimes, but other times they were preoccupied, delayed, or inconsistent.\n' + dashLine + '\n';
+    output += ' C. They dismissed my feelings, told me to stop overreacting, or expected me to cope on my own.\n' + dashLine + '\n';
+    output += ' D. They became anxious, overwhelmed, or overly involved, making me feel responsible for their emotions or reactions.\n' + dashLine + '\n';
+    output += ' E. They responded with anger, criticism, shame, or punishment, which made me fear expressing vulnerability.\n' + dashLine + '\n';
+    output += ' F. They were unavailable due to external pressures (work, stress, illness, addiction), and their absence shaped how I learned to cope.\n' + dashLine + '\n';
+    output += ' G. Other / Not Listed (please specify).\n' + dashLine + '\n\n';
+    output += ' Your selected option:\n';
+    var q3Sel = getRadioValue('q3_choice');
+    output += ' • ' + (q3Sel ? (q3Sel + ' *') : '(no option selected)') + '\n\n';
+    output += addNotesBlock([
+      getTrimmedValue('q3a_other'),
+      getTrimmedValue('q3_follow1')
+    ]);
+
+    document.getElementById('resultsBox').value = output;
+  }
+
+  // ---------- FINISH ----------
+  var finishBtn = document.getElementById('finishBtn');
+  finishBtn.addEventListener('click', function() {
+    generateExportText();
+    document.getElementById('resultsSection').style.display = 'block';
+    document.getElementById('resultsSection').scrollIntoView(true);
+  });
+
+  // ---------- COPY ----------
+  var copyButton = document.getElementById('copyButton');
+  copyButton.addEventListener('click', function() {
+    var statusMessage = document.getElementById('statusMessage');
+    var text = document.getElementById('resultsBox').value;
+
+    if (!text || text.trim() === '') {
+      statusMessage.textContent = 'Nothing to copy yet.';
+      return;
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text)
+        .then(function() {
+          statusMessage.textContent = '✨ Reflection copied! You can now paste it into an email or document.';
+        })
+        .catch(function() {
+          fallbackCopy(statusMessage);
+        });
+    } else {
+      fallbackCopy(statusMessage);
+    }
+  });
+
+  function fallbackCopy(statusMessage) {
+    var box = document.getElementById('resultsBox');
+    box.focus();
+    box.select();
+    box.setSelectionRange(0, box.value.length);
+    try {
+      var ok = document.execCommand('copy');
+      statusMessage.textContent = ok ? '✨ Reflection copied! You can now paste it into an email or document.' : 'Copy failed. Please try again.';
+    } catch (e) {
+      statusMessage.textContent = 'Copy failed. Please try again.';
+    }
+  }
+
+  // ---------- INIT ----------
+  startTimer();
+  showStep(1);
+  enableOrDisableButtonsForStep(1);
+</script>
+</body>
+</html>
