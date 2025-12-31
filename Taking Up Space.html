@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Taking Up Space</title>
+
+  <!-- Mobile render at proper scale -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at top, #1e3a8a 0, #4f46e5 25%, #ec4899 60%, #f97316 100%);
+      color: #111827;
+      min-height: 100vh;
+    }
+
+    .layout {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 260px;
+      flex: 0 0 260px;
+      position: sticky;
+      top: 16px;
+      align-self: flex-start;
+    }
+
+    .page {
+      flex: 1;
+      min-width: 0;
+      padding-bottom: 28px;
+    }
+
+    h1 {
+      font-size: 1.9rem;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #f9fafb;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.45);
+    }
+
+    p.intro {
+      margin-top: 0;
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+      color: #e5e7eb;
+      max-width: 760px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    }
+
+    /* Timer */
+    .timer {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 3px;
+      padding: 8px 11px;
+      border-radius: 16px;
+      background: rgba(15,23,42,0.95);
+      border: 1px solid rgba(248,250,252,0.2);
+      box-shadow: 0 6px 18px rgba(15,23,42,0.7);
+      font-size: 0.88rem;
+      color: #e5e7eb;
+      width: 100%;
+    }
+    .timer span.label { opacity: 0.85; font-size: 0.78rem; }
+    .timer span.time {
+      font-weight: 800;
+      font-size: 1.2rem;
+      letter-spacing: 0.08em;
+    }
+    .timer.ending {
+      border-color: #f97373;
+      color: #fecaca;
+      box-shadow: 0 0 14px rgba(248,113,113,0.7);
+    }
+    .timer.up { opacity: 0.75; }
+
+    .time-up-banner {
+      display: none;
+      margin-bottom: 10px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(254,242,242,0.96);
+      color: #991b1b;
+      border: 1px solid #fecaca;
+      font-size: 0.84rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .time-up .time-up-banner { display: block; }
+    .time-up #reflectionForm input,
+    .time-up #reflectionForm textarea { pointer-events: none; opacity: 0.9; }
+
+    .card {
+      background: #f9fafb;
+      border-radius: 18px;
+      padding: 18px 16px;
+      box-shadow: 0 10px 22px rgba(15,23,42,0.25);
+      border: 1px solid #e5e7eb;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-title {
+      font-weight: 800;
+      margin-bottom: 6px;
+      color: #111827;
+    }
+
+    .question-text { font-size: 0.95rem; margin-bottom: 6px; }
+
+    textarea,
+    input[type="text"] {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      font: inherit;
+      background: #ffffff;
+      min-height: 78px;
+      resize: vertical;
+      transition: border-color 0.15s ease-out, box-shadow 0.15s ease-out, transform 0.05s ease-out;
+    }
+    textarea:focus,
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 2px rgba(129,140,248,0.4);
+      transform: translateY(-1px);
+    }
+
+    .options-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 10px 0 10px;
+    }
+
+    /* Consistent option font size + mobile-friendly wrapping */
+    .option-pill {
+      display: inline-flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(129,140,248,0.7);
+      font-size: 0.95rem;
+      line-height: 1.25;
+      background: rgba(239,246,255,0.95);
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.05s ease-out, box-shadow 0.05s ease-out, background 0.1s ease-out, border-color 0.1s ease-out, color 0.1s ease-out;
+      white-space: normal;
+    }
+    .option-pill input {
+      margin-top: 2px;
+      accent-color: #4b6bfb;
+      flex: 0 0 auto;
+    }
+    .option-pill:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 5px rgba(148,163,184,0.8);
+    }
+    .option-pill.selected {
+      background: linear-gradient(135deg, #22c55e, #a855f7);
+      color: #f9fafb;
+      border-color: transparent;
+      box-shadow: 0 4px 12px rgba(55,65,81,0.7);
+    }
+    .option-pill.selected input { accent-color: #fef9c3; }
+
+    .sub-question { margin-top: 12px; display: none; }
+    .sub-question.active { display: block; }
+
+    .sub-question-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #111827;
+    }
+
+    .step { display: none; }
+    .step.active { display: block; }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 14px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      cursor: pointer;
+      border-radius: 999px;
+      border: none;
+      padding: 10px 18px;
+      font-weight: 800;
+      font-size: 0.9rem;
+      background: radial-gradient(circle at 0% 0%, #f97316, #ec4899, #6366f1);
+      color: #f9fafb;
+      box-shadow: 0 8px 18px rgba(15,23,42,0.7);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: transform 0.07s ease, box-shadow 0.07s ease, opacity 0.1s ease;
+      min-height: 42px;
+    }
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 11px 22px rgba(15,23,42,0.8);
+    }
+    button:active:not(:disabled) {
+      transform: translateY(1px);
+      box-shadow: 0 5px 11px rgba(15,23,42,0.75);
+    }
+    button:disabled { opacity: 0.45; cursor: default; box-shadow: none; }
+
+    .secondary {
+      background: #e5e7eb;
+      color: #111827;
+      box-shadow: 0 4px 10px rgba(55,65,81,0.5);
+      text-transform: none;
+      letter-spacing: 0.01em;
+    }
+
+    /* Sub-nav */
+    .sub-nav {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .sub-nav .sub-status {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #374151;
+    }
+    .sub-nav .sub-prev,
+    .sub-nav .sub-next {
+      font-size: 0.82rem;
+      padding: 9px 14px;
+      text-transform: none;
+      letter-spacing: 0.01em;
+      font-weight: 800;
+    }
+
+    .status {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: #16a34a;
+      min-height: 1.2em;
+    }
+
+    /* Results section styling */
+    #resultsSection { margin-top: 18px; }
+    .results-card {
+      background: rgba(249,250,251,0.96);
+      border-radius: 18px;
+      padding: 18px 16px;
+      border: 1px solid rgba(229,231,235,0.9);
+      box-shadow: 0 10px 22px rgba(15,23,42,0.25);
+    }
+    .results-title {
+      margin: 0 0 8px;
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: #111827;
+    }
+    .results-note {
+      margin: 0 0 14px;
+      font-size: 0.95rem;
+      color: #374151;
+    }
+
+    .payment-card {
+      margin-top: 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(229,231,235,0.95);
+      background: #ffffff;
+      padding: 14px 14px;
+      box-shadow: inset 0 0 10px rgba(148,163,184,0.25);
+    }
+    .payment-title {
+      font-weight: 900;
+      font-size: 1rem;
+      margin-bottom: 8px;
+      color: #111827;
+    }
+    .payment-details {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      color: #111827;
+      white-space: pre-wrap;
+    }
+
+    /* Hidden textarea used only for legacy copy fallback (not displayed) */
+    #hiddenCopyBox {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+    }
+
+    @media (max-width: 900px) {
+      .layout { flex-direction: column; }
+      .sidebar {
+        width: 100%;
+        flex: none;
+        position: static;
+        order: -1;
+      }
+    }
+
+    /* Extra mobile polish: stack controls, keep content centered and full-height */
+    @media (max-width: 560px) {
+      .nav-buttons, .sub-nav {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .sub-nav .sub-status {
+        text-align: center;
+        width: 100%;
+        padding: 6px 0;
+      }
+      button { width: 100%; }
+      .option-pill { border-radius: 14px; }
+      textarea { min-height: 92px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="timer" id="timer">
+        <span class="label">⏱️ Time left (Taking Up Space)</span>
+        <span class="time" id="timeRemaining">30:00</span>
+        <span style="font-size:0.75rem; opacity:0.8;">Up to 30 minutes to complete this reflection.</span>
+      </div>
+    </aside>
+
+    <main class="page">
+      <h1>Taking Up Space</h1>
+      <p class="intro">
+        Move through the questions one at a time. Each question has two parts:
+        first, choose the best-fitting option; then add any extra details you’d like.
+        At the end, you can copy a formatted summary.
+      </p>
+
+      <div class="time-up-banner" id="timeUpBanner">
+        The 30 minutes for this reflection have finished. Your answers are still here – you can review them and copy them at the end.
+      </div>
+
+      <form id="reflectionForm">
+
+        <!-- STEP 1 – QUESTION 1 -->
+        <div class="step active" data-step="1">
+          <div class="card question" data-question="1. What does “occupying space” mean to you personally – emotionally, physically, or socially?">
+            <div class="card-title">Question 1</div>
+
+            <div class="sub-question" data-subquestion="1a. Choose the option that fits best">
+              <div class="sub-question-title">
+                What does “occupying space” mean to you personally – emotionally, physically, or socially?
+              </div>
+
+              <div class="options-group">
+                <label class="option-pill">
+                  <input type="radio" name="q1a" value="Feeling safe and entitled to express my needs, emotions, and opinions openly.">
+                  A. Feeling safe and entitled to express my needs, emotions, and opinions openly.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q1a" value="Being physically present and confident without shrinking myself or making others more comfortable.">
+                  B. Being physically present and confident without shrinking myself or making others more comfortable.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q1a" value="Having a visible and valued role within my community, workplace, or relationships.">
+                  C. Having a visible and valued role within my community, workplace, or relationships.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q1a" value="Setting boundaries and asserting my identity without guilt or fear.">
+                  D. Setting boundaries and asserting my identity without guilt or fear.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q1a" value="Being able to exist without constantly monitoring how I'm being perceived by others.">
+                  E. Being able to exist without constantly monitoring how I'm being perceived by others.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q1a" value="Other, Please Specify">
+                  F. Other, Please Specify
+                </label>
+              </div>
+
+              <textarea id="q1_other" placeholder="If ‘Other’, please specify here (optional)."></textarea>
+            </div>
+
+            <div class="sub-question" data-subquestion="1b. Please provide more details that you think are relevant">
+              <div class="sub-question-title">Optional follow-up:</div>
+              <div class="question-text">Please provide more details that you think are relevant.</div>
+              <textarea id="q1_details" placeholder="Write any additional details here (optional)."></textarea>
+            </div>
+          </div>
+
+          <div class="nav-buttons">
+            <span></span>
+            <button type="button" id="next1" disabled>Next Question ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 2 – QUESTION 2 -->
+        <div class="step" data-step="2">
+          <div class="card question" data-question="2. Can you recall a time when you felt fully allowed to take up space? What was happening then?">
+            <div class="card-title">Question 2</div>
+
+            <div class="sub-question" data-subquestion="2a. Choose the option that fits best">
+              <div class="sub-question-title">
+                Can you recall a time when you felt fully allowed to take up space? What was happening then?
+              </div>
+
+              <div class="options-group">
+                <label class="option-pill">
+                  <input type="radio" name="q2a" value="I was in a supportive environment where my voice and presence were actively welcomed.">
+                  A. I was in a supportive environment where my voice and presence were actively welcomed.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q2a" value="I had achieved something, and others recognized and affirmed my worth.">
+                  B. I had achieved something, and others recognized and affirmed my worth.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q2a" value="I was alone or with people who made me feel emotionally safe.">
+                  C. I was alone or with people who made me feel emotionally safe.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q2a" value="I was performing, creating, or doing something that connected me to my sense of self.">
+                  D. I was performing, creating, or doing something that connected me to my sense of self.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q2a" value="I was in a leadership role or position of authority.">
+                  E. I was in a leadership role or position of authority.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q2a" value="Other, Please Specify">
+                  F. Other, Please Specify
+                </label>
+              </div>
+
+              <textarea id="q2_other" placeholder="If ‘Other’, please specify here (optional)."></textarea>
+            </div>
+
+            <div class="sub-question" data-subquestion="2b. Please provide more details that you think are relevant">
+              <div class="sub-question-title">Optional follow-up:</div>
+              <div class="question-text">Please provide more details that you think are relevant.</div>
+              <textarea id="q2_details" placeholder="Write any additional details here (optional)."></textarea>
+            </div>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back2">⮜ Back</button>
+            <button type="button" id="next2" disabled>Next Question ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 3 – QUESTION 3 -->
+        <div class="step" data-step="3">
+          <div class="card question" data-question="3. Are there particular contexts where it feels easier or harder to occupy space?">
+            <div class="card-title">Question 3</div>
+
+            <div class="sub-question" data-subquestion="3a. Choose the option that fits best">
+              <div class="sub-question-title">
+                Are there particular contexts where it feels easier or harder to occupy space?
+              </div>
+
+              <div class="options-group">
+                <label class="option-pill">
+                  <input type="radio" name="q3a" value="It feels easier with close friends or people who know and accept me.">
+                  A. It feels easier with close friends or people who know and accept me.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q3a" value="It feels harder in professional or hierarchical settings.">
+                  B. It feels harder in professional or hierarchical settings.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q3a" value="It’s difficult in group settings where I worry about judgment or rejection.">
+                  C. It’s difficult in group settings where I worry about judgment or rejection.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q3a" value="It depends on how I’m feeling about myself at the time (e.g., confident vs. self-critical).">
+                  D. It depends on how I’m feeling about myself at the time (e.g., confident vs. self-critical).
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q3a" value="I often struggle in any setting where I feel different, marginalized, or underrepresented.">
+                  E. I often struggle in any setting where I feel different, marginalized, or underrepresented.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q3a" value="Other, Please Specify">
+                  F. Other, Please Specify
+                </label>
+              </div>
+
+              <textarea id="q3_other" placeholder="If ‘Other’, please specify here (optional)."></textarea>
+            </div>
+
+            <div class="sub-question" data-subquestion="3b. Please provide more details that you think are relevant">
+              <div class="sub-question-title">Optional follow-up:</div>
+              <div class="question-text">Please provide more details that you think are relevant.</div>
+              <textarea id="q3_details" placeholder="Write any additional details here (optional)."></textarea>
+            </div>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back3">⮜ Back</button>
+            <button type="button" id="next3" disabled>Next Question ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 4 – QUESTION 4 -->
+        <div class="step" data-step="4">
+          <div class="card question" data-question="4. What messages have you received (directly or indirectly) about your right to be seen or heard?">
+            <div class="card-title">Question 4</div>
+
+            <div class="sub-question" data-subquestion="4a. Choose the option that fits best">
+              <div class="sub-question-title">
+                What messages have you received (directly or indirectly) about your right to be seen or heard?
+              </div>
+
+              <div class="options-group">
+                <label class="option-pill">
+                  <input type="radio" name="q4a" value="I was encouraged to speak up and share my thoughts without fear of judgment.">
+                  A. I was encouraged to speak up and share my thoughts without fear of judgment.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q4a" value="I was taught that being quiet or self-sacrificing is more acceptable or respectful.">
+                  B. I was taught that being quiet or self-sacrificing is more acceptable or respectful.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q4a" value="I received mixed messages – sometimes validated, other times silenced or dismissed.">
+                  C. I received mixed messages – sometimes validated, other times silenced or dismissed.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q4a" value="I was often ignored or overlooked, which made me doubt my value.">
+                  D. I was often ignored or overlooked, which made me doubt my value.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q4a" value="I was only heard when I met certain expectations (e.g., being helpful, pleasing, or high-achieving).">
+                  E. I was only heard when I met certain expectations (e.g., being helpful, pleasing, or high-achieving).
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q4a" value="Other, Please Specify">
+                  F. Other, Please Specify
+                </label>
+              </div>
+
+              <textarea id="q4_other" placeholder="If ‘Other’, please specify here (optional)."></textarea>
+            </div>
+
+            <div class="sub-question" data-subquestion="4b. Please provide more details that you think are relevant">
+              <div class="sub-question-title">Optional follow-up:</div>
+              <div class="question-text">Please provide more details that you think are relevant.</div>
+              <textarea id="q4_details" placeholder="Write any additional details here (optional)."></textarea>
+            </div>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back4">⮜ Back</button>
+            <button type="button" id="next4" disabled>Next Question ⮕</button>
+          </div>
+        </div>
+
+        <!-- STEP 5 – QUESTION 5 -->
+        <div class="step" data-step="5">
+          <div class="card question" data-question="5. When you do express yourself, what fears or beliefs tend to show up?">
+            <div class="card-title">Question 5</div>
+
+            <div class="sub-question" data-subquestion="5a. Choose the option that fits best">
+              <div class="sub-question-title">
+                When you do express yourself, what fears or beliefs tend to show up?
+              </div>
+
+              <div class="options-group">
+                <label class="option-pill">
+                  <input type="radio" name="q5a" value="Fear of being judged, misunderstood, or rejected.">
+                  A. Fear of being judged, misunderstood, or rejected.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q5a" value="Belief that my needs or feelings are a burden to others.">
+                  B. Belief that my needs or feelings are a burden to others.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q5a" value="Fear that I will be seen as too much, too emotional, or too assertive.">
+                  C. Fear that I will be seen as too much, too emotional, or too assertive.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q5a" value="Worry that expressing myself could lead to conflict or disconnection.">
+                  D. Worry that expressing myself could lead to conflict or disconnection.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q5a" value="Belief that what I have to say isn’t important or valid.">
+                  E. Belief that what I have to say isn’t important or valid.
+                </label>
+                <label class="option-pill">
+                  <input type="radio" name="q5a" value="Other, Please Specify">
+                  F. Other, Please Specify
+                </label>
+              </div>
+
+              <textarea id="q5_other" placeholder="If ‘Other’, please specify here (optional)."></textarea>
+            </div>
+
+            <div class="sub-question" data-subquestion="5b. Please provide more details that you think are relevant">
+              <div class="sub-question-title">Optional follow-up:</div>
+              <div class="question-text">Please provide more details that you think are relevant.</div>
+              <textarea id="q5_details" placeholder="Write any additional details here (optional)."></textarea>
+            </div>
+          </div>
+
+          <div class="nav-buttons">
+            <button type="button" class="secondary" id="back5">⮜ Back</button>
+            <button type="button" id="finishBtn" disabled>Finish</button>
+          </div>
+        </div>
+
+      </form>
+
+      <!-- RESULTS -->
+      <div id="resultsSection" style="display:none;">
+        <div class="results-card">
+          <div class="results-title">Your Reflection Export</div>
+          <p class="results-note">
+            Tap the button to copy your reflection. Selected answers are marked with a <strong>*</strong>.
+          </p>
+
+          <button type="button" id="copyButton">📋 Copy this reflection</button>
+          <div class="status" id="statusMessage"></div>
+
+          <div class="payment-card">
+            <div class="payment-title">For analysis, please transfer £20:</div>
+            <div class="payment-details">James French Counselling
+Sort Code: 040003
+Account Number: 45538964</div>
+          </div>
+
+          <!-- Hidden textarea for legacy/manual copy fallback (not shown) -->
+          <textarea id="hiddenCopyBox" readonly></textarea>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // ES5-friendly script with no arrow functions / let / const
+
+    // ---------- TIMER (30 MINUTES) ----------
+    var totalSeconds = 30 * 60;
+    var timerInterval = null;
+    var timeUp = false;
+
+    var timerEl = document.getElementById('timer');
+    var timeRemainingEl = document.getElementById('timeRemaining');
+    var timeUpBanner = document.getElementById('timeUpBanner');
+
+    function formatTime(seconds) {
+      var m = Math.floor(seconds / 60);
+      var s = seconds % 60;
+      var mm = m < 10 ? '0' + m : '' + m;
+      var ss = s < 10 ? '0' + s : '' + s;
+      return mm + ':' + ss;
+    }
+
+    function startTimer() {
+      timeRemainingEl.textContent = formatTime(totalSeconds);
+      timerInterval = setInterval(function() {
+        totalSeconds--;
+        if (totalSeconds <= 0) {
+          totalSeconds = 0;
+          clearInterval(timerInterval);
+          handleTimeUp();
+        }
+        timeRemainingEl.textContent = formatTime(totalSeconds);
+        if (totalSeconds <= 60 && !timeUp) {
+          if (timerEl.className.indexOf('ending') === -1) {
+            timerEl.className += ' ending';
+          }
+        }
+      }, 1000);
+    }
+
+    function handleTimeUp() {
+      timeUp = true;
+      timerEl.className = timerEl.className.replace(' ending', '');
+      if (timerEl.className.indexOf(' up') === -1) {
+        timerEl.className += ' up';
+      }
+      if (document.body.className.indexOf('time-up') === -1) {
+        document.body.className += ' time-up';
+      }
+      timeUpBanner.style.display = 'block';
+      var allInputs = document.querySelectorAll('#reflectionForm input, #reflectionForm textarea');
+      for (var i = 0; i < allInputs.length; i++) {
+        allInputs[i].disabled = true;
+      }
+    }
+
+    // ---------- STEPS ----------
+    var steps = document.querySelectorAll('.step');
+    var currentStep = 1;
+
+    function showStep(stepNumber) {
+      for (var i = 0; i < steps.length; i++) {
+        var step = steps[i];
+        var target = Number(step.getAttribute('data-step')) === stepNumber;
+        if (target) {
+          if (step.className.indexOf('active') === -1) {
+            step.className += ' active';
+          }
+        } else {
+          step.className = step.className.replace(' active', '');
+        }
+      }
+      currentStep = stepNumber;
+
+      if (subQuestionState[stepNumber]) {
+        updateSubNav(stepNumber);
+      }
+
+      // Make sure the view lands on the content on mobile
+      try {
+        var activeStep = document.querySelector('.step[data-step="' + stepNumber + '"]');
+        if (activeStep) activeStep.scrollIntoView(true);
+      } catch (e) {}
+    }
+
+    // ---------- ANSWER CHECKING ----------
+    function isMainQuestionAnswered(stepNumber) {
+      var step = document.querySelector('.step[data-step="' + stepNumber + '"]');
+      if (!step) return false;
+
+      var checked = step.querySelector('input[type="radio"]:checked, input[type="checkbox"]:checked');
+      if (checked) return true;
+
+      var fields = step.querySelectorAll('textarea, input[type="text"]');
+      for (var i = 0; i < fields.length; i++) {
+        if (fields[i].value && fields[i].value.trim() !== '') {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function checkQuestionReward(stepNumber) {
+      // intentionally empty
+    }
+
+    function closestWithClass(element, className, stopAt) {
+      while (element && element !== stopAt && element.nodeType === 1) {
+        if ((' ' + element.className + ' ').indexOf(' ' + className + ' ') > -1) {
+          return element;
+        }
+        element = element.parentNode;
+      }
+      return null;
+    }
+
+    // ---------- SUB-QUESTION "PAGES" ----------
+    var subQuestionState = {}; // stepNumber -> { index, nodes, prevBtn, nextBtn, statusEl }
+
+    function initSubQuestions() {
+      for (var i = 0; i < steps.length; i++) {
+        var step = steps[i];
+        var stepNumber = Number(step.getAttribute('data-step'));
+        var subs = step.querySelectorAll('.sub-question');
+
+        if (!subQuestionState[stepNumber]) {
+          subQuestionState[stepNumber] = { index: 0, nodes: subs };
+        } else {
+          subQuestionState[stepNumber].nodes = subs;
+        }
+
+        for (var j = 0; j < subs.length; j++) {
+          subs[j].className = subs[j].className.replace(' active', '');
+        }
+        if (subs.length > 0) {
+          if (subs[0].className.indexOf('active') === -1) {
+            subs[0].className += ' active';
+          }
+        }
+
+        if (subs.length > 1) {
+          var nav = document.createElement('div');
+          nav.className = 'sub-nav';
+
+          var prevBtn = document.createElement('button');
+          prevBtn.type = 'button';
+          prevBtn.className = 'secondary sub-prev';
+          prevBtn.textContent = '⮜ Previous part';
+
+          var status = document.createElement('span');
+          status.className = 'sub-status';
+
+          var nextBtn = document.createElement('button');
+          nextBtn.type = 'button';
+          nextBtn.className = 'sub-next';
+          nextBtn.textContent = 'Next part ⮕';
+
+          nav.appendChild(prevBtn);
+          nav.appendChild(status);
+          nav.appendChild(nextBtn);
+
+          var navButtons = step.querySelector('.nav-buttons');
+          if (navButtons) {
+            step.insertBefore(nav, navButtons);
+          } else {
+            step.appendChild(nav);
+          }
+
+          subQuestionState[stepNumber].prevBtn = prevBtn;
+          subQuestionState[stepNumber].nextBtn = nextBtn;
+          subQuestionState[stepNumber].statusEl = status;
+
+          (function(stepNum) {
+            prevBtn.addEventListener('click', function() { changeSubQuestion(stepNum, -1); });
+            nextBtn.addEventListener('click', function() { changeSubQuestion(stepNum, 1); });
+          })(stepNumber);
+        }
+      }
+
+      for (var s = 1; s <= steps.length; s++) {
+        if (subQuestionState[s]) updateSubNav(s);
+      }
+    }
+
+    function updateSubNav(stepNumber) {
+      var state = subQuestionState[stepNumber];
+      if (!state || !state.nodes || !state.nodes.length) return;
+
+      var total = state.nodes.length;
+      var idx = state.index;
+
+      if (idx < 0) idx = 0;
+      if (idx >= total) idx = total - 1;
+      state.index = idx;
+
+      for (var i = 0; i < total; i++) {
+        var sub = state.nodes[i];
+        sub.className = sub.className.replace(' active', '');
+        if (i === idx) {
+          if (sub.className.indexOf('active') === -1) sub.className += ' active';
+        }
+      }
+
+      if (state.prevBtn) state.prevBtn.disabled = (idx === 0);
+      if (state.nextBtn) state.nextBtn.disabled = (idx === total - 1);
+      if (state.statusEl) state.statusEl.textContent = 'Part ' + (idx + 1) + ' of ' + total;
+
+      // show the step's "Next/Finish" only on the last part
+      for (var s = 1; s <= 5; s++) {
+        var nextBtn = document.getElementById('next' + s);
+        if (nextBtn) nextBtn.style.display = 'none';
+      }
+      var finishBtn = document.getElementById('finishBtn');
+      if (finishBtn) finishBtn.style.display = 'none';
+
+      if (idx === total - 1) {
+        if (stepNumber >= 1 && stepNumber <= 4) {
+          var showNext = document.getElementById('next' + stepNumber);
+          if (showNext) showNext.style.display = 'inline-flex';
+        } else if (stepNumber === 5) {
+          if (finishBtn) finishBtn.style.display = 'inline-flex';
+        }
+      }
+
+      enableOrDisableButtonsForStep(stepNumber);
+    }
+
+    function changeSubQuestion(stepNumber, direction) {
+      var state = subQuestionState[stepNumber];
+      if (!state || !state.nodes || !state.nodes.length) return;
+
+      var newIndex = state.index + direction;
+      if (newIndex < 0) newIndex = 0;
+      if (newIndex >= state.nodes.length) newIndex = state.nodes.length - 1;
+      if (newIndex === state.index) return;
+
+      state.index = newIndex;
+      updateSubNav(stepNumber);
+      enableOrDisableButtonsForStep(stepNumber);
+    }
+
+    // ---------- OPTION PILL SELECTION ----------
+    var optionGroups = document.querySelectorAll('.options-group');
+    for (var og = 0; og < optionGroups.length; og++) {
+      optionGroups[og].addEventListener('change', function(e) {
+        var target = e.target || e.srcElement;
+        if (!target || target.tagName !== 'INPUT') return;
+
+        var pill = closestWithClass(target, 'option-pill', this);
+        if (!pill) return;
+
+        if (target.type === 'radio') {
+          var allPills = this.querySelectorAll('.option-pill');
+          for (var i = 0; i < allPills.length; i++) {
+            allPills[i].className = allPills[i].className.replace(' selected', '');
+          }
+          if (pill.className.indexOf('selected') === -1) pill.className += ' selected';
+        }
+
+        var stepEl = closestWithClass(target, 'step', document.body);
+        if (stepEl) {
+          var stepNumber = Number(stepEl.getAttribute('data-step'));
+          enableOrDisableButtonsForStep(stepNumber);
+          checkQuestionReward(stepNumber);
+        }
+      });
+    }
+
+    var reflectionForm = document.getElementById('reflectionForm');
+    reflectionForm.addEventListener('input', function(e) {
+      var target = e.target || e.srcElement;
+      var stepEl = closestWithClass(target, 'step', document.body);
+      if (stepEl) {
+        var stepNumber = Number(stepEl.getAttribute('data-step'));
+        enableOrDisableButtonsForStep(stepNumber);
+        checkQuestionReward(stepNumber);
+      }
+    });
+
+    function enableOrDisableButtonsForStep(stepNumber) {
+      var answered = isMainQuestionAnswered(stepNumber);
+
+      var btn = document.getElementById('next' + stepNumber);
+      if (btn) btn.disabled = !answered;
+
+      if (stepNumber === 5) {
+        var finish = document.getElementById('finishBtn');
+        if (finish) finish.disabled = !answered;
+      }
+    }
+
+    // ---------- STEP NAV BUTTONS ----------
+    var next1 = document.getElementById('next1');
+    var next2 = document.getElementById('next2');
+    var next3 = document.getElementById('next3');
+    var next4 = document.getElementById('next4');
+
+    var back2 = document.getElementById('back2');
+    var back3 = document.getElementById('back3');
+    var back4 = document.getElementById('back4');
+    var back5 = document.getElementById('back5');
+
+    var finishBtn = document.getElementById('finishBtn');
+
+    next1.addEventListener('click', function() { showStep(2); });
+    next2.addEventListener('click', function() { showStep(3); });
+    next3.addEventListener('click', function() { showStep(4); });
+    next4.addEventListener('click', function() { showStep(5); });
+
+    back2.addEventListener('click', function() { showStep(1); });
+    back3.addEventListener('click', function() { showStep(2); });
+    back4.addEventListener('click', function() { showStep(3); });
+    back5.addEventListener('click', function() { showStep(4); });
+
+    // Dash line (as in your base)
+    var dashLine = '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -';
+
+    // ---------- EXPORT TEXT ----------
+    function generateExportText() {
+      var allQuestions = document.querySelectorAll('.question');
+      var output = '';
+
+      output += '──────────────────────────────────────────────────────────────\n';
+      output += 'Taking Up Space: Reflection Summary\n';
+      output += '──────────────────────────────────────────────────────────────\n\n';
+      output += 'For each question below, all possible options are listed.\n';
+      output += 'Selected answers are marked with a *.\n';
+      output += 'Your written notes follow where you added them.\n\n';
+
+      for (var qIndex = 0; qIndex < allQuestions.length; qIndex++) {
+        var q = allQuestions[qIndex];
+        var mainPrompt = q.getAttribute('data-question') || ('Question ' + (qIndex + 1));
+
+        output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+        output += mainPrompt + '\n';
+
+        var subQuestions = q.querySelectorAll('.sub-question');
+        for (var sIndex = 0; sIndex < subQuestions.length; sIndex++) {
+          var sub = subQuestions[sIndex];
+          var subPrompt = sub.getAttribute('data-subquestion') || '';
+          output += '\n ▸ ' + subPrompt + '\n';
+
+          var groups = sub.querySelectorAll('.options-group');
+          for (var gIndex = 0; gIndex < groups.length; gIndex++) {
+            var group = groups[gIndex];
+            var labels = group.querySelectorAll('label.option-pill');
+
+            if (labels.length > 0) {
+              output += ' Options:\n';
+              for (var lIndex = 0; lIndex < labels.length; lIndex++) {
+                var label = labels[lIndex];
+                var input = label.querySelector('input');
+                var isChecked = input && input.checked;
+
+                var labelText = label.textContent.replace(/\s+/g, ' ').trim();
+                output += (isChecked ? '* ' : '  ') + labelText + '\n';
+                output += dashLine + '\n';
+              }
+            }
+          }
+
+          var notes = [];
+          var fields = sub.querySelectorAll('textarea, input[type="text"]');
+          for (var fIndex = 0; fIndex < fields.length; fIndex++) {
+            var field = fields[fIndex];
+            if (field.value && field.value.trim() !== '') {
+              notes.push(field.value.trim());
+            }
+          }
+
+          if (notes.length > 0) {
+            output += ' Notes and narrative reflections:\n';
+            for (var nIndex = 0; nIndex < notes.length; nIndex++) {
+              output += ' • ' + notes[nIndex] + '\n';
+            }
+          } else {
+            output += ' Notes and narrative reflections:\n';
+            output += ' • (no additional written notes provided for this part)\n';
+          }
+        }
+
+        output += '\n';
+      }
+
+      output += '──────────────────────────────────────────────────────────────\n';
+      output += 'End of Taking Up Space\n';
+      output += '──────────────────────────────────────────────────────────────\n';
+
+      return output;
+    }
+
+    // When finish clicked, show results + generate export, then hide finish
+    finishBtn.addEventListener('click', function() {
+      var exportText = generateExportText();
+
+      // Store in hidden textarea for fallback copying
+      var hiddenBox = document.getElementById('hiddenCopyBox');
+      hiddenBox.value = exportText;
+
+      document.getElementById('resultsSection').style.display = 'block';
+      finishBtn.style.display = 'none';
+
+      try {
+        document.getElementById('resultsSection').scrollIntoView(true);
+      } catch (e) {}
+    });
+
+    // ---------- COPY BUTTON ----------
+    var copyButton = document.getElementById('copyButton');
+    copyButton.addEventListener('click', function() {
+      var statusMessage = document.getElementById('statusMessage');
+      var hiddenBox = document.getElementById('hiddenCopyBox');
+      var text = hiddenBox.value || generateExportText();
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text)
+          .then(function() {
+            statusMessage.textContent = '✨ Reflection copied! You can now paste it into an email or document.';
+          })
+          .catch(function() {
+            // fallback
+            hiddenBox.value = text;
+            hiddenBox.focus();
+            hiddenBox.select();
+            try {
+              var successful = document.execCommand('copy');
+              statusMessage.textContent = successful
+                ? '✨ Reflection copied! You can now paste it into an email or document.'
+                : 'Copy failed. Please try again.';
+            } catch (e) {
+              statusMessage.textContent = 'Copy failed. Please try again.';
+            }
+          });
+      } else {
+        hiddenBox.value = text;
+        hiddenBox.focus();
+        hiddenBox.select();
+        try {
+          var ok = document.execCommand('copy');
+          statusMessage.textContent = ok
+            ? '✨ Reflection copied! You can now paste it into an email or document.'
+            : 'Copy failed. Please try again.';
+        } catch (e2) {
+          statusMessage.textContent = 'Copy failed. Please try again.';
+        }
+      }
+    });
+
+    // ---------- INIT ----------
+    initSubQuestions();
+    startTimer();
+    showStep(1);
+    enableOrDisableButtonsForStep(1);
+  </script>
+</body>
+</html>
