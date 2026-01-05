@@ -435,8 +435,8 @@
     }
 
     @media (max-width: 900px) {
-      .layout { 
-        flex-direction: column; 
+      .layout {
+        flex-direction: column;
       }
       .sidebar {
         width: 100%;
@@ -1190,7 +1190,15 @@
             for (var lIndex = 0; lIndex < labels.length; lIndex++) {
               var label = labels[lIndex];
               var labelText = label.textContent.replace(/\s+/g, ' ').trim();
-              output += '   ' + labelText + '\n';
+
+              // NEW: add * next to selected answers (keep everything else identical)
+              var selectedMark = '';
+              var inputEl = label.querySelector('input');
+              if (inputEl && inputEl.checked) {
+                selectedMark = ' *';
+              }
+
+              output += '   ' + labelText + selectedMark + '\n';
               output += dashLine + '\n';
             }
           }
