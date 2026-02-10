@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Section 5b: Challenges and Adversity</title>
+  <!-- NEW: make mobile render at proper scale -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* NEW: prevent iOS from randomly resizing some text blocks */
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      height: 100%;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at top, #1e3a8a 0, #4f46e5 25%, #ec4899 60%, #f97316 100%);
+      color: #111827;
+      min-height: 100vh;
+    }
+    .layout {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      min-height: 100vh; /* ensure full height on mobile */
+    }
+    .sidebar {
+      width: 260px;
+      flex: 0 0 260px;
+      position: sticky;
+      top: 16px;
+      align-self: flex-start;
+    }
+    .page {
+      flex: 1;
+      min-width: 0;
+    }
+    h1 {
+      font-size: 1.9rem;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #f9fafb;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.45);
+    }
+    h1 span.badge {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(251,191,36,0.95);
+      color: #78350f;
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+    }
+    p.intro {
+      margin-top: 0;
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+      color: #e5e7eb;
+      max-width: 760px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    }
+
+    /* Timer only in sidebar now */
+    .timer {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 3px;
+      padding: 8px 11px;
+      border-radius: 16px;
+      background: rgba(15,23,42,0.95);
+      border: 1px solid rgba(248,250,252,0.2);
+      box-shadow: 0 6px 18px rgba(15,23,42,0.7);
+      font-size: 0.88rem;
+      color: #e5e7eb;
+    }
+    .timer span.label {
+      opacity: 0.8;
+      font-size: 0.78rem;
+    }
+    .timer span.time {
+      font-weight: 800;
+      font-size: 1.2rem;
+      letter-spacing: 0.08em;
+    }
+    .timer.ending {
+      border-color: #f97373;
+      color: #fecaca;
+      box-shadow: 0 0 14px rgba(248,113,113,0.7);
+    }
+    .timer.up {
+      opacity: 0.7;
+    }
+    .time-up-banner {
+      display: none;
+      margin-bottom: 10px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(254,242,242,0.96);
+      color: #991b1b;
+      border: 1px solid #fecaca;
+      font-size: 0.84rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .time-up .time-up-banner {
+      display: block;
+    }
+    .time-up #reflectionForm input,
+    .time-up #reflectionForm textarea {
+      pointer-events: none;
+      opacity: 0.9;
+    }
+
+    .card {
+      background: #f9fafb;
+      border-radius: 18px;
+      padding: 18px 16px;
+      box-shadow: 0 10px 22px rgba(15,23,42,0.25);
+      border: 1px solid #e5e7eb;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-title {
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #111827;
+    }
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 4px;
+      color: #111827;
+    }
+    .question-text {
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+    }
+    textarea,
+    input[type="text"] {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      font: inherit;
+      background: #ffffff;
+      min-height: 70px;
+      resize: vertical;
+      transition: border-color 0.15s ease-out, box-shadow 0.15s ease-out, transform 0.05s ease-out;
+    }
+    textarea:focus,
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 2px rgba(129,140,248,0.4);
+      transform: translateY(-1px);
+    }
+
+    .options-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin: 8px 0 10px;
+    }
+    .option-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(129,140,248,0.7);
+      font-size: 0.9rem;           /* consistent font size */
+      background: rgba(239,246,255,0.95);
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.05s ease-out, box-shadow 0.05s ease-out, background 0.1s ease-out, border-color 0.1s ease-out, color 0.1s ease-out;
+    }
+    .option-pill input {
+      accent-color: #4b6bfb;
+      font-size: inherit;          /* keep radio text size consistent */
+    }
+    .option-pill:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 5px rgba(148,163,184,0.8);
+    }
+    .option-pill.selected {
+      background: linear-gradient(135deg, #22c55e, #a855f7);
+      color: #f9fafb;
+      border-color: transparent;
+      box-shadow: 0 4px 12px rgba(55,65,81,0.7);
+    }
+    .option-pill.selected input {
+      accent-color: #fef9c3;
+    }
+
+    .sub-question {
+      margin-top: 12px;
+      display: none; /* show only active one per question "page" */
+    }
+    .sub-question.active {
+      display: block;
+    }
+    .sub-question-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #111827;
+    }
+
+    .step {
+      display: none;
+    }
+    .step.active {
+      display: block;
+    }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 14px;
+      gap: 10px;
+    }
+    button {
+      cursor: pointer;
+      border-radius: 999px;
+      border: none;
+      padding: 10px 18px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      background: radial-gradient(circle at 0% 0%, #f97316, #ec4899, #6366f1);
+      color: #f9fafb;
+      box-shadow: 0 8px 18px rgba(15,23,42,0.7);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: transform 0.07s ease, box-shadow 0.07s ease, opacity 0.1s ease;
+    }
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 11px 22px rgba(15,23,42,0.8);
+    }
+    button:active:not(:disabled) {
+      transform: translateY(1px);
+      box-shadow: 0 5px 11px rgba(15,23,42,0.75);
+    }
+    button:disabled {
+      opacity: 0.45;
+      cursor: default;
+      box-shadow: none;
+    }
+    .secondary {
+      background: #e5e7eb;
+      color: #111827;
+      box-shadow: 0 4px 10px rgba(55,65,81,0.5);
+      text-transform: none;
+      letter-spacing: 0.01em;
+    }
+
+    /* Sub-question navigation (per main question) */
+    .sub-nav {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .sub-nav .sub-status {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #374151;
+    }
+    .sub-nav .sub-prev,
+    .sub-nav .sub-next {
+      font-size: 0.8rem;
+      padding: 8px 14px;
+    }
+
+    #resultsBox {
+      width: 100%;
+      min-height: 200px;
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px dashed #e5e7eb;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 0.9rem;
+      background: #f9fafb;
+      box-shadow: inset 0 0 8px rgba(148,163,184,0.5);
+      white-space: pre-wrap;
+    }
+    .status {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: #16a34a;
+      min-height: 1.2em;
+    }
+    .footer-note {
+      margin-top: 12px;
+      font-size: 0.8rem;
+      color: #e5e7eb;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      .sidebar {
+        width: 100%;
+        flex: none;
+        position: static;
+        order: -1;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+  <!-- Sidebar with timer only -->
+  <aside class="sidebar">
+    <div class="timer" id="timer">
+      <span class="label">⏱️ Time left (Section 5b)</span>
+      <span class="time" id="timeRemaining">30:00</span>
+      <span style="font-size:0.75rem; opacity:0.75;">Up to 30 minutes to complete this week's narrative.</span>
+    </div>
+  </aside>
+
+  <!-- Main question page -->
+  <main class="page">
+    <h1>Section 5b: Challenges and Adversity</h1>
+    <p class="intro">
+      This sequence explores beliefs, values, and moments where you have faced inner or outer conflict.
+      Move through Questions 4, 5, and 6 one part at a time. At the end you’ll be able to copy a formatted
+      reflection to send on.
+    </p>
+
+    <div class="time-up-banner" id="timeUpBanner">
+      The 30 minutes for this reflection have finished. Your answers are still here – you can review them and copy them at the end.
+    </div>
+
+    <form id="reflectionForm">
+      <!-- STEP GROUP 1 – QUESTION 4 -->
+      <div class="step active" data-step="1">
+        <div class="card question" data-question="4. Letting go of a belief or principle">
+          <div class="card-title">Question 4 – Letting go of a belief or principle</div>
+
+          <!-- PART 1: main multiple choice -->
+          <div class="sub-question" data-subquestion="4a. The belief or principle you let go of">
+            <div class="sub-question-title">
+              Think about a belief or principle that you have let go of over time, replacing it with new perspectives.
+            </div>
+            <div class="question-text">
+              What was the belief or principle you let go of?
+            </div>
+
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q4a" value="A cultural or family tradition that no longer resonated with you.">
+                A. A cultural or family tradition that no longer resonated with you.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q4a" value="A rigid perspective or mindset.">
+                B. A rigid perspective or mindset.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q4a" value="A specific moral or ethical stance that evolved with experience.">
+                C. A specific moral or ethical stance that evolved with experience.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q4a" value="A spiritual or religious belief.">
+                D. A spiritual or religious belief.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q4a" value="A belief about yourself or your capabilities.">
+                E. A belief about yourself or your capabilities.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q4a" value="A strict social norm or expectation.">
+                F. A strict social norm or expectation.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q4a" value="Other / Not Listed (please specify).">
+                G. Other / Not Listed (please specify):
+              </label>
+            </div>
+
+            <textarea id="q4a_other"
+              placeholder="If ‘Other’ or if you’d like to describe this belief or principle in more detail, you can write about it here."></textarea>
+          </div>
+
+          <!-- PART 2: follow-up multiple choice -->
+          <div class="sub-question" data-subquestion="4b. What led to this change and how it opened opportunities">
+            <div class="sub-question-title">
+              What led to this change, and how has shifting this belief opened opportunities for growth and understanding in life?
+            </div>
+
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q4b" value="Gaining new experiences or perspectives.">
+                A. Gaining new experiences or perspectives.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q4b" value="A life event that challenged the belief.">
+                B. A life event that challenged the belief.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q4b" value="A conversation or relationship that broadened your views.">
+                C. A conversation or relationship that broadened your views.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q4b" value="A growing sense that the belief no longer served you.">
+                D. A growing sense that the belief no longer served you.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q4b" value="A long period of reflection or soul-searching.">
+                E. A long period of reflection or soul-searching.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q4b" value="Witnessing others embrace alternative perspectives.">
+                F. Witnessing others embrace alternative perspectives.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q4b" value="Other / Not Listed (please specify).">
+                G. Other / Not Listed (please specify):
+              </label>
+            </div>
+
+            <textarea id="q4b_other"
+              placeholder="If ‘Other’ or if you’d like to describe what led to this change in more detail, you can write about it here."></textarea>
+          </div>
+
+          <!-- PART 3: optional follow-up text -->
+          <div class="sub-question" data-subquestion="4c. Optional follow-up – new possibilities and outlook">
+            <div class="sub-question-title">Optional follow-up:</div>
+            <div class="question-text">
+              How has letting go of this belief opened up new possibilities or changed your outlook on life?
+            </div>
+            <textarea id="q4_follow"
+              placeholder="You might write about the kinds of choices, relationships, or perspectives that became available once this belief shifted."></textarea>
+          </div>
+        </div>
+
+        <!-- sub-question navigation for Question 4 will be injected here by JS -->
+
+        <div class="nav-buttons">
+          <span></span>
+          <button type="button" id="next1" disabled>Next Question ⮕</button>
+        </div>
+      </div>
+
+      <!-- STEP GROUP 2 – QUESTION 5 -->
+      <div class="step" data-step="2">
+        <div class="card question" data-question="5. Standing up for what you believe in">
+          <div class="card-title">Question 5 – Standing up for what you believe in</div>
+
+          <!-- PART 1: main multiple choice -->
+          <div class="sub-question" data-subquestion="5a. The situation where you stood up for your beliefs">
+            <div class="sub-question-title">
+              Reflect on a moment when you had to stand up for what you believe in, despite personal or external challenges.
+            </div>
+            <div class="question-text">
+              What best describes the situation?
+            </div>
+
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q5a" value="Speaking out against injustice or inequality.">
+                A. Speaking out against injustice or inequality.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q5a" value="Defending a personal value or principle.">
+                B. Defending a personal value or principle.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q5a" value="Supporting someone who needed help.">
+                C. Supporting someone who needed help.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q5a" value="Challenging authority or a widely held norm.">
+                D. Challenging authority or a widely held norm.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q5a" value="Advocating for fairness or inclusion in a group setting.">
+                E. Advocating for fairness or inclusion in a group setting.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q5a" value="Defending someone else’s rights or dignity.">
+                F. Defending someone else’s rights or dignity.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q5a" value="Other / Not Listed (please specify).">
+                G. Other / Not Listed (please specify):
+              </label>
+            </div>
+
+            <textarea id="q5a_other"
+              placeholder="If ‘Other’ or if you’d like to describe this situation in more detail, you can write about it here."></textarea>
+          </div>
+
+          <!-- PART 2: follow-up multiple choice -->
+          <div class="sub-question" data-subquestion="5b. Consequences and impact on your confidence">
+            <div class="sub-question-title">
+              What were the consequences of your actions, and how did they impact your confidence in advocating for your beliefs?
+            </div>
+
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q5b" value="You inspired others or made a positive impact.">
+                A. You inspired others or made a positive impact.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q5b" value="You faced resistance or criticism.">
+                B. You faced resistance or criticism.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q5b" value="You felt empowered and true to yourself.">
+                C. You felt empowered and true to yourself.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q5b" value="The situation caused tension or conflict but was worth it.">
+                D. The situation caused tension or conflict but was worth it.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q5b" value="It led to a meaningful change in the situation.">
+                E. It led to a meaningful change in the situation.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q5b" value="It strengthened your understanding of yourself and others.">
+                F. It strengthened your understanding of yourself and others.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q5b" value="Other / Not Listed (please specify).">
+                G. Other / Not Listed (please specify):
+              </label>
+            </div>
+
+            <textarea id="q5b_other"
+              placeholder="If ‘Other’ or if you’d like to describe the consequences or impact in more detail, you can write about it here."></textarea>
+          </div>
+
+          <!-- PART 3: optional follow-up text -->
+          <div class="sub-question" data-subquestion="5c. Optional follow-up – confidence going forward">
+            <div class="sub-question-title">Optional follow-up:</div>
+            <div class="question-text">
+              How did this experience impact your confidence in advocating for your beliefs in the future?
+            </div>
+            <textarea id="q5_follow"
+              placeholder="You might write about situations you’ve handled differently since then, or how your sense of courage has changed."></textarea>
+          </div>
+        </div>
+
+        <!-- sub-question navigation for Question 5 will be injected here by JS -->
+
+        <div class="nav-buttons">
+          <button type="button" class="secondary" id="back2">⮜ Back</button>
+          <button type="button" id="next2" disabled>Next Question ⮕</button>
+        </div>
+      </div>
+
+      <!-- STEP GROUP 3 – QUESTION 6 -->
+      <div class="step" data-step="3">
+        <div class="card question" data-question="6. Conflict between your values and others">
+          <div class="card-title">Question 6 – Conflict between your values and others</div>
+
+          <!-- PART 1: main multiple choice -->
+          <div class="sub-question" data-subquestion="6a. What caused the conflict between your values and others">
+            <div class="sub-question-title">
+              Think about a time when you felt a sense of conflict between your values and the actions or beliefs of others.
+            </div>
+            <div class="question-text">
+              What caused the conflict between your values and others?
+            </div>
+
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q6a" value="Differences in cultural or family norms.">
+                A. Differences in cultural or family norms.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q6a" value="A workplace or professional disagreement.">
+                B. A workplace or professional disagreement.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q6a" value="A relationship or friendship dynamic.">
+                C. A relationship or friendship dynamic.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q6a" value="A societal or political issue.">
+                D. A societal or political issue.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q6a" value="Differences in how to approach or solve a problem.">
+                E. Differences in how to approach or solve a problem.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q6a" value="A societal norm or tradition that felt out of place for you.">
+                F. A societal norm or tradition that felt out of place for you.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q6a" value="Other / Not Listed (please specify).">
+                G. Other / Not Listed (please specify):
+              </label>
+            </div>
+
+            <textarea id="q6a_other"
+              placeholder="If ‘Other’ or if you’d like to describe the source of this conflict in more detail, you can write about it here."></textarea>
+          </div>
+
+          <!-- PART 2: follow-up multiple choice -->
+          <div class="sub-question" data-subquestion="6b. How you navigated the conflict and what it taught you">
+            <div class="sub-question-title">
+              How did you navigate the conflict, and what did the experience teach you about understanding others and yourself better?
+            </div>
+
+            <div class="options-group">
+              <label class="option-pill">
+                <input type="radio" name="q6b" value="Found common ground or compromised.">
+                A. Found common ground or compromised.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q6b" value="Asserted your perspective respectfully.">
+                B. Asserted your perspective respectfully.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q6b" value="Chose to distance yourself from the situation.">
+                C. Chose to distance yourself from the situation.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q6b" value="Reflected deeply before deciding how to act.">
+                D. Reflected deeply before deciding how to act.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q6b" value="You found ways to explain your perspective thoughtfully.">
+                E. You found ways to explain your perspective thoughtfully.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q6b" value="You actively sought compromise to maintain the relationship.">
+                F. You actively sought compromise to maintain the relationship.
+              </label>
+              <label class="option-pill">
+                <input type="radio" name="q6b" value="Other / Not Listed (please specify).">
+                G. Other / Not Listed (please specify):
+              </label>
+            </div>
+
+            <textarea id="q6b_other"
+              placeholder="If ‘Other’ or if you’d like to describe how you navigated this conflict in more detail, you can write about it here."></textarea>
+          </div>
+
+          <!-- PART 3: optional follow-up text -->
+          <div class="sub-question" data-subquestion="6c. Optional follow-up – what you learned about yourself">
+            <div class="sub-question-title">Optional follow-up:</div>
+            <div class="question-text">
+              What did you learn about yourself and your ability to navigate difficult situations through this experience?
+            </div>
+            <textarea id="q6_follow"
+              placeholder="You might write about your boundaries, empathy, communication style, or resilience in the face of values-based conflict."></textarea>
+          </div>
+        </div>
+
+        <!-- sub-question navigation for Question 6 will be injected here by JS -->
+
+        <div class="nav-buttons">
+          <button type="button" class="secondary" id="back3">⮜ Back</button>
+          <button type="button" id="finishBtn" disabled>Finish</button>
+        </div>
+      </div>
+    </form>
+
+    <div id="resultsSection" style="display:none; margin-top:20px;">
+      <h2 style="color:#f9fafb; text-shadow:0 2px 6px rgba(0,0,0,0.45);">Your Reflection Export</h2>
+      <p class="intro">
+        Below is your formatted reflection. It includes every option for each question, plus your written notes.
+      </p>
+      <button type="button" id="copyButton">📋 Copy this reflection</button>
+      <div class="status" id="statusMessage"></div>
+      <textarea id="resultsBox" readonly></textarea>
+      <p class="footer-note">
+        After clicking “Copy this reflection”, go to your email or message app and use
+        <strong>Paste</strong> (Ctrl+V / Cmd+V).
+      </p>
+    </div>
+  </main>
+</div>
+
+<script>
+  // ES5-friendly script with no arrow functions / let / const
+  // and avoiding newer APIs where possible.
+
+  // ---------- TIMER (30 MINUTES) ----------
+  var totalSeconds = 30 * 60;
+  var timerInterval = null;
+  var timeUp = false;
+  var timerEl = document.getElementById('timer');
+  var timeRemainingEl = document.getElementById('timeRemaining');
+  var timeUpBanner = document.getElementById('timeUpBanner');
+
+  function formatTime(seconds) {
+    var m = Math.floor(seconds / 60);
+    var s = seconds % 60;
+    var mm = m < 10 ? '0' + m : '' + m;
+    var ss = s < 10 ? '0' + s : '' + s;
+    return mm + ':' + ss;
+  }
+
+  function startTimer() {
+    timeRemainingEl.textContent = formatTime(totalSeconds);
+    timerInterval = setInterval(function() {
+      totalSeconds--;
+      if (totalSeconds <= 0) {
+        totalSeconds = 0;
+        clearInterval(timerInterval);
+        handleTimeUp();
+      }
+      timeRemainingEl.textContent = formatTime(totalSeconds);
+      if (totalSeconds <= 60 && !timeUp) {
+        if (timerEl.className.indexOf('ending') === -1) {
+          timerEl.className += ' ending';
+        }
+      }
+    }, 1000);
+  }
+
+  function handleTimeUp() {
+    timeUp = true;
+    timerEl.className = timerEl.className.replace(' ending', '');
+    if (timerEl.className.indexOf(' up') === -1) {
+      timerEl.className += ' up';
+    }
+    if (document.body.className.indexOf('time-up') === -1) {
+      document.body.className += ' time-up';
+    }
+    timeUpBanner.style.display = 'block';
+    var allInputs = document.querySelectorAll('#reflectionForm input, #reflectionForm textarea');
+    for (var i = 0; i < allInputs.length; i++) {
+      allInputs[i].disabled = true;
+    }
+  }
+
+  // ---------- STEPS ----------
+  var steps = document.querySelectorAll('.step');
+  var currentStep = 1;
+  var totalSteps = steps.length; // 3
+
+  function showStep(stepNumber) {
+    for (var i = 0; i < steps.length; i++) {
+      var step = steps[i];
+      var target = Number(step.getAttribute('data-step')) === stepNumber;
+      if (target) {
+        if (step.className.indexOf('active') === -1) {
+          step.className += ' active';
+        }
+      } else {
+        step.className = step.className.replace(' active', '');
+      }
+    }
+    currentStep = stepNumber;
+    // ensure correct sub-question is shown for this step
+    if (subQuestionState[stepNumber]) {
+      updateSubNav(stepNumber);
+    }
+  }
+
+  // ---------- ANSWER CHECKING (for enabling Next/Finish) ----------
+  function isMainQuestionAnswered(stepNumber) {
+    var step = document.querySelector('.step[data-step="' + stepNumber + '"]');
+    if (!step) return false;
+
+    var checked = step.querySelector('input[type="radio"]:checked, input[type="checkbox"]:checked');
+    if (checked) return true;
+
+    var fields = step.querySelectorAll('textarea, input[type="text"]');
+    for (var i = 0; i < fields.length; i++) {
+      if (fields[i].value && fields[i].value.trim() !== '') {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function checkQuestionReward(stepNumber) {
+    // intentionally empty
+  }
+
+  // simple helper to find closest parent with a class (for older Safari)
+  function closestWithClass(element, className, stopAt) {
+    while (element && element !== stopAt && element.nodeType === 1) {
+      if ((' ' + element.className + ' ').indexOf(' ' + className + ' ') > -1) {
+        return element;
+      }
+      element = element.parentNode;
+    }
+    return null;
+  }
+
+  // ---------- SUB-QUESTION "PAGES" (ONE VISIBLE PER MAIN QUESTION) ----------
+  var subQuestionState = {}; // stepNumber -> { index, nodes, prevBtn, nextBtn, statusEl }
+
+  function initSubQuestions() {
+    for (var i = 0; i < steps.length; i++) {
+      var step = steps[i];
+      var stepNumber = Number(step.getAttribute('data-step'));
+      var subs = step.querySelectorAll('.sub-question');
+
+      if (!subQuestionState[stepNumber]) {
+        subQuestionState[stepNumber] = { index: 0, nodes: subs };
+      } else {
+        subQuestionState[stepNumber].nodes = subs;
+      }
+
+      // ensure only one active sub-question initially
+      for (var j = 0; j < subs.length; j++) {
+        subs[j].className = subs[j].className.replace(' active', '');
+      }
+      if (subs.length > 0) {
+        if (subs[0].className.indexOf('active') === -1) {
+          subs[0].className += ' active';
+        }
+      }
+
+      // create navigation controls if more than one sub-question
+      if (subs.length > 1) {
+        var nav = document.createElement('div');
+        nav.className = 'sub-nav';
+
+        var prevBtn = document.createElement('button');
+        prevBtn.type = 'button';
+        prevBtn.className = 'secondary sub-prev';
+        prevBtn.textContent = '⮜ Previous part';
+
+        var status = document.createElement('span');
+        status.className = 'sub-status';
+
+        var nextBtn = document.createElement('button');
+        nextBtn.type = 'button';
+        nextBtn.className = 'sub-next';
+        nextBtn.textContent = 'Next part ⮕';
+
+        nav.appendChild(prevBtn);
+        nav.appendChild(status);
+        nav.appendChild(nextBtn);
+
+        var card = step.querySelector('.card.question');
+        var navButtons = step.querySelector('.nav-buttons');
+        if (card && navButtons) {
+          step.insertBefore(nav, navButtons);
+        } else {
+          step.appendChild(nav);
+        }
+
+        subQuestionState[stepNumber].prevBtn = prevBtn;
+        subQuestionState[stepNumber].nextBtn = nextBtn;
+        subQuestionState[stepNumber].statusEl = status;
+
+        (function(stepNum) {
+          prevBtn.addEventListener('click', function() {
+            changeSubQuestion(stepNum, -1);
+          });
+          nextBtn.addEventListener('click', function() {
+            changeSubQuestion(stepNum, 1);
+          });
+        })(stepNumber);
+      }
+    }
+
+    // initial update for all steps
+    for (var s = 1; s <= steps.length; s++) {
+      if (subQuestionState[s]) {
+        updateSubNav(s);
+      }
+    }
+  }
+
+  function updateSubNav(stepNumber) {
+    var state = subQuestionState[stepNumber];
+    if (!state || !state.nodes || !state.nodes.length) return;
+
+    var total = state.nodes.length;
+    var idx = state.index;
+
+    // ensure index in range
+    if (idx < 0) idx = 0;
+    if (idx >= total) idx = total - 1;
+    state.index = idx;
+
+    // show only the active sub-question
+    for (var i = 0; i < total; i++) {
+      var sub = state.nodes[i];
+      sub.className = sub.className.replace(' active', '');
+      if (i === idx) {
+        if (sub.className.indexOf('active') === -1) {
+          sub.className += ' active';
+        }
+      }
+    }
+
+    // update sub-nav buttons & status
+    if (state.prevBtn) {
+      state.prevBtn.disabled = (idx === 0);
+    }
+    if (state.nextBtn) {
+      state.nextBtn.disabled = (idx === total - 1);
+    }
+    if (state.statusEl) {
+      state.statusEl.textContent = 'Part ' + (idx + 1) + ' of ' + total;
+    }
+
+    // show main "Next Question" / "Finish" buttons only on the last part
+    if (stepNumber === 1) {
+      var nextBtn1 = document.getElementById('next1');
+      if (nextBtn1) {
+        nextBtn1.style.display = (idx === total - 1) ? 'inline-flex' : 'none';
+      }
+    } else if (stepNumber === 2) {
+      var nextBtn2 = document.getElementById('next2');
+      if (nextBtn2) {
+        nextBtn2.style.display = (idx === total - 1) ? 'inline-flex' : 'none';
+      }
+    } else if (stepNumber === 3) {
+      var finishBtn = document.getElementById('finishBtn');
+      if (finishBtn) {
+        finishBtn.style.display = (idx === total - 1) ? 'inline-flex' : 'none';
+      }
+    }
+  }
+
+  function changeSubQuestion(stepNumber, direction) {
+    var state = subQuestionState[stepNumber];
+    if (!state || !state.nodes || !state.nodes.length) return;
+
+    var newIndex = state.index + direction;
+    if (newIndex < 0) newIndex = 0;
+    if (newIndex >= state.nodes.length) newIndex = state.nodes.length - 1;
+    if (newIndex === state.index) return;
+
+    state.index = newIndex;
+    updateSubNav(stepNumber);
+
+    // keep button-enabled state in sync
+    enableOrDisableButtonsForStep(stepNumber);
+  }
+
+  // ---------- OPTION PILL SELECTION ----------
+  var optionGroups = document.querySelectorAll('.options-group');
+  for (var og = 0; og < optionGroups.length; og++) {
+    optionGroups[og].addEventListener('change', function(e) {
+      var target = e.target || e.srcElement;
+      if (!target || target.tagName !== 'INPUT') return;
+
+      var pill = closestWithClass(target, 'option-pill', this);
+      if (!pill) return;
+
+      if (target.type === 'radio') {
+        var allPills = this.querySelectorAll('.option-pill');
+        for (var i = 0; i < allPills.length; i++) {
+          allPills[i].className = allPills[i].className.replace(' selected', '');
+        }
+        if (pill.className.indexOf('selected') === -1) {
+          pill.className += ' selected';
+        }
+      } else if (target.type === 'checkbox') {
+        if (target.checked) {
+          if (pill.className.indexOf('selected') === -1) {
+            pill.className += ' selected';
+          }
+        } else {
+          pill.className = pill.className.replace(' selected', '');
+        }
+      }
+
+      var stepEl = closestWithClass(target, 'step', document.body);
+      if (stepEl) {
+        var stepNumber = Number(stepEl.getAttribute('data-step'));
+        enableOrDisableButtonsForStep(stepNumber);
+        checkQuestionReward(stepNumber);
+      }
+    });
+  }
+
+  // Also update when typing
+  var reflectionForm = document.getElementById('reflectionForm');
+  reflectionForm.addEventListener('input', function(e) {
+    var target = e.target || e.srcElement;
+    var stepEl = closestWithClass(target, 'step', document.body);
+    if (stepEl) {
+      var stepNumber = Number(stepEl.getAttribute('data-step'));
+      enableOrDisableButtonsForStep(stepNumber);
+      checkQuestionReward(stepNumber);
+    }
+  });
+
+  function enableOrDisableButtonsForStep(stepNumber) {
+    var stepEl = document.querySelector('.step[data-step="' + stepNumber + '"]');
+    if (!stepEl) return;
+
+    var answered = isMainQuestionAnswered(stepNumber);
+
+    if (stepNumber === 1) {
+      var nextBtn1 = document.getElementById('next1');
+      if (nextBtn1) {
+        nextBtn1.disabled = !answered;
+      }
+    } else if (stepNumber === 2) {
+      var nextBtn2 = document.getElementById('next2');
+      if (nextBtn2) {
+        nextBtn2.disabled = !answered;
+      }
+    } else if (stepNumber === 3) {
+      var finishBtn = document.getElementById('finishBtn');
+      if (finishBtn) {
+        finishBtn.disabled = !answered;
+      }
+    }
+  }
+
+  // ---------- STEP NAV BUTTONS ----------
+  var next1 = document.getElementById('next1');
+  var back2 = document.getElementById('back2');
+  var next2 = document.getElementById('next2');
+  var back3 = document.getElementById('back3');
+  var finishBtn = document.getElementById('finishBtn');
+
+  next1.addEventListener('click', function() {
+    showStep(2);
+  });
+  back2.addEventListener('click', function() {
+    showStep(1);
+  });
+  next2.addEventListener('click', function() {
+    showStep(3);
+  });
+  back3.addEventListener('click', function() {
+    showStep(2);
+  });
+
+  // When finish clicked, show results section + generate export, then hide the Finish button
+  finishBtn.addEventListener('click', function() {
+    generateExportText();
+    document.getElementById('resultsSection').style.display = 'block';
+    finishBtn.style.display = 'none'; // hide Finish on the final page
+    document.getElementById('resultsSection').scrollIntoView();
+  });
+
+  // Dash line (40 dashes) used after each option ONLY
+  var dashLine = '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -';
+
+  // ---------- EXPORT TEXT ----------
+  function generateExportText() {
+    var allQuestions = document.querySelectorAll('.question');
+    var output = '';
+
+    output += '──────────────────────────────────────────────────────────────\n';
+    output += 'Section 5b: Challenges and Adversity – Reflection Summary\n';
+    output += '──────────────────────────────────────────────────────────────\n\n';
+    output += 'For each question below, all possible options are listed.\n';
+    output += 'Your own written notes follow each group of options where you added them.\n\n';
+
+    for (var qIndex = 0; qIndex < allQuestions.length; qIndex++) {
+      var q = allQuestions[qIndex];
+      var mainPrompt = q.getAttribute('data-question') || ('Question ' + (qIndex + 4));
+
+      output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+      output += mainPrompt + '\n';
+
+      var subQuestions = q.querySelectorAll('.sub-question');
+      for (var sIndex = 0; sIndex < subQuestions.length; sIndex++) {
+        var sub = subQuestions[sIndex];
+        var subPrompt = sub.getAttribute('data-subquestion') || '';
+        output += '\n ▸ ' + subPrompt + '\n';
+
+        var groups = sub.querySelectorAll('.options-group');
+        for (var gIndex = 0; gIndex < groups.length; gIndex++) {
+          var group = groups[gIndex];
+          var labels = group.querySelectorAll('label.option-pill');
+          if (labels.length > 0) {
+            output += ' Options:\n';
+            for (var lIndex = 0; lIndex < labels.length; lIndex++) {
+              var label = labels[lIndex];
+
+              // NEW: mark selected option(s) with a trailing *
+              var inputEl = label.querySelector('input');
+              var isSelected = false;
+              if (inputEl) {
+                if (inputEl.type === 'radio') {
+                  isSelected = inputEl.checked === true;
+                } else if (inputEl.type === 'checkbox') {
+                  isSelected = inputEl.checked === true;
+                }
+              }
+
+              var labelText = label.textContent.replace(/\s+/g, ' ').trim();
+              if (isSelected) {
+                labelText += ' *';
+              }
+
+              output += ' ' + labelText + '\n';
+              output += dashLine + '\n';
+            }
+          }
+        }
+
+        var notes = [];
+        var fields = sub.querySelectorAll('textarea, input[type="text"]');
+        for (var fIndex = 0; fIndex < fields.length; fIndex++) {
+          var field = fields[fIndex];
+          if (field.value && field.value.trim() !== '') {
+            notes.push(field.value.trim());
+          }
+        }
+
+        if (notes.length > 0) {
+          output += ' Notes and narrative reflections:\n';
+          for (var nIndex = 0; nIndex < notes.length; nIndex++) {
+            output += ' • ' + notes[nIndex] + '\n';
+          }
+        } else {
+          output += ' Notes and narrative reflections:\n';
+          output += ' • (no additional written notes provided for this part)\n';
+        }
+      }
+
+      output += '\n';
+    }
+
+    output += '──────────────────────────────────────────────────────────────\n';
+    output += 'End of Section 5b\n';
+    output += '──────────────────────────────────────────────────────────────\n';
+
+    document.getElementById('resultsBox').value = output;
+  }
+
+  // ---------- COPY BUTTON ----------
+  var copyButton = document.getElementById('copyButton');
+  copyButton.addEventListener('click', function() {
+    var statusMessage = document.getElementById('statusMessage');
+    var text = document.getElementById('resultsBox').value;
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text)
+        .then(function() {
+          statusMessage.textContent = '✨ Reflection copied! You can now paste it into an email or document.';
+        })
+        .catch(function() {
+          statusMessage.textContent = 'Copy failed. Please select all the text in the box and copy it manually.';
+        });
+    } else {
+      var box = document.getElementById('resultsBox');
+      box.focus();
+      box.select();
+      try {
+        var successful = document.execCommand('copy');
+        if (successful) {
+          statusMessage.textContent = '✨ Reflection copied! You can now paste it into an email or document.';
+        } else {
+          statusMessage.textContent = 'Copy failed. Please select all the text in the box and copy it manually.';
+        }
+      } catch (e) {
+        statusMessage.textContent = 'Copy failed. Please select all the text in the box and copy it manually.';
+      }
+    }
+  });
+
+  // ---------- INIT ----------
+  initSubQuestions();
+  startTimer();
+  showStep(1);
+  enableOrDisableButtonsForStep(1);
+</script>
+</body>
+</html>
